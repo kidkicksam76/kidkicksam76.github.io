@@ -1,7 +1,12 @@
 .body {
-    background-color: #aa3011;
+    background-color: #bd0e0e;
 }
 
 .h1 {
+    text-align: center;
+    text-emphasis: style;
+}
+
+.p {
     text-align: center;
 }
