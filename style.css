@@ -1,6 +1,7 @@
-.body {
-    background-color: #bd0e0e;
+body {
+    background-color: darkcyan;
 }
-.h1 {
+
+h1 {
     text-align: center;
 }
