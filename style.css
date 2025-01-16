@@ -1,8 +1,9 @@
 .background_color {
     background-color:rgb(158, 155, 155);
     color: #d42424;
+    text-transform: uppercase;
 }
 
-.h2 {
-    color: goldenrod
+.fieldset {
+    gap: 24px;
 }
