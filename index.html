@@ -18,12 +18,7 @@
         <fieldset><label for="bio">Provide a bio:
           <textarea id="bio" name="bio" rows="3" cols="30" placeholder="please enter bio here..."></textarea>
         </label></fieldset>
-        <fieldset><input type="submit" value="Submit" /></fieldset>
-        <script>
-          document.getElementById("signup-form").addEventListener("submit", function(event) {
-              event.preventDefault();
-              window.location.href = "linked_page";
-          });
-      </script>
-    </body>
-    </html>
+        <form action="/submit" method="POST">
+          <button type="submit">Submit</button>
+        </form>
+        
