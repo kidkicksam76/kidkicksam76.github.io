@@ -1,13 +1,41 @@
 <!DOCTYPE html>
-<html>
-    <head>
+<html class="background_color" lang="en">
+<head class="background_color">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vision Chat Home Page</title>
+    <title>Vision Chat Sign up</title>
     <link rel="stylesheet" href="style.css">
-        <body>
-    <a href="chat room1\index.html"><h2>Chat Room 1</h2></a>
-    <a href="chat room 2\index.html"><h2>Chat Room 2</h2></a>
-        </body>
-    </head>
+</head>
+<body class="background_color"> 
+    <h1>Welcome to Visions Chat</h1>
+    <h2>Please fill out the sign-up form to join.</h2>
+    <form action="/submit" method="POST" enctype="multipart/form-data">
+        <fieldset>
+            <label for="first-name">First Name:
+                <input id="first-name" name="first_name" type="text" required />
+            </label>
+            <label for="last-name">Last Name:
+                <input id="last-name" name="last_name" type="text" required />
+            </label>
+            <label for="email">Email:
+                <input id="email" name="email" type="email" required />
+            </label>
+            <label for="new-password">Create a Password:
+                <input id="new-password" name="password" type="password" pattern="[a-zA-Z0-9]{8,}" required />
+            </label>
+            <label for="profile-picture">Profile Picture:
+                <input id="profile-picture" type="file" name="profile_picture" />
+            </label>
+            <label for="age">Age in years:
+                <input id="age" type="number" name="age" min="13" max="100" />
+            </label>
+        </fieldset>
+        <fieldset>
+            <label for="bio">Provide a bio:
+                <textarea id="bio" name="bio" rows="3" cols="30" placeholder="Please enter bio here..."></textarea>
+            </label>
+        </fieldset>
+        <button type="submit"><a href="home.html">submit</a></button>
+    </form>
+</body>
 </html>

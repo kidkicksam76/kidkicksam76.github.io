@@ -1,5 +1,5 @@
 .background_color {
-    background-color:rgb(158, 155, 155);
+    background-color:rgb(30, 192, 233);
     color: #d42424;
     text-transform: uppercase;
 }
@@ -36,9 +36,9 @@
   }
   
   input, textarea {
-    background-color: #d1d1d1;
-    border: 1px solid #d1d1d1;
-    color: #da2828;
+    background-color: #2a2b26;
+    border: 1px solid #b702cf;
+    color: #ff00aa;
   }
   
   .inline {
@@ -53,11 +53,19 @@
     margin: 1em auto;
     height: 2em;
     font-size: 1.1rem;
-    background-color: #7b7ba1;
+    background-color: #00ffbf;
     border-color: white;
     min-width: 300px;
   }
   
   input[type="file"] {
     padding: 1px 2px;
+  }
+
+  .text {
+    color: rgb(172, 2, 2);
+  }
+
+  body {
+    background-color: rgb(14, 153, 25);
   }
