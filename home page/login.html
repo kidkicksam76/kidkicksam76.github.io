@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="background_color"> 
-    <h1>Welcome to Visions Chat</h1>
-    <h2>Please fill out the sign-up form to join.</h2>
+    <h1>Visions Chat</h1>
+    <h2>Login</h2>
     <form action="/submit" method="POST" enctype="multipart/form-data">
         <fieldset>
-            <label for="email">Email: <input id="email" name="email" type="email" /></label>
-            <label for="new-password">Password: <input id="new-password" name="new-password" type="password" pattern="[a-z0-5]{8,}" /></label>
+            <label for="email">Email: <input id="email" name="email" type="email" required/></label>
+            <label for="new-password">Password: <input id="new-password" name="new-password" type="password" pattern="[a-z0-5]{8,}" required/></label>
         </fieldset>
         <a type="submit" value="Submit" href="home.html">Submit</a>
         

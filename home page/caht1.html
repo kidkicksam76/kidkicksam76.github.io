@@ -24,5 +24,25 @@
 
   <script src="script.js"></script>
   <a href="home.html">Home Page</a>
+
+  <script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    // Send a message
+    document.querySelector('#sendBtn').addEventListener('click', () => {
+        const message = document.querySelector('#messageInput').value;
+        socket.emit('chat message', message);
+    });
+
+    // Receive messages
+    socket.on('chat message', (msg) => {
+        const chatBox = document.querySelector('#chatBox');
+        const newMessage = document.createElement('p');
+        newMessage.textContent = msg;
+        chatBox.appendChild(newMessage);
+    });
+</script>
+
 </body>
 </html>
