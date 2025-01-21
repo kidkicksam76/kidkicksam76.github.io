@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html class="background_color" lang="en">
+<head class="background_color">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Chat Sign up</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="background_color"> 
+    <h1>Welcome to Visions Chat</h1>
+    <h2>Please fill out the sign-up form to join.</h2>
+    <form action="/submit" method="POST" enctype="multipart/form-data">
+        <fieldset>
+            <label for="email">Email: <input id="email" name="email" type="email" /></label>
+            <label for="new-password">Password: <input id="new-password" name="new-password" type="password" pattern="[a-z0-5]{8,}" /></label>
+        </fieldset>
+        <a type="submit" value="Submit" href="home.html">Submit</a>
+        

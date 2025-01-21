@@ -37,8 +37,8 @@
   
   input, textarea {
     background-color: #2a2b26;
-    border: 1px solid #b702cf;
-    color: #ff00aa;
+    border: 1px solid #0c1ebe;
+    color: #ff00ea;
   }
   
   .inline {
@@ -47,15 +47,16 @@
     vertical-align: middle;
   }
   
-  input[type="submit"] {
+  a[type="submit"] {
     display: block;
     width: 60%;
     margin: 1em auto;
     height: 2em;
     font-size: 1.1rem;
-    background-color: #00ffbf;
+    background-color: #10c269;
     border-color: white;
     min-width: 300px;
+    text-align: center;
   }
   
   input[type="file"] {

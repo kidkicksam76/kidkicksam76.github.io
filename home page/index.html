@@ -11,31 +11,32 @@
     <h2>Please fill out the sign-up form to join.</h2>
     <form action="/submit" method="POST" enctype="multipart/form-data">
         <fieldset>
-            <label for="first-name">First Name:
-                <input id="first-name" name="first_name" type="text" required/>
+            <label for="first-name">Enter Your First Name: 
+                <input id="first-name" name="first-name" type="text" />
             </label>
-            <label for="last-name">Last Name:
-                <input id="last-name" name="last_name" type="text" required/>
+            <label for="last-name">Enter Your Last Name: 
+                <input id="last-name" name="last-name" type="text" />
             </label>
-            <label for="email">Email:
-                <input id="email" name="email" type="email" required/>
+            <label for="email">Enter Your Email: 
+                <input id="email" name="email" type="email" />
             </label>
-            <label for="new-password">Create a Password:
-                <input id="new-password" name="password" type="password" pattern="[a-zA-Z0-9]{8,}" required/>
+            <label for="new-password">Create a New Password: 
+                <input id="new-password" name="new-password" type="password" pattern="[a-z0-5]{8,}" />
             </label>
-            <label for="profile-picture">Profile Picture:
-                <input id="profile-picture" type="file" name="profile_picture" required/>
+            <label for="profile-picture">Upload a profile picture: 
+                <input id="profile-picture" type="file" name="file" />
             </label>
-            <label for="age">Age in years:
-                <input id="age" type="number" name="age" min="13" max="100" required/>
+            <label for="age">Input your age (years): 
+                <input id="age" type="number" name="age" min="13" max="120" />
             </label>
         </fieldset>
         <fieldset>
             <label for="bio">Provide a bio:
-                <textarea id="bio" name="bio" rows="3" cols="30" placeholder="Please enter bio here..."></textarea>
-            </label>
+                <textarea id="bio" name="bio" rows="3" cols="30" placeholder="Please provide a bio"></textarea>
+              </label>
         </fieldset>
-        <button type="submit"><a href="home.html">submit</a></button>
+        <a type="submit" value="Submit" href="home.html">Submit</a>
+        <a type="submit" value="Submit" href="login.html">Login</a>
     </form>
 </body>
 </html>
