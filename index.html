@@ -65,6 +65,7 @@
         }
     </style>
 </head>
+<<<<<<< HEAD:home page/index.html
 <body>
     <header>
         <h1>Welcome to Visions Chat</h1>
@@ -107,5 +108,32 @@
             }
         });
     </script>
+=======
+<body class="background_color"> 
+    <h1>Welcome to Visions Chat</h1>
+    <h2>Please fill out the sign-up form to join.</h2>
+    <form action="/submit" method="POST" enctype="multipart/form-data">
+        <fieldset>
+            <label for="first-name">Enter Your First Name: <input id="first-name" name="first-name" type="text"/></label>
+            <label for="last-name">Enter Your Last Name: <input id="last-name" name="last-name" type="text"/></label>
+            <label for="email">Enter Your Email: <input id="email" name="email" type="email"/></label>
+            <label for="new-password">Create a Password: <input id="new-password" name="new-password" type="password" pattern="[a-z0-5]{8,}"/></label>
+          </fieldset>
+          <fieldset>
+            <legend>Account type</legend>
+            <label for="personal-account"><input id="personal-account" type="radio" name="account-type" class="inline" /> Personal</label>
+            <label for="business-account"><input id="business-account" type="radio" name="account-type" class="inline" /> Business</label>
+          </fieldset>
+          <fieldset>
+            <label for="profile-picture">Upload a profile picture: <input id="profile-picture" type="file" name="file" /></label>
+            <label for="age">Input your age (years): <input id="age" type="number" name="age" min="13" max="120"/></label>
+            <label for="bio">Provide a bio:
+              <textarea id="bio" name="bio" rows="3" cols="30" placeholder="I like coding on the beach..."></textarea>
+            </label>
+          </fieldset>
+        <a type="submit" value="Submit" href="home.html">Submit</a>
+        <a type="submit" value="Submit" href="login.html">Login</a>
+    </form>
+>>>>>>> 497d3806386f6a6ecc9256b0c51d9a8a4841bd13:index.html
 </body>
 </html>
