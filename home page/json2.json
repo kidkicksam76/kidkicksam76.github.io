@@ -1,0 +1,7 @@
+{
+    "_id": "unique_message_id",
+    "sender_id": "unique_user_id",
+    "receiver_id": "unique_user_id",
+    "content": "Hello!",
+    "timestamp": "2025-01-22T10:05:00Z"
+}
