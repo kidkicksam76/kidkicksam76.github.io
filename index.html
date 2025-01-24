@@ -1,99 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"></html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visions Chat</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #d41717;
-        }
-        header {
-            background-color: #0078d7;
-            color: rgb(20, 214, 68);
-            padding: 10px 20px;
-            text-align: center;
-        }
-        .chat-container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: rgb(235, 163, 8);
-            border: 1px solid #776a6a;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .messages {
-            height: 400px;
-            overflow-y: auto;
-            border: 1px solid #ff0095;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 15px;
-            background-color: #331281;
-        }
-        .message {
-            padding: 8px;
-            margin: 5px 0;
-            border-radius: 5px;
-            background-color: #85f1ff;
-        }
-        .send-message {
-            display: flex;
-            gap: 10px;
-        }
-        .send-message input[type="text"] {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #d11313;
-            border-radius: 4px;
-        }
-        .send-message button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            background-color: #134b21;
-            color: rgb(6, 243, 17);
-            cursor: pointer;
-        }
-        .send-message button:hover {
-            background-color: #33021a;
-        }
-    </style>
+    <title>Visions Chat sign up</title>
 </head>
 <body>
-    <header>
-        <h1>Welcome to Visions Chat Website</h1>
-    </header>
-    <div class="chat-container">
-        <div class="messages" id="messages">
-        </div>
-        <form class="send-message" id="send-message-form">
-            <input type="text" id="message-input" placeholder="Type your message..." required />
-            <button type="submit">Send</button>
-        </form>
-    </div>
+  <h1>Fill out what you want</h1>
+  <style>
+    body {
+      background-color: color-mix(in srgb, blue 50%, rgb(14, 207, 14) 50%);
+      color: red;
+    }
+    a {
+      color: gold;
+    }
+  </style>
+    <fieldset required><label for="first-name">Enter Your First Name: <input id="first-name" name="first-name" type="text" required /></label>
+    <label for="last-name">Enter Your Last Name: <input id="last-name" name="last-name" type="text" required /></label>
+    <label for="email">Enter Your Email: <input id="email" name="email" type="email" required /></label>
+    <label for="new-password">Create a New Password: <input id="new-password" name="new-password" type="password" pattern="[a-z0-5]{8,}" /></label>
+  </fieldset>
+  <fieldset>
+    <label for="profile-picture">Upload a profile picture: <input id="profile-picture" type="file" name="file" /></label>
+    <label required for="age">Input your age (years): <input id="age" type="number" name="age" min="13" max="120" /></label>
+    <label for="bio">Provide a bio:
+      <textarea id="bio" name="bio" rows="3" cols="30" placeholder="bio"></textarea>
+    </label></fieldset>
+    <form action="index.html" method="get">
+      <input type="submit" value="Submit" />
+  </form>
+  
 
-    <script>
-        const form = document.getElementById('send-message-form');
-        const messagesDiv = document.getElementById('messages');
-        const messageInput = document.getElementById('message-input');
 
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const messageText = messageInput.value.trim();
-            if (messageText) {
-                const newMessage = document.createElement('div');
-                newMessage.classList.add('message');
-                newMessage.innerHTML = `<strong>You:</strong> ${messageText}`;
-                messagesDiv.appendChild(newMessage);
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-                messageInput.value = '';
-            }
-        });
-    </script>
 </body>
-</html>
+<main></main>
