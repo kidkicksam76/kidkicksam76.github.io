@@ -1,7 +1,0 @@
-{
-    "_id": "unique_user_id",
-    "username": "john_doe",
-    "email": "john@example.com",
-    "password": "hashed_password",
-    "created_at": "2025-01-22T10:00:00Z"
-}

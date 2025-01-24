@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visions Chat Website</title>
+    <title>Visions Chat</title>
     <style>
-        /* Basic Styling */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -71,7 +70,6 @@
     </header>
     <div class="chat-container">
         <div class="messages" id="messages">
-            <!-- Messages will be dynamically added here -->
         </div>
         <form class="send-message" id="send-message-form">
             <input type="text" id="message-input" placeholder="Type your message..." required />
@@ -80,29 +78,19 @@
     </div>
 
     <script>
-        // JavaScript to handle sending messages
         const form = document.getElementById('send-message-form');
         const messagesDiv = document.getElementById('messages');
         const messageInput = document.getElementById('message-input');
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
-
-            // Get the message text
             const messageText = messageInput.value.trim();
             if (messageText) {
-                // Create a new message element
                 const newMessage = document.createElement('div');
                 newMessage.classList.add('message');
                 newMessage.innerHTML = `<strong>You:</strong> ${messageText}`;
-
-                // Append it to the messages container
                 messagesDiv.appendChild(newMessage);
-
-                // Scroll to the bottom
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-                // Clear the input
                 messageInput.value = '';
             }
         });
