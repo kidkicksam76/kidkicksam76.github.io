@@ -1,34 +1,82 @@
 <!DOCTYPE html>
-<html lang="en"></html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visions Chat sign up</title>
+    <title>Visions Chat Sign Up</title>
+    <style>
+        body {
+            background-color: color-mix(in srgb, blue 50%, rgb(14, 207, 14) 50%);
+            color: red;
+        }
+        fieldset {
+            margin-right: 1200px;
+        }
+        .button_1 {
+            font-size: 15px;
+            padding: 15px 15px;
+            background-color: #f309cc;
+            color: rgb(10, 57, 185);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px hsla(0, 100%, 50%, 0.637);
+        }
+    </style>
 </head>
 <body>
-  <h1>Fill out what you want</h1>
-  <style>
-    body {
-      background-color: color-mix(in srgb, blue 50%, rgb(14, 207, 14) 50%);
-      color: red;
-    }
-  </style>
-    <fieldset required><label for="first-name">Enter Your First Name: <input id="first-name" name="first-name" type="text" required /></label>
-    <label for="last-name">Enter Your Last Name: <input id="last-name" name="last-name" type="text" required /></label>
-    <label for="email">Enter Your Email: <input id="email" name="email" type="email" required /></label>
-    <label for="new-password">Create a New Password: <input id="new-password" name="new-password" type="password" pattern="[a-z0-5]{8,}" /></label>
-  </fieldset>
-  <fieldset>
-    <label for="profile-picture">Upload a profile picture: <input id="profile-picture" type="file" name="file" /></label>
-    <label required for="age">Input your age (years): <input id="age" type="number" name="age" min="13" max="120" /></label>
-    <label for="bio">Provide a bio:
-      <textarea id="bio" name="bio" rows="3" cols="30" placeholder="bio"></textarea>
-    </label></fieldset>
-    <form action="index.html" method="get">
-      <input type="submit" value="Submit" />
-  </form>
-  
+    <h1>Sign Up</h1>
 
+    <form id="signUpForm">
+        <fieldset>
+            <label for="first-name">Enter Your First Name: 
+                <input id="first-name" name="first-name" type="text" required />
+            </label>
+            <br><br>
+            <label for="last-name">Enter Your Last Name: 
+                <input id="last-name" name="last-name" type="text" required />
+            </label>
+            <br><br>
+            <label for="email">Enter Your Email: 
+                <input id="email" name="email" type="email" required />
+            </label>
+            <br><br>
+            <label for="new-password">Create a New Password: 
+                <input id="new-password" name="new-password" type="password" 
+                       pattern="[a-z0-5]{8,}" 
+                       title="Password must be at least 8 characters long and contain only lowercase letters and numbers." 
+                       required />
+            </label>
+        </fieldset>
 
+        <fieldset>
+            <label for="profile-picture">Upload a Profile Picture: 
+                <input id="profile-picture" type="file" name="file" required />
+            </label>
+            <br><br>
+            <label for="age">Input Your Age (years): 
+                <input id="age" type="number" name="age" min="13" max="120" required />
+            </label>
+            <br><br>
+            <label for="bio">Provide a Bio:
+                <textarea id="bio" name="bio" rows="3" cols="30" placeholder="Write something about yourself..." required></textarea>
+            </label>
+        </fieldset>
+        <button type="button" class="button_1" onclick="validateAndNavigate()">Submit</button>
+    </form>
+
+    <script>
+        function validateAndNavigate() {
+            const form = document.getElementById('signUpForm');
+            if (form.checkValidity()) {
+                // Redirect if form is valid
+                window.location.href = 'chat_page.html';
+            } else {
+                // Trigger validation UI for invalid fields
+                alert('Please fill in all required fields correctly before proceeding.');
+                form.reportValidity();
+            }
+        }
+    </script>
 </body>
-<main></main>
+</html>

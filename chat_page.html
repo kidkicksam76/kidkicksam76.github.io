@@ -69,32 +69,39 @@
         <h1>Welcome to Visions Chat Website</h1>
     </header>
     <div class="chat-container">
-        <div class="messages" id="messages">
-        </div>
+        <div class="messages" id="messages"></div>
         <form class="send-message" id="send-message-form">
             <input type="text" id="message-input" placeholder="Type your message..." required />
             <button type="submit">Send</button>
         </form>
     </div>
 
+    <!-- Include Socket.IO -->
+    <script src="/socket.io/socket.io.js"></script>
     <script>
+        const socket = io();
         const form = document.getElementById('send-message-form');
         const messagesDiv = document.getElementById('messages');
         const messageInput = document.getElementById('message-input');
 
+        // Send messages to the server
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             const messageText = messageInput.value.trim();
             if (messageText) {
-                const newMessage = document.createElement('div');
-                newMessage.classList.add('message');
-                newMessage.innerHTML = `<strong>You:</strong> ${messageText}`;
-                messagesDiv.appendChild(newMessage);
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                socket.emit('chat message', messageText);
                 messageInput.value = '';
             }
+        });
+
+        // Receive messages from the server
+        socket.on('chat message', function (msg) {
+            const newMessage = document.createElement('div');
+            newMessage.classList.add('message');
+            newMessage.innerHTML = `<strong>User:</strong> ${msg}`;
+            messagesDiv.appendChild(newMessage);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
         });
     </script>
 </body>
 </html>
-<p></p>
