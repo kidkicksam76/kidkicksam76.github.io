@@ -195,6 +195,47 @@
             text-decoration: none;
         }
 
+        /* Certifications Section */
+        #certifications {
+            padding: 80px 20px;
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            margin: 20px;
+        }
+
+        #certifications h2 {
+            font-size: 2.5em;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .cert-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .cert-link {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #2c3e50, #4a6278);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .cert-link:hover {
+            background: linear-gradient(45deg, rgb(107, 191, 219), rgb(75, 150, 180));
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
         /* Animations */
         @keyframes slideIn {
             from { transform: translateY(-100%); }
@@ -231,6 +272,11 @@
             .project-tile {
                 max-width: 90%;
             }
+
+            .cert-container {
+                flex-direction: column;
+                gap: 20px;
+            }
         }
     </style>
 </head>
@@ -241,6 +287,7 @@
         <a href="#projects">Projects</a>
         <a href="#social-media">Social</a>
         <a href="#profile">Profile</a>
+        <a href="#certifications">Certifications</a>
     </nav>
 
     <!-- Welcome Section -->
@@ -277,6 +324,15 @@
             <li>Dec 18th 2024: Began learning HTML & CSS at <a href="https://www.freecodecamp.org/" target="_blank">Free Code Camp</a></li>
             <li>Jan 31st 2025: I received my HTML & CSS certification</li>
         </ul>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications">
+        <h2>My Certifications</h2>
+        <div class="cert-container">
+            <a href="SP_HTML&CSS_Jan31.png" target="_blank" class="cert-link">HTML & CSS Certification</a>
+            <a href="SP_Python_Dec17.png" target="_blank" class="cert-link">Python Certification</a>
+        </div>
     </section>
 </body>
 </html>
