@@ -4,49 +4,279 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sam Paladino Creations</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
     <style>
-    h1 {
-        text-align: center;
-    }
-    
-    body {
-        background-color: rgb(107, 191, 219);
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    h2 {
-        text-align: center;
-        margin-top: 80px;
-    }
+        body {
+            background: linear-gradient(135deg, rgb(107, 191, 219), rgb(75, 150, 180));
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
 
-    p {
-        text-align: center;
-        font-size: 22.5px;
-    }
-
-    .navbar {
+        /* Navbar Styles */
+        #navbar {
             position: fixed;
             top: 0;
-            left: 0;
             width: 100%;
-            background-color: #333;
-            color: white;
-            padding: 15px;
-            text-align: center;
+            background: linear-gradient(to right, #2c3e50, #4a6278);
+            padding: 20px;
             z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease-in;
         }
-    .content {
-        margin-top: 60px; /* Prevents content from being hidden behind the navbar */
-        padding: 20px;
+
+        #navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        #navbar a:hover {
+            color: rgb(107, 191, 219);
+            transform: translateY(-2px);
+        }
+
+        #navbar a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: rgb(107, 191, 219);
+            transition: width 0.3s ease;
+        }
+
+        #navbar a:hover::after {
+            width: 100%;
+        }
+
+        /* Welcome Section */
+        #welcome-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" fill-opacity="1" d="M0,224L80,213.3C160,203,320,181,480,186.7C640,192,800,224,960,213.3C1120,203,1280,149,1360,122.7L1440,96L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path></svg>') no-repeat bottom;
+            animation: fadeIn 1s ease-in;
+        }
+
+        #welcome-section h1 {
+            font-size: 3.5em;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            animation: bounceIn 1s ease;
+        }
+
+        #welcome-section p {
+            font-size: 1.5em;
+            color: white;
+            background: rgba(0,0,0,0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+        }
+
+        /* Projects Section */
+        #projects {
+            padding: 80px 20px;
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            margin: 20px;
+        }
+
+        #projects h2 {
+            font-size: 2.5em;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .project-tile {
+            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .project-tile:hover {
+            transform: scale(1.05);
+        }
+
+        /* Social Media Section */
+        #social-media {
+            padding: 80px 20px;
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            margin: 20px;
+        }
+
+        #social-media h2 {
+            font-size: 2.5em;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        #social-media a {
+            margin: 0 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            padding: 10px 20px;
+            background: #2c3e50;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        #social-media a:hover {
+            background: rgb(107, 191, 219);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Profile Section */
+        #profile {
+            padding: 80px 20px;
+            text-align: center;
+            max-width: 900px;
+            margin: 20px auto;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+        }
+
+        #profile h2 {
+            font-size: 2.5em;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        #profile ul {
+            list-style: none;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        #profile li {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        #profile li:hover {
+            background: rgba(0,0,0,0.4);
+            transform: translateX(10px);
+        }
+
+        #profile a {
+            color: rgb(107, 191, 219);
+            text-decoration: none;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            60% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #navbar {
+                flex-direction: column;
+                gap: 20px;
+                padding: 15px;
+            }
+
+            #welcome-section h1 {
+                font-size: 2em;
+            }
+
+            #welcome-section p {
+                font-size: 1.2em;
+            }
+
+            .project-tile {
+                max-width: 90%;
+            }
         }
     </style>
-    <div class="navbar">
-        <div>Home</div>
-    </div>
-    <div class="content">
-        <p></p>
-        <p style="height: 2000px;"></p>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav id="navbar">
+        <a href="#welcome-section">Home</a>
+        <a href="#projects">Projects</a>
+        <a href="#social-media">Social</a>
+        <a href="#profile">Profile</a>
+    </nav>
+
+    <!-- Welcome Section -->
+    <section id="welcome-section">
+        <h1>Hi, I'm Sam Paladino, a Future Developer!</h1>
+        <p>Welcome to my portfolio where I showcase my coding projects</p>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects">
+        <h2>Projects</h2>
+        <div class="project-tile">
+            <p>I don't have anything to upload at the moment - exciting projects coming soon!</p>
+        </div>
+    </section>
+
+    <!-- Social Media Section -->
+    <section id="social-media">
+        <h2>Connect With Me</h2>
+        <p>
+            <a href="https://github.com/kidkicksam76" target="_blank">GitHub</a>
+            <a href="https://www.linkedin.com/in/sam-paladino-880986341/" target="_blank">LinkedIn</a>
+            <a href="https://www.codewars.com/users/Mr.random218" target="_blank">CodeWars</a>
+        </p>
+    </section>
+
+    <!-- Profile Section -->
+    <section id="profile">
+        <h2>About Me</h2>
+        <p>Here's my journey:</p>
+        <ul>
+            <li>July 24th 2024: Started learning Python in <a href="https://www.skillstruck.com/" target="_blank">Skillstruck</a></li>
+            <li>Dec 17th 2024: I got my Python certification</li>
+            <li>Dec 18th 2024: Began learning HTML & CSS at <a href="https://www.freecodecamp.org/" target="_blank">Free Code Camp</a></li>
+            <li>Jan 31st 2025: I received my HTML & CSS certification</li>
+        </ul>
+    </section>
 </body>
 </html>
