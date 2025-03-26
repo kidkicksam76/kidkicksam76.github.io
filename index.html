@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algebra Calculator Hub</title>
+    <style>
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body with a vibrant, shifting gradient background */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ff99, #ffcc00);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        /* Header with neon glow */
+        header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: #00ffcc;
+            text-shadow: 0 0 10px #00ffcc, 0 0 20px #ff00cc, 0 0 30px #3333ff;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        /* Navigation bar with sleek neon vibes */
+        nav {
+            background: linear-gradient(90deg, #ff00cc, #3333ff);
+            padding: 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 0 15px rgba(255, 0, 204, 0.7);
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1.5rem;
+            font-size: 1.1rem;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        nav a:hover {
+            color: #ffcc00;
+            text-shadow: 0 0 10px #ffcc00;
+        }
+
+        /* Hero section with bold contrast */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            color: #ff00cc;
+            text-shadow: 0 0 15px #ff00cc, 0 0 25px #3333ff;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            color: #00ff99;
+        }
+
+        /* Calculator section with glowing cards */
+        #calculators {
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        #calculators h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #ffcc00;
+            text-shadow: 0 0 10px #ffcc00;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .calc-card {
+            background: linear-gradient(135deg, #3333ff, #ff00cc);
+            padding: 2rem;
+            border-radius: 15px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 0 10px #3333ff, 0 0 20px #ff00cc;
+        }
+
+        .calc-card:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #ffcc00, 0 0 30px #00ff99;
+        }
+
+        /* Footer with a futuristic touch */
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: linear-gradient(90deg, #3333ff, #ff00cc);
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+        }
+
+        footer p {
+            color: #fff;
+            text-shadow: 0 0 5px #00ff99;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Algebra Calculator Hub</h1>
+        <p>Explore cool tools for all your algebra needs!</p>
+    </header>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#calculators">Calculators</a>
+        <a href="#about">About</a>
+    </nav>
+
+    <section id="home">
+        <div class="hero">
+            <h2>Welcome to the Algebra Zone!</h2>
+            <p>Dive into our collection of algebra calculators with a splash of color and fun.</p>
+        </div>
+    </section>
+
+    <section id="calculators">
+        <h2>Algebra Calculators</h2>
+        <div class="calculator-grid">
+            <a href="#linear" class="calc-card">Linear Equations</a>
+            <a href="#quadratic" class="calc-card">Quadratic Equations</a>
+            <a href="#systems" class="calc-card">Systems of Equations</a>
+            <a href="#factoring" class="calc-card">Factoring</a>
+            <a href="#exponents" class="calc-card">Exponents & Radicals</a>
+            <a href="#polynomials" class="calc-card">Polynomials</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Algebra Calculator Hub. Made with math and magic!</p>
+    </footer>
+</body>
+</html>
