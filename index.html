@@ -291,6 +291,9 @@
   </footer>
 
   <script>
+    // Configurable API URL
+    const API_URL = 'http://localhost:3000/api/generate'; // Change to your backend URL if different (e.g., http://localhost:5000/api/generate)
+
     // Theme Toggle
     const themeToggle = document.getElementById('theme-toggle');
     const html = document.documentElement;
@@ -332,8 +335,14 @@
       resultsSection.classList.remove('hidden');
       gsap.fromTo('#results', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' });
 
+      // Mock data fallback
+      const mockData = [
+        { name: 'Epic Mod', platform: 'Modrinth', url: 'https://modrinth.com/mod/example', description: 'A legendary mod for epic adventures.' },
+        { name: 'Mythic Mod', platform: 'CurseForge', url: 'https://www.curseforge.com/minecraft/mc-mods/another', description: 'Unleashes mythical powers.' },
+      ];
+
       try {
-        const response = await fetch('http://localhost:3000/api/generate', {
+        const response = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt: description, minecraftVersion: version }),
@@ -345,14 +354,11 @@
         }
 
         const data = await response.json();
-        // Mock data for demonstration (replace with actual API response)
-        const mockData = [
-          { name: 'Epic Mod', platform: 'Modrinth', url: 'https://modrinth.com/mod/example', description: 'A legendary mod for epic adventures.' },
-          { name: 'Mythic Mod', platform: 'CurseForge', url: 'https://www.curseforge.com/minecraft/mc-mods/another', description: 'Unleashes mythical powers.' },
-        ];
+        // Use real data if available, otherwise mock data
+        const results = data.mods || mockData;
 
         // Render results with GSAP
-        resultsContainer.innerHTML = mockData.map(item => `
+        resultsContainer.innerHTML = results.map(item => `
           <div class="bg-gray-800 bg-opacity-90 p-4 rounded-lg shadow-lg glow result-card">
             <h3 class="text-xl font-bold">${item.name}</h3>
             <p class="text-gray-300">${item.description}</p>
@@ -364,19 +370,32 @@
       } catch (error) {
         let errorMessage = 'An error occurred while generating the modpack.';
         if (error.message.includes('Failed to fetch')) {
-          errorMessage = 'Unable to connect to the server. Please ensure the backend is running at http://localhost:3000.';
+          errorMessage = `Unable to connect to the server. Please ensure the backend is running at ${API_URL}. Try starting the server with 'npm run dev' in the backend directory.`;
         } else if (error.message.includes('CORS')) {
-          errorMessage = 'Cross-origin request blocked. Please check the backend CORS configuration.';
+          errorMessage = 'Cross-origin request blocked. Please check the backend CORS configuration (ensure cors middleware is enabled).';
         } else if (error.message.includes('Server error')) {
           errorMessage = error.message;
         }
         resultsContainer.innerHTML = `
           <p class="text-red-500">${errorMessage}</p>
           <button id="retry-button" class="mt-4 btn-minecraft text-white py-2 px-4 rounded-md">Try Again</button>
+          <button id="mock-button" class="mt-4 btn-minecraft text-white py-2 px-4 rounded-md">Use Mock Data</button>
         `;
         gsap.from('#results-container', { opacity: 0, duration: 0.5 });
-        // Add retry button listener
+        // Retry button
         document.getElementById('retry-button')?.addEventListener('click', () => generateModpack(version, description));
+        // Mock data button
+        document.getElementById('mock-button')?.addEventListener('click', () => {
+          resultsContainer.innerHTML = mockData.map(item => `
+            <div class="bg-gray-800 bg-opacity-90 p-4 rounded-lg shadow-lg glow result-card">
+              <h3 class="text-xl font-bold">${item.name}</h3>
+              <p class="text-gray-300">${item.description}</p>
+              <p class="text-sm text-gray-500">Platform: ${item.platform}</p>
+              <a href="${item.url}" target="_blank" class="mt-2 inline-block btn-minecraft text-white py-2 px-4 rounded-md">Download</a>
+            </div>
+          `).join('');
+          gsap.from('.result-card', { opacity: 0, y: 20, stagger: 0.2, duration: 0.5, ease: 'power2.out' });
+        });
       }
     }
 
