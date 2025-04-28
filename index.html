@@ -13,7 +13,6 @@
       font-family: 'Minecraftia', sans-serif;
       overflow-x: hidden;
     }
-    /* Parallax Background */
     .parallax {
       position: fixed;
       top: 0;
@@ -33,8 +32,6 @@
     .layer-sky { background-image: url('https://i.imgur.com/4Y3z5lP.png'); transform: translateZ(-2px) scale(3); }
     .layer-clouds { background-image: url('https://i.imgur.com/6Q3z8vX.png'); transform: translateZ(-1px) scale(2); opacity: 0.5; }
     .layer-ground { background-image: url('https://i.imgur.com/8Z7k3vN.png'); transform: translateZ(0); bottom: 0; height: 50%; }
-
-    /* Animations */
     @keyframes glow {
       0% { box-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00; }
       50% { box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00; }
@@ -52,7 +49,6 @@
       box-shadow: 0 0 15px #00ff00;
       background: #666666;
     }
-    /* Loading Spinner */
     .spinner {
       width: 40px;
       height: 40px;
@@ -63,7 +59,6 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    /* Particles Container */
     #particles-js {
       position: absolute;
       width: 100%;
@@ -71,7 +66,7 @@
       z-index: 0;
       pointer-events: none;
     }
-    select {
+    select, textarea {
       max-height: 200px;
       background: #555555;
       color: white;
@@ -81,20 +76,20 @@
       background: #555555;
       color: white;
     }
+    select:focus, textarea:focus {
+      outline: none;
+      border-color: #00ff00;
+      box-shadow: 0 0 10px #00ff00;
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-white">
-  <!-- Parallax Background -->
   <div class="parallax">
     <div class="parallax-layer layer-sky"></div>
     <div class="parallax-layer layer-clouds"></div>
     <div class="parallax-layer layer-ground"></div>
   </div>
-
-  <!-- Particles -->
   <div id="particles-js"></div>
-
-  <!-- Header -->
   <header class="sticky top-0 z-20 bg-gray-800 bg-opacity-80 backdrop-blur-md shadow-lg">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
       <h1 class="text-3xl glow">ModCraft AI</h1>
@@ -109,13 +104,10 @@
       </nav>
     </div>
   </header>
-
-  <!-- Main Content -->
   <main class="container mx-auto px-4 py-8 relative z-10">
-    <!-- Input Form -->
     <section id="home" class="bg-gray-800 bg-opacity-90 p-6 rounded-lg shadow-lg mb-8 glow">
       <h2 class="text-4xl mb-4">Craft Your Epic Modpack</h2>
-      <p class="text-gray-300 mb-6">Select any Minecraft version and describe your ultimate modpack. Our AI conjures mods, resource packs, and shaders from Modrinth and CurseForge. Older versions may have fewer mods.</p>
+      <p class="text-gray-300 mb-6">Select any Minecraft version and describe your ultimate modpack. Our AI finds mods from Modrinth. Older versions may have fewer mods.</p>
       <form id="modpack-form" class="space-y-4">
         <div>
           <label for="minecraft-version" class="block text-sm">Minecraft Version</label>
@@ -269,31 +261,22 @@
         <button type="submit" class="w-full btn-minecraft text-white font-bold py-2 px-4 rounded-md">Generate Modpack</button>
       </form>
     </section>
-
-    <!-- Results Section -->
     <section id="results" class="hidden">
       <h2 class="text-4xl mb-4 glow">Your Legendary Modpack</h2>
       <div id="results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
-
-    <!-- About Section -->
     <section id="about" class="bg-gray-800 bg-opacity-90 p-6 rounded-lg shadow-lg glow">
       <h2 class="text-4xl mb-4">About ModCraft AI</h2>
-      <p class="text-gray-300">ModCraft AI is your portal to epic Minecraft adventures, crafting personalized modpacks for any version, from Alpha to the latest realms. Powered by enchanted AI, it pulls mods from Modrinth and CurseForge. Forge your legend today!</p>
+      <p class="text-gray-300">ModCraft AI is your portal to epic Minecraft adventures, crafting personalized modpacks for any version from Modrinth. Forge your legend today!</p>
     </section>
   </main>
-
-  <!-- Footer -->
   <footer class="bg-gray-900 bg-opacity-80 text-white py-4 relative z-10">
     <div class="container mx-auto px-4 text-center">
       <p>© 2025 ModCraft AI. Crafted with Enchantment.</p>
     </div>
   </footer>
-
+  <script src="searchMods.js" defer></script>
   <script>
-    // Configurable API URL
-    const API_URL = 'http://localhost:3000/api/generate'; // Change to your backend URL if different (e.g., http://localhost:5000/api/generate)
-
     // Theme Toggle
     const themeToggle = document.getElementById('theme-toggle');
     const html = document.documentElement;
@@ -325,85 +308,61 @@
     gsap.from('#home', { opacity: 0, y: 50, duration: 1, delay: 0.5, ease: 'power2.out' });
 
     // Form Submission
-    const form = document.getElementById('modpack-form');
-    const resultsSection = document.getElementById('results');
-    const resultsContainer = document.getElementById('results-container');
-
-    async function generateModpack(version, description) {
-      // Show loading state
-      resultsContainer.innerHTML = '<div class="spinner mx-auto"></div>';
-      resultsSection.classList.remove('hidden');
-      gsap.fromTo('#results', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' });
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('modpack-form');
+      const resultsSection = document.getElementById('results');
+      const resultsContainer = document.getElementById('results-container');
 
       // Mock data fallback
       const mockData = [
-        { name: 'Epic Mod', platform: 'Modrinth', url: 'https://modrinth.com/mod/example', description: 'A legendary mod for epic adventures.' },
-        { name: 'Mythic Mod', platform: 'CurseForge', url: 'https://www.curseforge.com/minecraft/mc-mods/another', description: 'Unleashes mythical powers.' },
+        { name: 'Epic Mod', platform: 'Modrinth', url: 'https://cdn.modrinth.com/data/example/versions/1.0.0/epic-mod-1.0.0.jar', description: 'A legendary mod for epic adventures.' },
+        { name: 'Mythic Mod', platform: 'Modrinth', url: 'https://cdn.modrinth.com/data/another/versions/1.0.0/mythic-mod-1.0.0.jar', description: 'Unleashes mythical powers.' }
       ];
 
-      try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: description, minecraftVersion: version }),
-        });
+      async function generateModpack(version, description) {
+        resultsContainer.innerHTML = '<div class="spinner mx-auto"></div>';
+        resultsSection.classList.remove('hidden');
+        gsap.fromTo('#results', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' });
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Server error: ${response.status} - ${errorText || 'Unknown error'}`);
-        }
-
-        const data = await response.json();
-        // Use real data if available, otherwise mock data
-        const results = data.mods || mockData;
-
-        // Render results with GSAP
-        resultsContainer.innerHTML = results.map(item => `
-          <div class="bg-gray-800 bg-opacity-90 p-4 rounded-lg shadow-lg glow result-card">
-            <h3 class="text-xl font-bold">${item.name}</h3>
-            <p class="text-gray-300">${item.description}</p>
-            <p class="text-sm text-gray-500">Platform: ${item.platform}</p>
-            <a href="${item.url}" target="_blank" class="mt-2 inline-block btn-minecraft text-white py-2 px-4 rounded-md">Download</a>
-          </div>
-        `).join('');
-        gsap.from('.result-card', { opacity: 0, y: 20, stagger: 0.2, duration: 0.5, ease: 'power2.out' });
-      } catch (error) {
-        let errorMessage = 'An error occurred while generating the modpack.';
-        if (error.message.includes('Failed to fetch')) {
-          errorMessage = `Unable to connect to the server. Please ensure the backend is running at ${API_URL}. Try starting the server with 'npm run dev' in the backend directory.`;
-        } else if (error.message.includes('CORS')) {
-          errorMessage = 'Cross-origin request blocked. Please check the backend CORS configuration (ensure cors middleware is enabled).';
-        } else if (error.message.includes('Server error')) {
-          errorMessage = error.message;
-        }
-        resultsContainer.innerHTML = `
-          <p class="text-red-500">${errorMessage}</p>
-          <button id="retry-button" class="mt-4 btn-minecraft text-white py-2 px-4 rounded-md">Try Again</button>
-          <button id="mock-button" class="mt-4 btn-minecraft text-white py-2 px-4 rounded-md">Use Mock Data</button>
-        `;
-        gsap.from('#results-container', { opacity: 0, duration: 0.5 });
-        // Retry button
-        document.getElementById('retry-button')?.addEventListener('click', () => generateModpack(version, description));
-        // Mock data button
-        document.getElementById('mock-button')?.addEventListener('click', () => {
-          resultsContainer.innerHTML = mockData.map(item => `
+        try {
+          const mods = await searchMods(description, version);
+          resultsContainer.innerHTML = mods.map(item => `
             <div class="bg-gray-800 bg-opacity-90 p-4 rounded-lg shadow-lg glow result-card">
               <h3 class="text-xl font-bold">${item.name}</h3>
               <p class="text-gray-300">${item.description}</p>
               <p class="text-sm text-gray-500">Platform: ${item.platform}</p>
-              <a href="${item.url}" target="_blank" class="mt-2 inline-block btn-minecraft text-white py-2 px-4 rounded-md">Download</a>
+              <a href="${item.url}" download class="mt-2 inline-block btn-minecraft text-white py-2 px-4 rounded-md">Download</a>
             </div>
           `).join('');
           gsap.from('.result-card', { opacity: 0, y: 20, stagger: 0.2, duration: 0.5, ease: 'power2.out' });
-        });
+        } catch (error) {
+          resultsContainer.innerHTML = `
+            <p class="text-red-500">${error.message}</p>
+            <button id="retry-button" class="mt-4 btn-minecraft text-white py-2 px-4 rounded-md">Try Again</button>
+            <button id="mock-button" class="mt-4 btn-minecraft text-white py-2 px-4 rounded-md">Use Mock Data</button>
+          `;
+          gsap.from('#results-container', { opacity: 0, duration: 0.5 });
+          document.getElementById('retry-button')?.addEventListener('click', () => generateModpack(version, description));
+          document.getElementById('mock-button')?.addEventListener('click', () => {
+            resultsContainer.innerHTML = mockData.map(item => `
+              <div class="bg-gray-800 bg-opacity-90 p-4 rounded-lg shadow-lg glow result-card">
+                <h3 class="text-xl font-bold">${item.name}</h3>
+                <p class="text-gray-300">${item.description}</p>
+                <p class="text-sm text-gray-500">Platform: ${item.platform}</p>
+                <a href="${item.url}" download class="mt-2 inline-block btn-minecraft text-white py-2 px-4 rounded-md">Download</a>
+              </div>
+            `).join('');
+            gsap.from('.result-card', { opacity: 0, y: 20, stagger: 0.2, duration: 0.5, ease: 'power2.out' });
+          });
+        }
       }
-    }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const version = document.getElementById('minecraft-version').value;
-      const description = document.getElementById('modpack-description').value;
-      await generateModpack(version, description);
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const version = document.getElementById('minecraft-version').value;
+        const description = document.getElementById('modpack-description').value;
+        await generateModpack(version, description);
+      });
     });
   </script>
 </body>
