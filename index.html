@@ -1,230 +1,471 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Truth or Dare</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #e406a5, #04a04a);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinLit Academy | Financial Literacy for Teens</title>
+    <meta name="description" content="Learn budgeting, investing, credit, and money math – built for teens.">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #10b981;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Poppins',sans-serif; line-height:1.6; color:var(--dark); background:#fff; }
+        .container { max-width:1200px; margin:0 auto; padding:0 1rem; }
 
-    .container {
-      background: rgb(80, 14, 202);
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      max-width: 500px;
-      width: 100%;
-    }
+        /* Header */
+        header { background:white; box-shadow:0 2px 10px rgba(0,0,0,.1); position:fixed; width:100%; top:0; z-index:1000; }
+        nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 0; }
+        .logo { font-weight:700; font-size:1.5rem; color:var(--primary); text-decoration:none; }
+        .logo span { color:var(--secondary); }
+        .nav-links { display:flex; gap:2rem; }
+        .nav-links a { text-decoration:none; color:var(--dark); font-weight:500; transition:color .3s; }
+        .nav-links a:hover { color:var(--primary); }
+        .mobile-toggle { display:none; font-size:1.5rem; cursor:pointer; }
 
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
+        /* Hero */
+        .hero { padding:8rem 0 5rem; background:linear-gradient(135deg,#f0f9ff,#e0f2fe); text-align:center; }
+        .hero h1 { font-size:3rem; margin-bottom:1rem; }
+        .hero p { font-size:1.2rem; max-width:700px; margin:0 auto 2rem; color:var(--gray); }
+        .btn { display:inline-block; padding:.75rem 1.5rem; border-radius:.5rem; font-weight:600; text-decoration:none; transition:all .3s; margin:.5rem; }
+        .btn-primary { background:var(--primary); color:white; }
+        .btn-primary:hover { background:#4338ca; transform:translateY(-2px); }
+        .btn-secondary { background:white; color:var(--primary); border:2px solid var(--primary); }
+        .btn-secondary:hover { background:var(--primary); color:white; }
 
-    .buttons {
-      margin-bottom: 1rem;
-    }
+        /* Sections */
+        .section { padding:5rem 0; }
+        .section-title { text-align:center; font-size:2.5rem; margin-bottom:3rem; color:var(--dark); }
 
-    button {
-      padding: 0.6rem 1.2rem;
-      margin: 0 0.5rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+        /* Features */
+        .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:2rem; margin-top:3rem; }
+        .feature-card { background:white; padding:2rem; border-radius:1rem; box-shadow:0 4px 6px rgba(0,0,0,.05); text-align:center; transition:transform .3s; }
+        .feature-card:hover { transform:translateY(-10px); }
+        .feature-icon { font-size:3rem; margin-bottom:1rem; color:var(--primary); }
 
-    button.active {
-      background-color: #ff00c8;
-      color: white;
-    }
+        /* Teen Section */
+        .teen-section { background:#f8fafc; }
+        .teen-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center; margin-top:3rem; }
+        .teen-content ul { list-style:none; }
+        .teen-content li { padding:.75rem 0; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; }
+        .teen-content li:before { content:"Checkmark"; color:var(--secondary); font-weight:bold; margin-right:1rem; }
+        .teen-image img { max-width:100%; border-radius:1rem; box-shadow:0 10px 20px rgba(0,0,0,.1); }
 
-    button:not(.active) {
-      background-color: #27ccff;
-    }
+        /* Baby Steps Section (NEW) */
+        .babysteps-section { background:#fff; }
+        .babysteps-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:2rem; margin-top:2rem; }
+        .step-card { background:#f8fafc; padding:1.8rem; border-radius:1rem; position:relative; border-left:5px solid var(--primary); }
+        .step-number { position:absolute; top:-10px; left:-10px; background:var(--primary); color:white; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem; }
+        .step-card h3 { margin-left:1.5rem; color:var(--primary); }
+        .step-desc { margin-top:0.75rem; font-size:0.95rem; }
+        .step-teen { font-style:italic; color:var(--secondary); margin-top:0.5rem; font-size:0.9rem; }
 
-    button#generateBtn {
-      background-color: #4caf50;
-      color: white;
-    }
+        /* Stocks Section */
+        .stocks-section { background:#fff; }
+        .stock-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:2rem; margin-top:2rem; }
+        .stock-card { background:#f1f5f9; padding:1.5rem; border-radius:1rem; }
+        .stock-card h3 { margin-bottom:.5rem; color:var(--primary); }
 
-    button#generateBtn:hover {
-      background-color: #45a049;
-    }
+        /* Credit Section */
+        .credit-section { background:#1e293b; color:white; }
+        .credit-section .section-title { color:white; }
+        .credit-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:2rem; margin-top:2rem; }
+        .credit-card { background:rgba(255,255,255,.1); padding:1.5rem; border-radius:1rem; backdrop-filter:blur(8px); }
+        .credit-card h3 { color:var(--secondary); margin-bottom:.5rem; }
 
-    .output {
-      font-size: 1.2rem;
-      margin-top: 1rem;
-      padding: 1rem;
-      background: #f9f9f9;
-      border-radius: 12px;
-      min-height: 80px;
-    }
-  </style>
+        /* Formulas */
+        .formulas { background:var(--dark); color:white; }
+        .formulas .section-title { color:white; }
+        .formula-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:2rem; margin-top:3rem; }
+        .formula-card { background:rgba(255,255,255,.1); padding:1.5rem; border-radius:1rem; backdrop-filter:blur(10px); }
+        .formula-name { font-size:1.3rem; font-weight:600; margin-bottom:.5rem; color:var(--secondary); }
+        .formula-math { background:rgba(0,0,0,.2); padding:1rem; border-radius:.5rem; font-family:'Courier New',monospace; margin:1rem 0; text-align:center; font-size:1.1rem; }
+        .formula-desc { font-size:.95rem; opacity:.9; }
+        .formula-example { margin-top:1rem; font-size:.9rem; background:rgba(255,255,255,.1); padding:.75rem; border-radius:.5rem; }
+
+        /* CTA */
+        .cta { text-align:center; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:white; padding:5rem 0; }
+        .cta h2 { font-size:2.5rem; margin-bottom:1rem; }
+        .cta p { max-width:600px; margin:0 auto 2rem; font-size:1.1rem; }
+
+        /* Footer */
+        footer { background:var(--dark); color:white; padding:3rem 0 1rem; }
+        .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:2rem; margin-bottom:2rem; }
+        .footer-col h3 { margin-bottom:1rem; color:var(--secondary); }
+        .footer-col a { color:#cbd5e1; text-decoration:none; display:block; margin-bottom:.5rem; transition:color .3s; }
+        .footer-col a:hover { color:white; }
+        .copyright { text-align:center; padding-top:2rem; border-top:1px solid #374151; color:#94a3b8; font-size:.9rem; }
+
+        /* Responsive */
+        @media (max-width:768px){
+            .mobile-toggle{display:block;}
+            .nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:white;flex-direction:column;padding:1rem;box-shadow:0 4px 6px rgba(0,0,0,.1);}
+            .nav-links.active{display:flex;}
+            .hero h1{font-size:2.2rem;}
+            .teen-grid{grid-template-columns:1fr;}
+            .teen-image{order:-1;}
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Truth or Dare</h1>
-    <div class="buttons">
-      <button id="truthBtn" class="active">Truth</button>
-      <button id="dareBtn">Dare</button>
-    </div>
-    <button id="generateBtn">Get a Question</button>
-    <div class="output" id="outputBox"></div>
-  </div>
 
-  <script>
-    const truths = [
-      "Have you ever had a crush on someone at school?",
-      "What is your biggest fear related to failure?",
-      "What's the most embarrassing thing you've done in public?",
-      "Have you ever broken something and blamed someone else?",
-      "What would you never tell your parents?",
-      "What's a lie you've told to your best friend?",
-      "Who do you secretly admire?",
-      "What’s a dream you’ve never told anyone about?",
-      "What’s the weirdest food combo you’ve ever tried?",
-      "Have you ever cheated on a test or quiz?",
-      "What’s the most childish thing you still do?",
-      "Who was your first kiss?",
-      "What’s a secret you’re hiding from someone in this room?",
-      "Have you ever pretended to be sick to skip something?",
-      "What’s the worst gift you’ve ever received?",
-      "What’s something you’ve done that you regret?",
-      "Who do you think is the worst dressed person here?",
-      "What’s the most trouble you’ve gotten into at school?",
-      "Have you ever cried during a movie?",
-      "What’s the most awkward date you’ve been on?",
-      "What’s a habit you wish you could break?",
-      "Have you ever lied about your age?",
-      "What’s the strangest place you’ve ever fallen asleep?",
-      "Who’s the last person you stalked on social media?",
-      "What’s something you’re really bad at but love doing?",
-      "Have you ever had a crush on a teacher?",
-      "What’s the most ridiculous thing you’ve ever bought?",
-      "What’s a rumor you’ve heard about yourself?",
-      "Have you ever sent a text to the wrong person?",
-      "What’s the worst food you’ve ever tasted?",
-      "What’s something you do when no one’s watching?",
-      "Have you ever been caught lying?",
-      "What’s the most embarrassing song on your playlist?",
-      "What’s a fear you’ve overcome?",
-      "Who’s the last person you had a dream about?",
-      "What’s the worst advice you’ve ever given?",
-      "Have you ever snooped through someone’s phone?",
-      "What’s the longest you’ve gone without showering?",
-      "What’s something you’ve lied about on social media?",
-      "Have you ever had a wardrobe malfunction?",
-      "What’s the most annoying thing someone has done to you?",
-      "What’s a nickname you hate being called?",
-      "Have you ever forgotten someone’s name right after meeting them?",
-      "What’s the most childish prank you’ve pulled?",
-      "What’s something you’re too shy to admit?",
-      "Have you ever laughed so hard you cried?",
-      "What’s the worst lie you’ve told to get out of trouble?",
-      "What’s the most useless skill you have?",
-      "Have you ever been scared by something silly?",
-      "What’s the weirdest habit of someone you know?",
-      // ... (450 more truths to reach 500; full list available on request)
-    ];
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">Fin<span>Lit</span> Academy</a>
+                <div class="nav-links" id="navLinks">
+                    <a href="#home">Home</a>
+                    <a href="#teen">For Teens</a>
+                    <a href="#babysteps">7 Baby Steps</a>
+                    <a href="#stocks">Stocks</a>
+                    <a href="#credit">Credit & Debt</a>
+                    <a href="#formulas">Formulas</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="mobile-toggle" id="mobileToggle">Menu</div>
+            </nav>
+        </div>
+    </header>
 
-    const dares = [
-      "Do 10 jumping jacks.",
-      "Sing the chorus of your favorite song.",
-      "Talk in a robot voice for 1 minute.",
-      "Text someone you haven’t spoken to in a year saying 'I miss you!'",
-      "Do your best impression of a chicken.",
-      "Eat a spoonful of mustard.",
-      "Act like you're stuck in slow motion for 30 seconds.",
-      "Draw a silly face blindfolded.",
-      "Wear socks on your hands for 5 minutes.",
-      "Call a random contact and sing 'Happy Birthday' to them.",
-      "Do 20 push-ups in 30 seconds.",
-      "Imitate another player and let everyone guess who it is.",
-      "Dance like nobody’s watching for 1 minute.",
-      "Hold an ice cube until it melts without flinching.",
-      "Say everything in rhyme for the next 3 minutes.",
-      "Try to juggle 3 items from around you.",
-      "Post an embarrassing photo on your social media.",
-      "Speak in an accent for the next 5 minutes.",
-      "Do your best superhero pose and hold it for 30 seconds.",
-      "Eat a piece of fruit without using your hands.",
-      "Make up a short rap about someone in the room.",
-      "Run in place while singing the national anthem.",
-      "Let someone tickle you for 15 seconds.",
-      "Wear a funny hat for the next 3 rounds.",
-      "Do an impression of your favorite celebrity.",
-      "Balance a spoon on your nose for 10 seconds.",
-      "Say the alphabet backward as fast as you can.",
-      "Pretend to be a waiter and take everyone’s 'order'.",
-      "Make animal noises for 30 seconds.",
-      "Let someone give you a new hairstyle.",
-      "Hop on one foot while reciting a tongue twister.",
-      "Send a silly selfie to your best friend.",
-      "Do a cartwheel or attempt one.",
-      "Pretend you’re a puppy for 1 minute.",
-      "Eat a slice of lemon without making a face.",
-      "Tell a joke in a dramatic voice.",
-      "Spin around 10 times and then walk in a straight line.",
-      "Try to whistle a song with crackers in your mouth.",
-      "Do a silly walk across the room.",
-      "Let someone write a word on your forehead with a marker.",
-      "Sing a lullaby as loudly as you can.",
-      "Pretend to be a news anchor for 1 minute.",
-      "Do 15 squats while singing a song.",
-      "Hold a plank for 30 seconds.",
-      "Say 'I love you' in 5 different accents.",
-      "Dance with an imaginary partner for 30 seconds.",
-      "Make a funny face and hold it for 20 seconds.",
-      "Pretend to be a cat for 1 minute.",
-      "Eat a spoonful of hot sauce.",
-      "Recite a poem in a robotic voice.",
-      // ... (450 more dares to reach 500; full list available on request)
-    ];
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Master Money. <br>Start Young. Win Big.</h1>
+            <p>Financial literacy for teens – budgeting, stocks, credit, and the proven <strong>7 Baby Steps</strong> from Dave Ramsey.</p>
+            <div>
+                <a href="#teen" class="btn btn-primary">Start Learning Free</a>
+                <a href="#babysteps" class="btn btn-secondary">See the 7 Baby Steps</a>
+            </div>
+        </div>
+    </section>
 
-    let currentMode = "truth";
-    const truthBtn = document.getElementById("truthBtn");
-    const dareBtn = document.getElementById("dareBtn");
-    const generateBtn = document.getElementById("generateBtn");
-    const outputBox = document.getElementById("outputBox");
+    <!-- Features -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Why FinLit Academy?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">Target</div>
+                    <h3>Teen-Focused</h3>
+                    <p>Short, visual, meme-style lessons.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Mobile Phone</div>
+                    <h3>Interactive Tools</h3>
+                    <p>Budget calculators, stock simulators, credit trackers.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Calculator</div>
+                    <h3>Proven Path</h3>
+                    <p>Dave Ramsey’s 7 Baby Steps + teen math.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Trophy</div>
+                    <h3>Gamified</h3>
+                    <p>Badges, leaderboards, challenges.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    truthBtn.addEventListener("click", () => {
-      currentMode = "truth";
-      truthBtn.classList.add("active");
-      dareBtn.classList.remove("active");
-      outputBox.innerText = "Select 'Get a Question' for a Truth!";
-      console.log("Mode switched to Truth");
-    });
+    <!-- Teen Section -->
+    <section class="section teen-section" id="teen">
+        <div class="container">
+            <h2 class="section-title">Built for Teens</h2>
+            <div class="teen-grid">
+                <div class="teen-content">
+                    <h2>How We Help You Win</h2>
+                    <ul>
+                        <li><strong>Real Talk:</strong> Memes, videos, stories.</li>
+                        <li><strong>First Job Budget:</strong> Split paycheck smartly.</li>
+                        <li><strong>Side Hustle Math:</strong> Profit from TikTok or mowing.</li>
+                        <li><strong>College vs. Trade:</strong> Compare costs & earnings.</li>
+                        <li><strong>Credit Before Cards:</strong> Build score safely.</li>
+                        <li><strong>Invest at 16:</strong> Start with $5.</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary" style="margin-top:1.5rem;">Join 50K+ Teens</a>
+                </div>
+                <div class="teen-image">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Teens learning finance">
+                </div>
+            </div>
+        </div>
+    </section>
 
-    dareBtn.addEventListener("click", () => {
-      currentMode = "dare";
-      dareBtn.classList.add("active");
-      truthBtn.classList.remove("active");
-      outputBox.innerText = "Select 'Get a Question' for a Dare!";
-      console.log("Mode switched to Dare");
-    });
+    <!-- 7 Baby Steps Section (NEW) -->
+    <section class="section babysteps-section" id="babysteps">
+        <div class="container">
+            <h2 class="section-title">Dave Ramsey’s 7 Baby Steps</h2>
+            <p style="text-align:center;max-width:800px;margin:auto 0 2rem;">
+                The proven path to go from broke to millionaire. <br>
+                <strong>2.8M+ views</strong> on YouTube — now simplified for teens.
+            </p>
+            <div class="babysteps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Save $1,000 Fast</h3>
+                    <p class="step-desc">Your starter emergency fund. Sell stuff, work extra, get it in 30 days max.</p>
+                    <p class="step-teen"><strong>Teen Move:</strong> Sell old games → $1k in a weekend.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Debt Snowball</h3>
+                    <p class="step-desc">List debts smallest → largest. Pay minimums + attack the smallest with everything.</p>
+                    <p class="step-teen"><strong>Teen Move:</strong> Kill $200 phone bill first → roll payment to next.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>3–6 Months Expenses</h3>
+                    <p class="step-desc">Fully funded emergency fund. You’re now the bank — never borrow again.</p>
+                    <p class="step-teen"><strong>Teen Goal:</strong> Save $3k+ from summer jobs.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Invest 15% of Income</h3>
+                    <p class="step-desc">Roth IRA + 401(k) match → growth stock mutual funds.</p>
+                    <p class="step-teen"><strong>Teen Start:</strong> Open Roth at 16 with $50/month.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h3>College (No Debt!)</h3>
+                    <p class="step-desc">Save for kids’ college. Community college, scholarships, work — no loans.</p>
+                    <p class="step-teen"><strong>Teen Hack:</strong> Dual-enroll high school → free credits.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">6</div>
+                    <h3>Pay Off House Early</h3>
+                    <p class="step-desc">Chunk extra at mortgage. Average: paid off in 7–8 years.</p>
+                    <p class="step-teen"><strong>Future You:</strong> Own home by 30.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">7</div>
+                    <h3>Build Wealth & Give</h3>
+                    <p class="step-desc">Millionaire status → give like no one else. Fun + generosity.</p>
+                    <p class="step-teen"><strong>Endgame:</strong> Pay for little bro’s college in cash.</p>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:2.5rem;">
+                <a href="https://www.youtube.com/watch?v=OO25TrVo_dU&pp=ygUeZGF2ZSByYW1zZXkgZmluYW5jaWFsIGxpdGVyYWN5" target="_blank" class="btn btn-primary" style="background:#ff0000;color:white;">
+                    Watch Dave Ramsey Explain (YouTube)
+                </a>
+            </div>
+        </div>
+    </section>
 
-    generateBtn.addEventListener("click", () => {
-      const pool = currentMode === "truth" ? truths : dares;
-      if (pool.length === 0) {
-        outputBox.innerText = "No questions available!";
-        console.error(`No ${currentMode}s available in the pool`);
-        return;
-      }
-      const question = pool[Math.floor(Math.random() * pool.length)];
-      outputBox.innerText = question;
-      console.log(`Displayed ${currentMode}: ${question}`);
-    });
-  </script>
+    <!-- Stocks Section -->
+    <section class="section stocks-section" id="stocks">
+        <div class="container">
+            <h2 class="section-title">Stocks & Investing 101</h2>
+            <p style="text-align:center;max-width:700px;margin:auto 0 2rem;">
+                Own a piece of companies you love. Start with $5 on teen-friendly apps.
+            </p>
+            <div class="stock-grid">
+                <div class="stock-card">
+                    <h3>What is a Stock?</h3>
+                    <p>A tiny slice of a company. When the company grows, your slice is worth more.</p>
+                </div>
+                <div class="stock-card">
+                    <h3>Types of Stocks</h3>
+                    <p><strong>Growth:</strong> Tech (Apple, Tesla)<br>
+                       <strong>Dividend:</strong> Pays you cash (Coca-Cola)<br>
+                       <strong>Index Funds:</strong> Own the whole market (S&P 500)</p>
+                </div>
+                <div class="stock-card">
+                    <h3>How to Read a Quote</h3>
+                    <p><strong>Price:</strong> $150.32<br>
+                       <strong>Change:</strong> +2.10 (1.4%)<br>
+                       <strong>Volume:</strong> 12.4M shares traded</p>
+                </div>
+                <div class="stock-card">
+                    <h3>Teen Platforms</h3>
+                    <p><strong>Fidelity Youth</strong> (13–17, parent link)<br>
+                       <strong>Greenlight + Invest</strong> (any age)<br>
+                       <strong>Acorns Early</strong> (custodial)</p>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:2rem;">
+                <a href="#" class="btn btn-primary">Open Stock Simulator</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Credit & Debt Section -->
+    <section class="section credit-section" id="credit">
+        <div class="container">
+            <h2 class="section-title">Credit & Debt – The Truth</h2>
+            <p style="text-align:center;max-width:700px;margin:auto 0 2rem;opacity:.9;">
+                Credit isn’t free money. Use it right → free trips. Use it wrong → stress.
+            </p>
+            <div class="credit-grid">
+                <div class="credit-card">
+                    <h3>How Credit Works</h3>
+                    <p>Borrow → Pay back on time → Good score.<br>
+                       Late/miss → Score drops → Higher interest.</p>
+                </div>
+                <div class="credit-card">
+                    <h3>Credit Score (FICO)</h3>
+                    <p><strong>300–850</strong><br>
+                       <strong>35%</strong> Payment history<br>
+                       <strong>30%</strong> Amounts owed<br>
+                       <strong>15%</strong> Length of history</p>
+                </div>
+                <div class="credit-card">
+                    <h3>Good vs. Bad Debt</h3>
+                    <p><strong>Good:</strong> Student loan (future income)<br>
+                       <strong>Bad:</strong> $800 phone on 24% interest</p>
+                </div>
+                <div class="credit-card">
+                    <h3>Teen Tips</h3>
+                    <p>Become <strong>authorized user</strong> on parent card (no spending).<br>
+                       Pay <strong>phone bill</strong> on time → builds score.<br>
+                       Never borrow >30% of limit.</p>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:2rem;">
+                <a href="#" class="btn btn-secondary" style="background:white;color:var(--primary);">Check Your Score (Free)</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulas -->
+    <section class="section formulas" id="formulas">
+        <div class="container">
+            <h2 class="section-title">Money Formulas Every Teen Needs</h2>
+            <p style="text-align:center;max-width:700px;margin:auto 0 3rem;opacity:.9;">
+                5 core formulas – teen examples included.
+            </p>
+            <div class="formula-grid">
+
+                <!-- Compound Interest -->
+                <div class="formula-card">
+                    <div class="formula-name">Compound Interest</div>
+                    <div class="formula-math">A = P (1 + r/n)<sup>nt</sup></div>
+                    <div class="formula-desc">
+                        <strong>A</strong> = final amount<br>
+                        <strong>P</strong> = starting<br>
+                        <strong>r</strong> = rate<br>
+                        <strong>n</strong> = compounds/year<br>
+                        <strong>t</strong> = years
+                    </div>
+                    <div class="formula-example">
+                        <strong>Teen:</strong> $50/mo from 16 at 7% → $149k by 65.
+                    </div>
+                </div>
+
+                <!-- Rule of 72 -->
+                <div class="formula-card">
+                    <div class="formula-name">Rule of 72</div>
+                    <div class="formula-math">Years to Double = 72 ÷ Return %</div>
+                    <div class="formula-desc">Quick doubling estimate.</div>
+                    <div class="formula-example">
+                        <strong>Teen:</strong> 72 ÷ 8 = 9 yrs → $1k → $2k.
+                    </div>
+                </div>
+
+                <!-- 50/30/20 Budget -->
+                <div class="formula-card">
+                    <div class="formula-name">50/30/20 Budget</div>
+                    <div class="formula-math">50% Needs • 30% Wants • 20% Savings</div>
+                    <div class="formula-desc">Split take-home pay.</div>
+                    <div class="formula-example">
+                        <strong>Teen:</strong> $800 job → $400 essentials, $240 fun, $160 saved.
+                    </div>
+                </div>
+
+                <!-- Debt Snowball -->
+                <div class="formula-card">
+                    <div class="formula-name">Debt Snowball</div>
+                    <div class="formula-math">Pay Minimums + Extra → Smallest First</div>
+                    <div class="formula-desc">Psychological wins.</div>
+                    <div class="formula-example">
+                        <strong>Teen:</strong> $200 phone, $50 fine → kill fine first.
+                    </div>
+                </div>
+
+                <!-- Net Worth -->
+                <div class="formula-card">
+                    <div class="formula-name">Net Worth</div>
+                    <div class="formula-math">Assets - Liabilities = Net Worth</div>
+                    <div class="formula-desc">Track yearly.</div>
+                    <div class="formula-example">
+                        <strong>Teen:</strong> $1,200 savings + $500 laptop – $300 owed = $1,400.
+                    </div>
+                </div>
+
+            </div>
+            <div style="text-align:center;margin-top:3rem;">
+                <a href="#" class="btn btn-secondary" style="background:white;color:var(--primary);">Formula Calculator</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2>Start Your 7 Baby Steps Today</h2>
+            <p>Join teens who’ve saved $1,000+, paid off debt, and started investing — all before 18.</p>
+            <a href="#babysteps" class="btn btn-primary" style="background:white;color:var(--primary);font-size:1.1rem;padding:1rem 2rem;">
+                Begin Step 1 Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>FinLit Academy</h3>
+                    <p>Real money skills for teens, backed by Dave Ramsey’s 7 Baby Steps.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Learn</h3>
+                    <a href="#babysteps">7 Baby Steps</a>
+                    <a href="#stocks">Stocks</a>
+                    <a href="#credit">Credit</a>
+                    <a href="#">Side Hustles</a>
+                </div>
+                <div class="footer-col">
+                    <h3>Tools</h3>
+                    <a href="#">Budget Calc</a>
+                    <a href="#">Stock Simulator</a>
+                    <a href="#">Debt Snowball</a>
+                    <a href="#">Emergency Fund Tracker</a>
+                </div>
+                <div class="footer-col">
+                    <h3>Connect</h3>
+                    <a href="#">TikTok</a>
+                    <a href="#">Instagram</a>
+                    <a href="#">Discord</a>
+                    <a href="#">Parent Portal</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2025 FinLit Academy. All rights reserved. | Inspired by <a href="https://www.ramseysolutions.com" style="color:var(--secondary);text-decoration:underline;">Dave Ramsey</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu
+        const toggle = document.getElementById('mobileToggle');
+        const nav = document.getElementById('navLinks');
+        toggle.addEventListener('click', () => nav.classList.toggle('active'));
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});
+                nav.classList.remove('active');
+            });
+        });
+    </script>
 </body>
 </html>
