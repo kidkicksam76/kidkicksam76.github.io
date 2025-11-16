@@ -71,7 +71,7 @@
             text-align: center;
             color: #777;
         }
-        #copyButton {
+        #downloadButton, #copyButton {
             background-color: #2196F3;
             color: white;
             padding: 5px 10px;
@@ -79,8 +79,9 @@
             border-radius: 4px;
             cursor: pointer;
             margin-top: 10px;
+            margin-left: 10px;
         }
-        #copyButton:hover {
+        #downloadButton:hover, #copyButton:hover {
             background-color: #1E88E5;
         }
     </style>
@@ -88,15 +89,15 @@
 <body>
     <h1>AI Minecraft Mod Coder</h1>
     <div class="container">
-        <p>Welcome to the AI Minecraft Mod Coder! This tool helps you generate Java code for Minecraft Java Edition mods based on your detailed description. Describe what you want your mod to do (e.g., "Create a custom sword that sets enemies on fire when hit"), and it will prepare a prompt for Grok to generate the corresponding Java code. The output aims to match your input description as exactly as possible, providing a complete, compilable mod structure using Forge or Fabric (specify in your input if preferred).</p>
+        <p>Welcome to the AI Minecraft Mod Coder! This tool helps you generate Java code for Minecraft Java Edition mods based on your detailed description. Describe what you want your mod to do (e.g., "Create a custom sword that sets enemies on fire when hit"), and it will generate the corresponding Java code. The output aims to match your input description as exactly as possible, providing a complete, compilable mod structure using Forge or Fabric (specify in your input if preferred).</p>
         
         <p><strong>Important Notes:</strong></p>
         <ul>
-            <li>This tool prepares a prompt for Grok (by xAI) to generate the code. Copy the prompt and ask Grok directly.</li>
-            <li>The generated code is a starting point. Once you have the code from Grok, set up a local Minecraft modding environment (e.g., using Gradle, Forge MDK, or Fabric Loom) to compile it into a .jar file.</li>
-            <li>Prerequisites: Knowledge of Java, Minecraft modding basics (e.g., registering items/blocks, event handling). Ensure you have Minecraft Forge/Fabric installed. To build the .jar, use commands like './gradlew build' in your project directory.</li>
+            <li>This is a simulated AI tool for demonstration. For real AI-generated code, use Grok directly by describing your mod.</li>
+            <li>The generated code is a starting point and template based on your input. Always test and modify it in your Minecraft mod development environment (e.g., using Gradle, Forge MDK, or Fabric Loom).</li>
+            <li>Prerequisites: Knowledge of Java, Minecraft modding basics (e.g., registering items/blocks, event handling). Ensure you have Minecraft Forge/Fabric installed.</li>
             <li>For exact matching: Be precise in your input (e.g., include mod ID, class names, behaviors).</li>
-            <li>To download the .jar: After generating the code with Grok, create the project files locally, build the project, and the .jar will be in the build/libs folder.</li>
+            <li>To get the .jar: After downloading the code, set up a mod project (download Forge MDK or Fabric example mod), place the code in src/main/java, update build.gradle and mods.toml/fabric.mod.json as needed, then run './gradlew build' in the project directory. The .jar will be in build/libs.</li>
         </ul>
         
         <label for="input">Describe your Minecraft mod idea in detail:</label>
@@ -105,15 +106,16 @@
         <label for="dependencies">Mod Dependencies (e.g., Forge version, other required mods like 'jei', libraries):</label>
         <textarea id="dependencies" placeholder="E.g., Requires Minecraft Forge 1.20.1, depends on Just Enough Items (JEI) mod."></textarea>
         
-        <button id="generate">Generate Mod Code Prompt</button>
-        <div id="loading">Generating prompt... Please wait.</div>
+        <button id="generate">Generate Mod Code</button>
+        <div id="loading">Generating code... Please wait.</div>
         
         <div id="output"></div>
-        <button id="copyButton" style="display: none;">Copy Prompt to Clipboard</button>
+        <button id="downloadButton" style="display: none;">Download Code as .java</button>
+        <button id="copyButton" style="display: none;">Copy Code to Clipboard</button>
     </div>
     
     <footer>
-        Powered by Grok from xAI. Not affiliated with Mojang or Minecraft.
+        Powered by Simulated AI. For advanced generation, ask Grok on x.ai. Not affiliated with Mojang or Minecraft.
     </footer>
 
     <script>
@@ -122,9 +124,10 @@
         const dependenciesTextarea = document.getElementById('dependencies');
         const outputDiv = document.getElementById('output');
         const loadingDiv = document.getElementById('loading');
+        const downloadButton = document.getElementById('downloadButton');
         const copyButton = document.getElementById('copyButton');
 
-        generateButton.addEventListener('click', () => {
+        generateButton.addEventListener('click', async () => {
             const userInput = inputTextarea.value.trim();
             const dependencies = dependenciesTextarea.value.trim();
             
@@ -135,28 +138,52 @@
 
             loadingDiv.style.display = 'block';
             outputDiv.innerHTML = '';
+            downloadButton.style.display = 'none';
             copyButton.style.display = 'none';
 
             try {
-                let fullPrompt = `You are a Minecraft mod coding expert. Generate complete, detailed, and compilable Java code for a Minecraft Java Edition mod that exactly implements the following description: ${userInput}. Include all necessary classes, imports, registrations, and configurations. Use Forge or Fabric as specified, default to Forge if not mentioned. Ensure the code matches the description exactly without adding extra features. Also include the build.gradle file, mods.toml or fabric.mod.json, and any other configuration files needed for the mod project.`;
+                const generatedCode = await simulateAIResponse(userInput, dependencies);
                 
-                if (dependencies) {
-                    fullPrompt += `\n\nIncorporate the following dependencies: ${dependencies}. Update the build files accordingly.`;
-                }
-
-                outputDiv.innerHTML = `<h2>Generated Prompt for Grok:</h2><pre><code>${fullPrompt}</code></pre><p>Copy this prompt and paste it into a conversation with Grok (on x.com or grok.com) to get the full mod code. Once you have the code, set up the project locally and run './gradlew build' to generate the .jar file for installation in Minecraft.</p>`;
-                copyButton.style.display = 'block';
+                outputDiv.innerHTML = `<h2>Generated Java Code:</h2><pre><code>${generatedCode}</code></pre><p>Use this code in your mod project. Follow the notes above to build the .jar file.</p>`;
+                downloadButton.style.display = 'inline-block';
+                copyButton.style.display = 'inline-block';
             } catch (error) {
-                outputDiv.innerHTML = `<p>Error generating prompt: ${error.message}.</p>`;
+                outputDiv.innerHTML = `<p>Error generating code: ${error.message}.</p>`;
             } finally {
                 loadingDiv.style.display = 'none';
             }
         });
 
+        // Simulated AI function for demo. In real use, this would be replaced with AI logic or API.
+        async function simulateAIResponse(input, dependencies) {
+            // Basic template generation. For real AI, integrate with an API.
+            // Here, we create a simple mod class with the input as comment.
+            let code = `// Minecraft Mod Code generated based on description: "${input}"\n`;
+            if (dependencies) {
+                code += `// Dependencies: ${dependencies}\n`;
+            }
+            code += `\npackage com.example.my_mod;\n\nimport net.minecraft.block.Block;\nimport net.minecraft.block.Blocks;\nimport net.minecraftforge.common.MinecraftForge;\nimport net.minecraftforge.event.RegistryEvent;\nimport net.minecraftforge.eventbus.api.SubscribeEvent;\nimport net.minecraftforge.fml.common.Mod;\nimport net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;\nimport net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;\nimport org.apache.logging.log4j.LogManager;\nimport org.apache.logging.log4j.Logger;\n\n// The value here should also be lowercase and without quotes or periods.\n@Mod(MyMod.MOD_ID)\npublic class MyMod {\n    public static final String MOD_ID = "mymod";\n    private static final Logger LOGGER = LogManager.getLogger();\n\n    public MyMod() {\n        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);\n        MinecraftForge.EVENT_BUS.register(this);\n    }\n\n    private void setup(final FMLCommonSetupEvent event) {\n        // Some preinit code based on description\n        LOGGER.info("Mod setup complete for: ${input}");\n    }\n\n    // Example registry for a block if description mentions block\n    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)\n    public static class RegistryEvents {\n        @SubscribeEvent\n        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {\n            // Register blocks here based on description\n            // e.g., blockRegistryEvent.getRegistry().register(new Block(Block.Properties.copy(Blocks.DIAMOND_ORE)).setRegistryName("magic_ore"));\n        }\n    }\n}\n\n// Add more classes, recipes, etc., as needed for the full mod. Compile this in a Forge project to get the .jar.`;
+
+            return code;
+        }
+
+        downloadButton.addEventListener('click', () => {
+            const codeText = outputDiv.querySelector('pre code').textContent;
+            const blob = new Blob([codeText], { type: 'text/java' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'MyMinecraftMod.java';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
         copyButton.addEventListener('click', () => {
-            const promptText = outputDiv.querySelector('pre code').textContent;
-            navigator.clipboard.writeText(promptText).then(() => {
-                alert('Prompt copied to clipboard!');
+            const codeText = outputDiv.querySelector('pre code').textContent;
+            navigator.clipboard.writeText(codeText).then(() => {
+                alert('Code copied to clipboard!');
             }).catch(err => {
                 alert('Failed to copy: ' + err);
             });
