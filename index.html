@@ -3,467 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinLit Academy | Financial Literacy for Teens</title>
-    <meta name="description" content="Learn budgeting, investing, credit, and money math – built for teens.">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>AI Minecraft Mod Coder</title>
     <style>
-        :root {
-            --primary: #4f46e5;
-            --secondary: #10b981;
-            --dark: #1f2937;
-            --light: #f9fafb;
-            --gray: #6b7280;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Poppins',sans-serif; line-height:1.6; color:var(--dark); background:#fff; }
-        .container { max-width:1200px; margin:0 auto; padding:0 1rem; }
-
-        /* Header */
-        header { background:white; box-shadow:0 2px 10px rgba(0,0,0,.1); position:fixed; width:100%; top:0; z-index:1000; }
-        nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 0; }
-        .logo { font-weight:700; font-size:1.5rem; color:var(--primary); text-decoration:none; }
-        .logo span { color:var(--secondary); }
-        .nav-links { display:flex; gap:2rem; }
-        .nav-links a { text-decoration:none; color:var(--dark); font-weight:500; transition:color .3s; }
-        .nav-links a:hover { color:var(--primary); }
-        .mobile-toggle { display:none; font-size:1.5rem; cursor:pointer; }
-
-        /* Hero */
-        .hero { padding:8rem 0 5rem; background:linear-gradient(135deg,#f0f9ff,#e0f2fe); text-align:center; }
-        .hero h1 { font-size:3rem; margin-bottom:1rem; }
-        .hero p { font-size:1.2rem; max-width:700px; margin:0 auto 2rem; color:var(--gray); }
-        .btn { display:inline-block; padding:.75rem 1.5rem; border-radius:.5rem; font-weight:600; text-decoration:none; transition:all .3s; margin:.5rem; }
-        .btn-primary { background:var(--primary); color:white; }
-        .btn-primary:hover { background:#4338ca; transform:translateY(-2px); }
-        .btn-secondary { background:white; color:var(--primary); border:2px solid var(--primary); }
-        .btn-secondary:hover { background:var(--primary); color:white; }
-
-        /* Sections */
-        .section { padding:5rem 0; }
-        .section-title { text-align:center; font-size:2.5rem; margin-bottom:3rem; color:var(--dark); }
-
-        /* Features */
-        .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:2rem; margin-top:3rem; }
-        .feature-card { background:white; padding:2rem; border-radius:1rem; box-shadow:0 4px 6px rgba(0,0,0,.05); text-align:center; transition:transform .3s; }
-        .feature-card:hover { transform:translateY(-10px); }
-        .feature-icon { font-size:3rem; margin-bottom:1rem; color:var(--primary); }
-
-        /* Teen Section */
-        .teen-section { background:#f8fafc; }
-        .teen-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center; margin-top:3rem; }
-        .teen-content ul { list-style:none; }
-        .teen-content li { padding:.75rem 0; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; }
-        .teen-content li:before { content:"Checkmark"; color:var(--secondary); font-weight:bold; margin-right:1rem; }
-        .teen-image img { max-width:100%; border-radius:1rem; box-shadow:0 10px 20px rgba(0,0,0,.1); }
-
-        /* Baby Steps Section (NEW) */
-        .babysteps-section { background:#fff; }
-        .babysteps-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:2rem; margin-top:2rem; }
-        .step-card { background:#f8fafc; padding:1.8rem; border-radius:1rem; position:relative; border-left:5px solid var(--primary); }
-        .step-number { position:absolute; top:-10px; left:-10px; background:var(--primary); color:white; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem; }
-        .step-card h3 { margin-left:1.5rem; color:var(--primary); }
-        .step-desc { margin-top:0.75rem; font-size:0.95rem; }
-        .step-teen { font-style:italic; color:var(--secondary); margin-top:0.5rem; font-size:0.9rem; }
-
-        /* Stocks Section */
-        .stocks-section { background:#fff; }
-        .stock-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:2rem; margin-top:2rem; }
-        .stock-card { background:#f1f5f9; padding:1.5rem; border-radius:1rem; }
-        .stock-card h3 { margin-bottom:.5rem; color:var(--primary); }
-
-        /* Credit Section */
-        .credit-section { background:#1e293b; color:white; }
-        .credit-section .section-title { color:white; }
-        .credit-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:2rem; margin-top:2rem; }
-        .credit-card { background:rgba(255,255,255,.1); padding:1.5rem; border-radius:1rem; backdrop-filter:blur(8px); }
-        .credit-card h3 { color:var(--secondary); margin-bottom:.5rem; }
-
-        /* Formulas */
-        .formulas { background:var(--dark); color:white; }
-        .formulas .section-title { color:white; }
-        .formula-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:2rem; margin-top:3rem; }
-        .formula-card { background:rgba(255,255,255,.1); padding:1.5rem; border-radius:1rem; backdrop-filter:blur(10px); }
-        .formula-name { font-size:1.3rem; font-weight:600; margin-bottom:.5rem; color:var(--secondary); }
-        .formula-math { background:rgba(0,0,0,.2); padding:1rem; border-radius:.5rem; font-family:'Courier New',monospace; margin:1rem 0; text-align:center; font-size:1.1rem; }
-        .formula-desc { font-size:.95rem; opacity:.9; }
-        .formula-example { margin-top:1rem; font-size:.9rem; background:rgba(255,255,255,.1); padding:.75rem; border-radius:.5rem; }
-
-        /* CTA */
-        .cta { text-align:center; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:white; padding:5rem 0; }
-        .cta h2 { font-size:2.5rem; margin-bottom:1rem; }
-        .cta p { max-width:600px; margin:0 auto 2rem; font-size:1.1rem; }
-
-        /* Footer */
-        footer { background:var(--dark); color:white; padding:3rem 0 1rem; }
-        .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:2rem; margin-bottom:2rem; }
-        .footer-col h3 { margin-bottom:1rem; color:var(--secondary); }
-        .footer-col a { color:#cbd5e1; text-decoration:none; display:block; margin-bottom:.5rem; transition:color .3s; }
-        .footer-col a:hover { color:white; }
-        .copyright { text-align:center; padding-top:2rem; border-top:1px solid #374151; color:#94a3b8; font-size:.9rem; }
-
-        /* Responsive */
-        @media (max-width:768px){
-            .mobile-toggle{display:block;}
-            .nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:white;flex-direction:column;padding:1rem;box-shadow:0 4px 6px rgba(0,0,0,.1);}
-            .nav-links.active{display:flex;}
-            .hero h1{font-size:2.2rem;}
-            .teen-grid{grid-template-columns:1fr;}
-            .teen-image{order:-1;}
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #output {
+            margin-top: 20px;
+            background: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        #loading {
+            display: none;
+            margin-top: 10px;
+            color: #666;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #777;
         }
     </style>
 </head>
 <body>
-
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <nav>
-                <a href="#" class="logo">Fin<span>Lit</span> Academy</a>
-                <div class="nav-links" id="navLinks">
-                    <a href="#home">Home</a>
-                    <a href="#teen">For Teens</a>
-                    <a href="#babysteps">7 Baby Steps</a>
-                    <a href="#stocks">Stocks</a>
-                    <a href="#credit">Credit & Debt</a>
-                    <a href="#formulas">Formulas</a>
-                    <a href="#contact">Contact</a>
-                </div>
-                <div class="mobile-toggle" id="mobileToggle">Menu</div>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Hero -->
-    <section class="hero" id="home">
-        <div class="container">
-            <h1>Master Money. <br>Start Young. Win Big.</h1>
-            <p>Financial literacy for teens – budgeting, stocks, credit, and the proven <strong>7 Baby Steps</strong> from Dave Ramsey.</p>
-            <div>
-                <a href="#teen" class="btn btn-primary">Start Learning for only $9.99</a>
-                <a href="#babysteps" class="btn btn-secondary">See the 7 Baby Steps</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features -->
-    <section class="section">
-        <div class="container">
-            <h2 class="section-title">Why FinLit Academy?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">Target</div>
-                    <h3>Teen-Focused</h3>
-                    <p>Short, visual, meme-style lessons.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">Mobile Phone</div>
-                    <h3>Interactive Tools</h3>
-                    <p>Budget calculators, stock simulators, credit trackers.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">Calculator</div>
-                    <h3>Proven Path</h3>
-                    <p>Dave Ramsey’s 7 Baby Steps + teen math.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Teen Section -->
-    <section class="section teen-section" id="teen">
-        <div class="container">
-            <h2 class="section-title">Built for Teens</h2>
-            <div class="teen-grid">
-                <div class="teen-content">
-                    <h2>How We Help You Win</h2>
-                    <ul>
-                        <li><strong>Real Talk:</strong> Memes, videos, stories.</li>
-                        <li><strong>First Job Budget:</strong> Split paycheck smartly.</li>
-                        <li><strong>Side Hustle Math:</strong> Profit from TikTok or mowing.</li>
-                        <li><strong>College vs. Trade:</strong> Compare costs & earnings.</li>
-                        <li><strong>Credit Before Cards:</strong> Build score safely.</li>
-                        <li><strong>Invest at 16:</strong> Start with $5.</li>
-                    </ul>
-                    <a href="#" class="btn btn-primary" style="margin-top:1.5rem;">Join 50K+ Teens</a>
-                </div>
-                <div class="teen-image">
-                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Teens learning finance">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 7 Baby Steps Section (NEW) -->
-    <section class="section babysteps-section" id="babysteps">
-        <div class="container">
-            <h2 class="section-title">Dave Ramsey’s 7 Baby Steps</h2>
-            <p style="text-align:center;max-width:800px;margin:auto 0 2rem;">
-                The proven path to go from broke to millionaire. <br>
-                <strong>2.8M+ views</strong> on YouTube — now simplified for teens.
-            </p>
-            <div class="babysteps-grid">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <h3>Save $1,000 Fast</h3>
-                    <p class="step-desc">Your starter emergency fund. Sell stuff, work extra, get it in 30 days max.</p>
-                    <p class="step-teen"><strong>Teen Move:</strong> Sell old games → $1k in a weekend.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <h3>Debt Snowball</h3>
-                    <p class="step-desc">List debts smallest → largest. Pay minimums + attack the smallest with everything.</p>
-                    <p class="step-teen"><strong>Teen Move:</strong> Kill $200 phone bill first → roll payment to next.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <h3>3–6 Months Expenses</h3>
-                    <p class="step-desc">Fully funded emergency fund. You’re now the bank — never borrow again.</p>
-                    <p class="step-teen"><strong>Teen Goal:</strong> Save $3k+ from summer jobs.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">4</div>
-                    <h3>Invest 15% of Income</h3>
-                    <p class="step-desc">Roth IRA + 401(k) match → growth stock mutual funds.</p>
-                    <p class="step-teen"><strong>Teen Start:</strong> Open Roth at 16 with $50/month.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">5</div>
-                    <h3>College (No Debt!)</h3>
-                    <p class="step-desc">Save for kids’ college. Community college, scholarships, work — no loans.</p>
-                    <p class="step-teen"><strong>Teen Hack:</strong> Dual-enroll high school → free credits.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">6</div>
-                    <h3>Pay Off House Early</h3>
-                    <p class="step-desc">Chunk extra at mortgage. Average: paid off in 7–8 years.</p>
-                    <p class="step-teen"><strong>Future You:</strong> Own home by 30.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">7</div>
-                    <h3>Build Wealth & Give</h3>
-                    <p class="step-desc">Millionaire status → give like no one else. Fun + generosity.</p>
-                    <p class="step-teen"><strong>Endgame:</strong> Pay for little bro’s college in cash.</p>
-                </div>
-            </div>
-            <div style="text-align:center;margin-top:2.5rem;">
-                <a href="https://www.youtube.com/watch?v=OO25TrVo_dU&pp=ygUeZGF2ZSByYW1zZXkgZmluYW5jaWFsIGxpdGVyYWN5" target="_blank" class="btn btn-primary" style="background:#ff0000;color:white;">
-                    Watch Dave Ramsey Explain (YouTube)
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stocks Section -->
-    <section class="section stocks-section" id="stocks">
-        <div class="container">
-            <h2 class="section-title">Stocks & Investing 101</h2>
-            <p style="text-align:center;max-width:700px;margin:auto 0 2rem;">
-                Own a piece of companies you love. Start with $5 on teen-friendly apps.
-            </p>
-            <div class="stock-grid">
-                <div class="stock-card">
-                    <h3>What is a Stock?</h3>
-                    <p>A tiny slice of a company. When the company grows, your slice is worth more.</p>
-                </div>
-                <div class="stock-card">
-                    <h3>Types of Stocks</h3>
-                    <p><strong>Growth:</strong> Tech (Apple, Tesla)<br>
-                       <strong>Dividend:</strong> Pays you cash (Coca-Cola)<br>
-                       <strong>Index Funds:</strong> Own the whole market (S&P 500)</p>
-                </div>
-                <div class="stock-card">
-                    <h3>How to Read a Quote</h3>
-                    <p><strong>Price:</strong> $150.32<br>
-                       <strong>Change:</strong> +2.10 (1.4%)<br>
-                       <strong>Volume:</strong> 12.4M shares traded</p>
-                </div>
-                <div class="stock-card">
-                    <h3>Teen Platforms</h3>
-                    <p><strong>Fidelity Youth</strong> (13–17, parent link)<br>
-                       <strong>Greenlight + Invest</strong> (any age)<br>
-                       <strong>Acorns Early</strong> (custodial)</p>
-                </div>
-            </div>
-            <div style="text-align:center;margin-top:2rem;">
-                <a href="https://www.google.com/aclk?sa=L&ai=DChsSEwih4eqVvOOQAxXczcIEHTujIwwYACICCAEQABoCcHY&co=1&ase=2&gclid=CjwKCAiA8bvIBhBJEiwAu5ayrEL8Cs8d7d3fBpcIIU0MdLSh7xo0ImY63EybJzIJ3LdGtFa31mtbSBoCVD0QAvD_BwE&cid=CAASNuRo94K4VuGrrtr46t8uIJwue2yrfHsc55dTlptK4x-ARpuBjKa1n4_20FtkT4O-wXBiCorPHQ&cce=2&category=acrcp_v1_32&sig=AOD64_0XF50_v6MQuna_wedPsX5n1mLd8Q&q&nis=4&adurl&ved=2ahUKEwizvuSVvOOQAxUXHjQIHcoEHYEQ0Qx6BAgLEAE" class="btn btn-primary">Open Stock Simulator</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Credit & Debt Section -->
-    <section class="section credit-section" id="credit">
-        <div class="container">
-            <h2 class="section-title">Credit & Debt – The Truth</h2>
-            <p style="text-align:center;max-width:700px;margin:auto 0 2rem;opacity:.9;">
-                Credit isn’t free money. Use it right → free trips. Use it wrong → stress.
-            </p>
-            <div class="credit-grid">
-                <div class="credit-card">
-                    <h3>How Credit Works</h3>
-                    <p>Borrow → Pay back on time → Good score.<br>
-                       Late/miss → Score drops → Higher interest.</p>
-                </div>
-                <div class="credit-card">
-                    <h3>Credit Score (FICO)</h3>
-                    <p><strong>300–850</strong><br>
-                       <strong>35%</strong> Payment history<br>
-                       <strong>30%</strong> Amounts owed<br>
-                       <strong>15%</strong> Length of history</p>
-                </div>
-                <div class="credit-card">
-                    <h3>Good vs. Bad Debt</h3>
-                    <p><strong>Good:</strong> Student loan (future income)<br>
-                       <strong>Bad:</strong> $800 phone on 24% interest</p>
-                </div>
-                <div class="credit-card">
-                    <h3>Teen Tips</h3>
-                    <p>Become <strong>authorized user</strong> on parent card (no spending).<br>
-                       Pay <strong>phone bill</strong> on time → builds score.<br>
-                       Never borrow >30% of limit.</p>
-                </div>
-            </div>
-            <div style="text-align:center;margin-top:2rem;">
-                <a href="https://www.google.com/aclk?sa=L&ai=DChsSEwjV8NHIu-OQAxU-La0GHVplLTIYACICCAEQABoCcHY&co=1&ase=2&gclid=CjwKCAiA8bvIBhBJEiwAu5ayrEN3GjtjxqYvXu7-MxS2ZT7iIWujpDLUAxKCugM5X0O3dsGrJ219RxoCNdcQAvD_BwE&ei=sLEPaZbWHNvy0PEPipbToAc&cid=CAASNuRouiLSaK8iQCGvKvB4LY2zBZwEHIQQec_KHyetGJQs9xiJz4HHIoRc9lnCePz2NTdPvKAtqg&cce=2&category=acrcp_v1_32&sig=AOD64_34VDVNiqhaP0CnsjXfGpRKhoOEdg&q&sqi=2&nis=4&adurl&ved=2ahUKEwiW7svIu-OQAxVbOTQIHQrLFHQQ0Qx6BAgYEAQ" class="btn btn-secondary" style="background:white;color:var(--primary);">Check Your Score (Free)</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Formulas -->
-    <section class="section formulas" id="formulas">
-        <div class="container">
-            <h2 class="section-title">Money Formulas Every Teen Needs</h2>
-            <p style="text-align:center;max-width:700px;margin:auto 0 3rem;opacity:.9;">
-                5 core formulas – teen examples included.
-            </p>
-            <div class="formula-grid">
-
-                <!-- Compound Interest -->
-                <div class="formula-card">
-                    <div class="formula-name">Compound Interest</div>
-                    <div class="formula-math">A = P (1 + r/n)<sup>nt</sup></div>
-                    <div class="formula-desc">
-                        <strong>A</strong> = final amount<br>
-                        <strong>P</strong> = starting<br>
-                        <strong>r</strong> = rate<br>
-                        <strong>n</strong> = compounds/year<br>
-                        <strong>t</strong> = years
-                    </div>
-                    <div class="formula-example">
-                        <strong>Teen:</strong> $50/mo from 16 at 7% → $149k by 65.
-                    </div>
-                </div>
-
-                <!-- Rule of 72 -->
-                <div class="formula-card">
-                    <div class="formula-name">Rule of 72</div>
-                    <div class="formula-math">Years to Double = 72 ÷ Return %</div>
-                    <div class="formula-desc">Quick doubling estimate.</div>
-                    <div class="formula-example">
-                        <strong>Teen:</strong> 72 ÷ 8 = 9 yrs → $1k → $2k.
-                    </div>
-                </div>
-
-                <!-- 50/30/20 Budget -->
-                <div class="formula-card">
-                    <div class="formula-name">50/30/20 Budget</div>
-                    <div class="formula-math">50% Needs • 30% Wants • 20% Savings</div>
-                    <div class="formula-desc">Split take-home pay.</div>
-                    <div class="formula-example">
-                        <strong>Teen:</strong> $800 job → $400 essentials, $240 fun, $160 saved.
-                    </div>
-                </div>
-
-                <!-- Debt Snowball -->
-                <div class="formula-card">
-                    <div class="formula-name">Debt Snowball</div>
-                    <div class="formula-math">Pay Minimums + Extra → Smallest First</div>
-                    <div class="formula-desc">Psychological wins.</div>
-                    <div class="formula-example">
-                        <strong>Teen:</strong> $200 phone, $50 fine → kill fine first.
-                    </div>
-                </div>
-
-                <!-- Net Worth -->
-                <div class="formula-card">
-                    <div class="formula-name">Net Worth</div>
-                    <div class="formula-math">Assets - Liabilities = Net Worth</div>
-                    <div class="formula-desc">Track yearly.</div>
-                    <div class="formula-example">
-                        <strong>Teen:</strong> $1,200 savings + $500 laptop – $300 owed = $1,400.
-                    </div>
-                </div>
-            </div>
-        </div>
+    <h1>AI Minecraft Mod Coder</h1>
+    <div class="container">
+        <p>Welcome to the AI Minecraft Mod Coder! This tool helps you generate Java code for Minecraft Java Edition mods based on your detailed description. Describe what you want your mod to do (e.g., "Create a custom sword that sets enemies on fire when hit"), and the AI will generate the corresponding Java code. The output aims to match your input description as exactly as possible, providing a complete, compilable mod structure using Forge or Fabric (specify in your input if preferred).</p>
+        
+        <p><strong>Important Notes:</strong></p>
+        <ul>
+            <li>This tool integrates with xAI's Grok API. You need an API key from <a href="https://x.ai/api" target="_blank">https://x.ai/api</a>.</li>
+            <li>The generated code is a starting point. Always test and modify it in your Minecraft mod development environment (e.g., using Gradle, Forge MDK, or Fabric Loom).</li>
+            <li>Prerequisites: Knowledge of Java, Minecraft modding basics (e.g., registering items/blocks, event handling). Ensure you have Minecraft Forge/Fabric installed.</li>
+            <li>For exact matching: Be precise in your input (e.g., include mod ID, class names, behaviors). The AI will interpret and generate code to implement your description faithfully.</li>
+        </ul>
+        
+        <label for="apiKey">xAI API Key:</label>
+        <input type="text" id="apiKey" placeholder="Enter your xAI API Key here">
+        
+        <label for="input">Describe your Minecraft mod idea in detail:</label>
+        <textarea id="input" placeholder="E.g., Create a new block called 'Magic Ore' that drops diamonds when mined, registers it in the game, and adds a recipe to craft tools from it. Use Forge mod loader."></textarea>
+        
+        <label for="dependencies">Mod Dependencies (e.g., Forge version, other required mods like 'jei', libraries):</label>
+        <textarea id="dependencies" placeholder="E.g., Requires Minecraft Forge 1.20.1, depends on Just Enough Items (JEI) mod."></textarea>
+        
+        <button id="generate">Generate Mod Code</button>
+        <div id="loading">Generating code... Please wait.</div>
+        
+        <div id="output"></div>
     </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta">
-        <div class="container">
-            <h2>Start Your 7 Baby Steps Today</h2>
-            <p>Join teens who’ve saved $1,000+, paid off debt, and started investing — all before 18.</p>
-            <a href="#babysteps" class="btn btn-primary" style="background:white;color:var(--primary);font-size:1.1rem;padding:1rem 2rem;">
-                Begin Step 1 Now
-            </a>
-        </div>
-    </section>
-
-    <!-- Footer -->
+    
     <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h3>FinLit Academy</h3>
-                    <p>Real money skills for teens, backed by Dave Ramsey’s 7 Baby Steps.</p>
-                </div>
-                <div class="footer-col">
-                    <h3>Learn</h3>
-                    <a href="#babysteps">7 Baby Steps</a>
-                    <a href="#stocks">Stocks</a>
-                    <a href="#credit">Credit</a>
-                    <a href="#">Side Hustles</a>
-                </div>
-                <div class="footer-col">
-                    <h3>Tools</h3>
-                    <a href="#">Budget Calc</a>
-                    <a href="#">Stock Simulator</a>
-                    <a href="#">Debt Snowball</a>
-                    <a href="#">Emergency Fund Tracker</a>
-                </div>
-                <div class="footer-col">
-                    <h3>Connect</h3>
-                    <a href="#">TikTok</a>
-                    <a href="#">Instagram</a>
-                    <a href="#">Discord</a>
-                    <a href="#">Parent Portal</a>
-                </div>
-            </div>
-            <div class="copyright">
-                © 2025 FinLit Academy. All rights reserved. | Inspired by <a href="https://www.ramseysolutions.com" style="color:var(--secondary);text-decoration:underline;">Dave Ramsey</a>
-            </div>
-        </div>
+        Powered by xAI Grok API. Not affiliated with Mojang or Minecraft.
     </footer>
-<script src='https://www.noupe.com/embed/019a658c0ab072a3bd2bc7117feb485b9144.js'></script>
+
     <script>
-        // Mobile menu
-        const toggle = document.getElementById('mobileToggle');
-        const nav = document.getElementById('navLinks');
-        toggle.addEventListener('click', () => nav.classList.toggle('active'));
+        const generateButton = document.getElementById('generate');
+        const inputTextarea = document.getElementById('input');
+        const dependenciesTextarea = document.getElementById('dependencies');
+        const apiKeyInput = document.getElementById('apiKey');
+        const outputDiv = document.getElementById('output');
+        const loadingDiv = document.getElementById('loading');
 
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => {
-                e.preventDefault();
-                document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});
-                nav.classList.remove('active');
-            });
-        });
-    </script>
-</body>
-</html>
+        generateButton.addEventListener('click', async () => {
+            const userInput = inputTextarea.value.trim();
+            const dependencies = dependenciesTextarea.value.trim();
+            const apiKey = apiKeyInput.value.trim();
+            
+            if (!userInput) {
+                alert('Please enter a detailed description of your mod.');
+                return;
+            }
+            if (!apiKey) {
+                alert('Please enter your xAI API Key.');
+                return;
+            }
 
+            loadingDiv.style.display = 'block';
+            outputDiv.innerHTML = '';
 
+            try {
+                let fullUserPrompt = userInput;
+                if (dependencies) {
+                    fullUserPrompt += `\n\nDependencies: ${dependencies}`;
+                }
 
-
-
-
+                const systemPrompt = "You are a Minecraft mod coding expert. Generate complete, detailed, and compilable Java code for a Minecraft Java Edition mod that exactly implements the user's description. Include all necessary classes, imports, registrations, and configurations. Use Forge or Fabric as specified in the description, default to
