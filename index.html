@@ -40,13 +40,6 @@
             border-radius: 4px;
             resize: vertical;
         }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
         button {
             background-color: #4CAF50;
             color: white;
@@ -78,23 +71,33 @@
             text-align: center;
             color: #777;
         }
+        #copyButton {
+            background-color: #2196F3;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #copyButton:hover {
+            background-color: #1E88E5;
+        }
     </style>
 </head>
 <body>
     <h1>AI Minecraft Mod Coder</h1>
     <div class="container">
-        <p>Welcome to the AI Minecraft Mod Coder! This tool helps you generate Java code for Minecraft Java Edition mods based on your detailed description. Describe what you want your mod to do (e.g., "Create a custom sword that sets enemies on fire when hit"), and the AI will generate the corresponding Java code. The output aims to match your input description as exactly as possible, providing a complete, compilable mod structure using Forge or Fabric (specify in your input if preferred).</p>
+        <p>Welcome to the AI Minecraft Mod Coder! This tool helps you generate Java code for Minecraft Java Edition mods based on your detailed description. Describe what you want your mod to do (e.g., "Create a custom sword that sets enemies on fire when hit"), and it will prepare a prompt for Grok to generate the corresponding Java code. The output aims to match your input description as exactly as possible, providing a complete, compilable mod structure using Forge or Fabric (specify in your input if preferred).</p>
         
         <p><strong>Important Notes:</strong></p>
         <ul>
-            <li>This tool integrates with xAI's Grok API. You need an API key from <a href="https://x.ai/api" target="_blank">https://x.ai/api</a>.</li>
-            <li>The generated code is a starting point. Always test and modify it in your Minecraft mod development environment (e.g., using Gradle, Forge MDK, or Fabric Loom).</li>
-            <li>Prerequisites: Knowledge of Java, Minecraft modding basics (e.g., registering items/blocks, event handling). Ensure you have Minecraft Forge/Fabric installed.</li>
-            <li>For exact matching: Be precise in your input (e.g., include mod ID, class names, behaviors). The AI will interpret and generate code to implement your description faithfully.</li>
+            <li>This tool prepares a prompt for Grok (by xAI) to generate the code. Copy the prompt and ask Grok directly.</li>
+            <li>The generated code is a starting point. Once you have the code from Grok, set up a local Minecraft modding environment (e.g., using Gradle, Forge MDK, or Fabric Loom) to compile it into a .jar file.</li>
+            <li>Prerequisites: Knowledge of Java, Minecraft modding basics (e.g., registering items/blocks, event handling). Ensure you have Minecraft Forge/Fabric installed. To build the .jar, use commands like './gradlew build' in your project directory.</li>
+            <li>For exact matching: Be precise in your input (e.g., include mod ID, class names, behaviors).</li>
+            <li>To download the .jar: After generating the code with Grok, create the project files locally, build the project, and the .jar will be in the build/libs folder.</li>
         </ul>
-        
-        <label for="apiKey">xAI API Key:</label>
-        <input type="text" id="apiKey" placeholder="Enter your xAI API Key here">
         
         <label for="input">Describe your Minecraft mod idea in detail:</label>
         <textarea id="input" placeholder="E.g., Create a new block called 'Magic Ore' that drops diamonds when mined, registers it in the game, and adds a recipe to craft tools from it. Use Forge mod loader."></textarea>
@@ -102,45 +105,62 @@
         <label for="dependencies">Mod Dependencies (e.g., Forge version, other required mods like 'jei', libraries):</label>
         <textarea id="dependencies" placeholder="E.g., Requires Minecraft Forge 1.20.1, depends on Just Enough Items (JEI) mod."></textarea>
         
-        <button id="generate">Generate Mod Code</button>
-        <div id="loading">Generating code... Please wait.</div>
+        <button id="generate">Generate Mod Code Prompt</button>
+        <div id="loading">Generating prompt... Please wait.</div>
         
         <div id="output"></div>
+        <button id="copyButton" style="display: none;">Copy Prompt to Clipboard</button>
     </div>
     
     <footer>
-        Powered by xAI Grok API. Not affiliated with Mojang or Minecraft.
+        Powered by Grok from xAI. Not affiliated with Mojang or Minecraft.
     </footer>
 
     <script>
         const generateButton = document.getElementById('generate');
         const inputTextarea = document.getElementById('input');
         const dependenciesTextarea = document.getElementById('dependencies');
-        const apiKeyInput = document.getElementById('apiKey');
         const outputDiv = document.getElementById('output');
         const loadingDiv = document.getElementById('loading');
+        const copyButton = document.getElementById('copyButton');
 
-        generateButton.addEventListener('click', async () => {
+        generateButton.addEventListener('click', () => {
             const userInput = inputTextarea.value.trim();
             const dependencies = dependenciesTextarea.value.trim();
-            const apiKey = apiKeyInput.value.trim();
             
             if (!userInput) {
                 alert('Please enter a detailed description of your mod.');
                 return;
             }
-            if (!apiKey) {
-                alert('Please enter your xAI API Key.');
-                return;
-            }
 
             loadingDiv.style.display = 'block';
             outputDiv.innerHTML = '';
+            copyButton.style.display = 'none';
 
             try {
-                let fullUserPrompt = userInput;
+                let fullPrompt = `You are a Minecraft mod coding expert. Generate complete, detailed, and compilable Java code for a Minecraft Java Edition mod that exactly implements the following description: ${userInput}. Include all necessary classes, imports, registrations, and configurations. Use Forge or Fabric as specified, default to Forge if not mentioned. Ensure the code matches the description exactly without adding extra features. Also include the build.gradle file, mods.toml or fabric.mod.json, and any other configuration files needed for the mod project.`;
+                
                 if (dependencies) {
-                    fullUserPrompt += `\n\nDependencies: ${dependencies}`;
+                    fullPrompt += `\n\nIncorporate the following dependencies: ${dependencies}. Update the build files accordingly.`;
                 }
 
-                const systemPrompt = "You are a Minecraft mod coding expert. Generate complete, detailed, and compilable Java code for a Minecraft Java Edition mod that exactly implements the user's description. Include all necessary classes, imports, registrations, and configurations. Use Forge or Fabric as specified in the description, default to
+                outputDiv.innerHTML = `<h2>Generated Prompt for Grok:</h2><pre><code>${fullPrompt}</code></pre><p>Copy this prompt and paste it into a conversation with Grok (on x.com or grok.com) to get the full mod code. Once you have the code, set up the project locally and run './gradlew build' to generate the .jar file for installation in Minecraft.</p>`;
+                copyButton.style.display = 'block';
+            } catch (error) {
+                outputDiv.innerHTML = `<p>Error generating prompt: ${error.message}.</p>`;
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        });
+
+        copyButton.addEventListener('click', () => {
+            const promptText = outputDiv.querySelector('pre code').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                alert('Prompt copied to clipboard!');
+            }).catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+        });
+    </script>
+</body>
+</html>
