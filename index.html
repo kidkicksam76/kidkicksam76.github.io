@@ -1,193 +1,444 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Minecraft Mod Coder</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 {
-            color: #4CAF50;
-            text-align: center;
-        }
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        textarea {
-            width: 100%;
-            height: 150px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            resize: vertical;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #output {
-            margin-top: 20px;
-            background: #f9f9f9;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        #loading {
-            display: none;
-            margin-top: 10px;
-            color: #666;
-        }
-        footer {
-            margin-top: 20px;
-            text-align: center;
-            color: #777;
-        }
-        #downloadButton, #copyButton {
-            background-color: #2196F3;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-            margin-left: 10px;
-        }
-        #downloadButton:hover, #copyButton:hover {
-            background-color: #1E88E5;
-        }
-    </style>
-</head>
-<body>
-    <h1>AI Minecraft Mod Coder</h1>
-    <div class="container">
-        <p>Welcome to the AI Minecraft Mod Coder! This tool helps you generate Java code for Minecraft Java Edition mods based on your detailed description. Describe what you want your mod to do (e.g., "Create a custom sword that sets enemies on fire when hit"), and it will generate the corresponding Java code. The output aims to match your input description as exactly as possible, providing a complete, compilable mod structure using Forge or Fabric (specify in your input if preferred).</p>
-        
-        <p><strong>Important Notes:</strong></p>
-        <ul>
-            <li>This is a simulated AI tool for demonstration. For real AI-generated code, use Grok directly by describing your mod.</li>
-            <li>The generated code is a starting point and template based on your input. Always test and modify it in your Minecraft mod development environment (e.g., using Gradle, Forge MDK, or Fabric Loom).</li>
-            <li>Prerequisites: Knowledge of Java, Minecraft modding basics (e.g., registering items/blocks, event handling). Ensure you have Minecraft Forge/Fabric installed.</li>
-            <li>For exact matching: Be precise in your input (e.g., include mod ID, class names, behaviors).</li>
-            <li>To get the .jar: After downloading the code, set up a mod project (download Forge MDK or Fabric example mod), place the code in src/main/java, update build.gradle and mods.toml/fabric.mod.json as needed, then run './gradlew build' in the project directory. The .jar will be in build/libs.</li>
-        </ul>
-        
-        <label for="input">Describe your Minecraft mod idea in detail:</label>
-        <textarea id="input" placeholder="E.g., Create a new block called 'Magic Ore' that drops diamonds when mined, registers it in the game, and adds a recipe to craft tools from it. Use Forge mod loader."></textarea>
-        
-        <label for="dependencies">Mod Dependencies (e.g., Forge version, other required mods like 'jei', libraries):</label>
-        <textarea id="dependencies" placeholder="E.g., Requires Minecraft Forge 1.20.1, depends on Just Enough Items (JEI) mod."></textarea>
-        
-        <button id="generate">Generate Mod Code</button>
-        <div id="loading">Generating code... Please wait.</div>
-        
-        <div id="output"></div>
-        <button id="downloadButton" style="display: none;">Download Code as .java</button>
-        <button id="copyButton" style="display: none;">Copy Code to Clipboard</button>
-    </div>
-    
-    <footer>
-        Powered by Simulated AI. For advanced generation, ask Grok on x.ai. Not affiliated with Mojang or Minecraft.
-    </footer>
+# AI Minecraft Mod Builder — Full Website + Mod Template
 
-    <script>
-        const generateButton = document.getElementById('generate');
-        const inputTextarea = document.getElementById('input');
-        const dependenciesTextarea = document.getElementById('dependencies');
-        const outputDiv = document.getElementById('output');
-        const loadingDiv = document.getElementById('loading');
-        const downloadButton = document.getElementById('downloadButton');
-        const copyButton = document.getElementById('copyButton');
+This single-file repository contains a complete starter website (frontend + backend) and a ready-to-use Minecraft Forge mod template plus a GitHub Actions workflow that will build the mod JAR automatically on push. Use it to run an "AI-driven" mod generator web app locally or on a server and get an automated build producing the .jar.
 
-        generateButton.addEventListener('click', async () => {
-            const userInput = inputTextarea.value.trim();
-            const dependencies = dependenciesTextarea.value.trim();
-            
-            if (!userInput) {
-                alert('Please enter a detailed description of your mod.');
-                return;
-            }
+---
 
-            loadingDiv.style.display = 'block';
-            outputDiv.innerHTML = '';
-            downloadButton.style.display = 'none';
-            copyButton.style.display = 'none';
+## Project layout (all files included below)
 
-            try {
-                const generatedCode = await simulateAIResponse(userInput, dependencies);
-                
-                outputDiv.innerHTML = `<h2>Generated Java Code:</h2><pre><code>${generatedCode}</code></pre><p>Use this code in your mod project. Follow the notes above to build the .jar file.</p>`;
-                downloadButton.style.display = 'inline-block';
-                copyButton.style.display = 'inline-block';
-            } catch (error) {
-                outputDiv.innerHTML = `<p>Error generating code: ${error.message}.</p>`;
-            } finally {
-                loadingDiv.style.display = 'none';
-            }
-        });
+- README.md
+- frontend/ (React app)
+  - package.json
+  - src/App.jsx
+  - src/index.jsx
+  - public/index.html
+- backend/ (Node + Express)
+  - package.json
+  - server.js
+  - templates/forge-1.20.1/ (mod template)
+    - build.gradle
+    - gradle/ (wrapper - instructions included to generate wrappers locally)
+    - settings.gradle
+    - src/main/java/com/example/mod/ExampleMod.java
+    - src/main/resources/META-INF/mods.toml
+    - src/main/resources/assets/examplemod/lang/en_us.json
+- .github/workflows/build-mod.yml (GitHub Actions to build JAR)
 
-        // Simulated AI function for demo. In real use, this would be replaced with AI logic or API.
-        async function simulateAIResponse(input, dependencies) {
-            // Basic template generation. For real AI, integrate with an API.
-            // Here, we create a simple mod class with the input as comment.
-            let code = `// Minecraft Mod Code generated based on description: "${input}"\n`;
-            if (dependencies) {
-                code += `// Dependencies: ${dependencies}\n`;
-            }
-            code += `\npackage com.example.my_mod;\n\nimport net.minecraft.block.Block;\nimport net.minecraft.block.Blocks;\nimport net.minecraftforge.common.MinecraftForge;\nimport net.minecraftforge.event.RegistryEvent;\nimport net.minecraftforge.eventbus.api.SubscribeEvent;\nimport net.minecraftforge.fml.common.Mod;\nimport net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;\nimport net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;\nimport org.apache.logging.log4j.LogManager;\nimport org.apache.logging.log4j.Logger;\n\n// The value here should also be lowercase and without quotes or periods.\n@Mod(MyMod.MOD_ID)\npublic class MyMod {\n    public static final String MOD_ID = "mymod";\n    private static final Logger LOGGER = LogManager.getLogger();\n\n    public MyMod() {\n        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);\n        MinecraftForge.EVENT_BUS.register(this);\n    }\n\n    private void setup(final FMLCommonSetupEvent event) {\n        // Some preinit code based on description\n        LOGGER.info("Mod setup complete for: ${input}");\n    }\n\n    // Example registry for a block if description mentions block\n    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)\n    public static class RegistryEvents {\n        @SubscribeEvent\n        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {\n            // Register blocks here based on description\n            // e.g., blockRegistryEvent.getRegistry().register(new Block(Block.Properties.copy(Blocks.DIAMOND_ORE)).setRegistryName("magic_ore"));\n        }\n    }\n}\n\n// Add more classes, recipes, etc., as needed for the full mod. Compile this in a Forge project to get the .jar.`;
+---
 
-            return code;
-        }
+## README.md
 
-        downloadButton.addEventListener('click', () => {
-            const codeText = outputDiv.querySelector('pre code').textContent;
-            const blob = new Blob([codeText], { type: 'text/java' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'MyMinecraftMod.java';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
+```markdown
+# AI Minecraft Mod Builder
 
-        copyButton.addEventListener('click', () => {
-            const codeText = outputDiv.querySelector('pre code').textContent;
-            navigator.clipboard.writeText(codeText).then(() => {
-                alert('Code copied to clipboard!');
-            }).catch(err => {
-                alert('Failed to copy: ' + err);
-            });
-        });
-    </script>
-</body>
+This project is a starter website for generating Minecraft Forge mods from simple inputs. It provides:
+
+- A React frontend where users enter mod metadata and feature requests.
+- A Node/Express backend that generates a mod template (Forge 1.20.1 sample) using the inputs.
+- A GitHub Actions workflow that builds the mod JAR automatically on push using Gradle.
+
+**Important:** This repository contains source code and a Gradle project template. I cannot compile the mod into a .jar inside this web preview. However, follow the instructions below or use the included GitHub Actions workflow to build the JAR automatically.
+
+## Quick start (local)
+
+1. Clone the repo.
+2. Install frontend deps:
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+3. Start backend in another terminal:
+   ```bash
+   cd backend
+   npm install
+   node server.js
+   ```
+4. Open http://localhost:5173 (or the frontend dev port). Use the UI to generate mod sources.
+5. To build the mod JAR locally, go to `backend/templates/forge-1.20.1/` and follow Forge MDK instructions:
+   - Download Forge MDK for the matching Minecraft/Forge version, or initialize Gradle wrapper locally using `gradle wrapper`.
+   - Run `./gradlew build` (on Windows `gradlew.bat build`). The JAR will appear in `build/libs/`.
+
+## Quick start (automated build via GitHub Actions)
+
+1. Push the repo to GitHub.
+2. The workflow `.github/workflows/build-mod.yml` will run on push and produce a build artifact (the mod jar).
+3. Download the artifact from the Actions run.
+
+## Notes & security
+- The generator writes files server-side in a temp workspace and returns a ZIP of generated source. The Actions workflow demonstrates how to run a build on push — adjust versions carefully.
+- Do not run arbitrary code from untrusted sources in production. This template is meant as a developer scaffold.
+```
+```
+
+---
+
+## frontend/package.json
+
+```json
+{
+  "name": "ai-mod-builder-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "axios": "1.5.0",
+    "vite": "5.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}
+```
+
+---
+
+## frontend/public/index.html
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Minecraft Mod Builder</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
 </html>
+```
+
+---
+
+## frontend/src/index.jsx
+
+```jsx
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App'
+import './styles.css'
+
+createRoot(document.getElementById('root')).render(<App />)
+```
+
+---
+
+## frontend/src/App.jsx
+
+```jsx
+import React, {useState} from 'react'
+import axios from 'axios'
+
+export default function App(){
+  const [name, setName] = useState('ExampleMod')
+  const [id, setId] = useState('examplemod')
+  const [version, setVersion] = useState('1.0.0')
+  const [mcVersion, setMcVersion] = useState('1.20.1')
+  const [description, setDescription] = useState('An example mod generated by AI Mod Builder')
+  const [status, setStatus] = useState('')
+
+  async function handleGenerate(e){
+    e.preventDefault()
+    setStatus('Generating...')
+    try{
+      const resp = await axios.post('http://localhost:4000/generate', {
+        modName: name,
+        modId: id,
+        modVersion: version,
+        mcVersion,
+        description
+      }, { responseType: 'blob' })
+
+      // Download returned zip
+      const url = window.URL.createObjectURL(new Blob([resp.data]))
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${id}-source.zip`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      setStatus('Generated and downloaded ZIP with mod source. To build the JAR, run Gradle in the template or push to GitHub (the repo contains a workflow).')
+    }catch(err){
+      console.error(err)
+      setStatus('Error generating mod. See console for details.')
+    }
+  }
+
+  return (
+    <div style={{padding:20, fontFamily:'Arial, sans-serif'}}>
+      <h1>AI Minecraft Mod Builder</h1>
+      <form onSubmit={handleGenerate}>
+        <div>
+          <label>Mod Name: </label>
+          <input value={name} onChange={e=>setName(e.target.value)} />
+        </div>
+        <div>
+          <label>Mod ID: </label>
+          <input value={id} onChange={e=>setId(e.target.value)} />
+        </div>
+        <div>
+          <label>Mod Version: </label>
+          <input value={version} onChange={e=>setVersion(e.target.value)} />
+        </div>
+        <div>
+          <label>Minecraft Version: </label>
+          <input value={mcVersion} onChange={e=>setMcVersion(e.target.value)} />
+        </div>
+        <div>
+          <label>Description: </label>
+          <input value={description} onChange={e=>setDescription(e.target.value)} style={{width:'100%'}} />
+        </div>
+        <div style={{marginTop:10}}>
+          <button type="submit">Generate Mod Source (ZIP)</button>
+        </div>
+      </form>
+      <p>{status}</p>
+    </div>
+  )
+}
+```
+
+---
+
+## backend/package.json
+
+```json
+{
+  "name": "ai-mod-builder-backend",
+  "version": "0.1.0",
+  "main": "server.js",
+  "dependencies": {
+    "express": "4.18.2",
+    "archiver": "5.3.1",
+    "body-parser": "1.20.2",
+    "fs-extra": "11.1.1"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
+```
+
+---
+
+## backend/server.js
+
+```js
+const express = require('express')
+const bodyParser = require('body-parser')
+const path = require('path')
+const fs = require('fs-extra')
+const archiver = require('archiver')
+
+const app = express()
+app.use(bodyParser.json())
+
+const TEMPLATE_DIR = path.join(__dirname, 'templates', 'forge-1.20.1')
+
+// Basic generator: copies template, replaces placeholders, zips and returns
+app.post('/generate', async (req, res) => {
+  try{
+    const { modName='ExampleMod', modId='examplemod', modVersion='1.0.0', mcVersion='1.20.1', description='' } = req.body
+    const tmp = path.join(__dirname, 'tmp', `${modId}-${Date.now()}`)
+    await fs.copy(TEMPLATE_DIR, tmp)
+
+    // Replace placeholders in files (simple replacements)
+    const replaceInFile = async (relPath) => {
+      const full = path.join(tmp, relPath)
+      if(await fs.pathExists(full)){
+        let content = await fs.readFile(full, 'utf8')
+        content = content.replace(/__MOD_NAME__/g, modName)
+        content = content.replace(/__MOD_ID__/g, modId)
+        content = content.replace(/__MOD_VERSION__/g, modVersion)
+        content = content.replace(/__MC_VERSION__/g, mcVersion)
+        content = content.replace(/__MOD_DESCRIPTION__/g, description)
+        await fs.writeFile(full, content, 'utf8')
+      }
+    }
+
+    // Replace a few core files
+    await replaceInFile('src/main/java/com/example/mod/ExampleMod.java')
+    await replaceInFile('src/main/resources/META-INF/mods.toml')
+    await replaceInFile('src/main/resources/assets/examplemod/lang/en_us.json')
+    await replaceInFile('build.gradle')
+
+    // Zip tmp folder
+    res.setHeader('Content-Type', 'application/zip')
+    res.setHeader('Content-Disposition', `attachment; filename=${modId}-source.zip`)
+
+    const archive = archiver('zip')
+    archive.on('error', err => { throw err })
+    archive.directory(tmp, false)
+    archive.pipe(res)
+    await archive.finalize()
+
+    // Cleanup (fire & forget)
+    setTimeout(()=> fs.remove(tmp).catch(()=>{}), 10000)
+
+  }catch(err){
+    console.error(err)
+    res.status(500).json({error: String(err)})
+  }
+})
+
+app.listen(4000, ()=> console.log('Backend listening on http://localhost:4000'))
+```
+
+---
+
+## backend/templates/forge-1.20.1/build.gradle
+
+```gradle
+plugins {
+    id 'java'
+    id 'net.minecraftforge.gradle' version '5.1.45' // example version — set appropriate plugin for target Forge
+}
+
+group = 'com.example'
+version = '__MOD_VERSION__'
+archivesBaseName = '__MOD_ID__'
+
+minecraft {
+    version = "__MC_VERSION__-forge"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Add Forge dependencies if needed
+}
+
+jar {
+    manifest {
+        attributes 'Specification-Title': '__MOD_NAME__',
+                   'Specification-Vendor': 'AI Mod Builder'
+    }
+}
+```
+
+---
+
+## backend/templates/forge-1.20.1/settings.gradle
+
+```groovy
+rootProject.name = '__MOD_ID__'
+```
+
+---
+
+## backend/templates/forge-1.20.1/src/main/java/com/example/mod/ExampleMod.java
+
+```java
+package com.example.mod;
+
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+
+@Mod("__MOD_ID__")
+public class ExampleMod {
+    public static final String MODID = "__MOD_ID__";
+
+    public ExampleMod() {
+        // Mod constructor
+    }
+
+    @SubscribeEvent
+    public void setup(final FMLCommonSetupEvent event) {
+        // Example setup code
+        System.out.println("Hello from __MOD_NAME__!");
+    }
+}
+```
+
+---
+
+## backend/templates/forge-1.20.1/src/main/resources/META-INF/mods.toml
+
+```toml
+modLoader="javafml"
+loaderVersion=">=46"
+license="MIT"
+
+[[mods]]
+modId="__MOD_ID__"
+version="__MOD_VERSION__"
+displayName="__MOD_NAME__"
+description='''
+__MOD_DESCRIPTION__
+'''
+```
+
+---
+
+## backend/templates/forge-1.20.1/src/main/resources/assets/examplemod/lang/en_us.json
+
+```json
+{
+  "itemGroup.examplemod": "__MOD_NAME__ Items"
+}
+```
+
+---
+
+## .github/workflows/build-mod.yml
+
+```yaml
+name: Build Minecraft Mod (Forge)
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '17'
+    - name: Run Gradle build
+      working-directory: backend/templates/forge-1.20.1
+      run: |
+        # If gradle wrapper is not present, generate it (requires Gradle installed on runner). Alternatively commit the wrapper.
+        if [ ! -f ./gradlew ]; then
+          echo "Gradle wrapper not found. Attempting to install gradle..."
+          sudo apt-get update && sudo apt-get install -y gradle
+          gradle wrapper
+        fi
+        ./gradlew build --no-daemon
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: mod-jar
+        path: backend/templates/forge-1.20.1/build/libs/*.jar
+```
+
+---
+
+## Next steps & customization ideas
+
+- Replace the basic template with the exact Forge MDK layout for your target Minecraft version. The template here is illustrative — for a working build, grab the correct Forge MDK and either commit the Gradle wrapper or let the workflow create it.
+- Extend the backend to run code-generation models (e.g., run an LLM) to craft Java class files for items, blocks, entities, and registrations. If you add an AI model runner, sandbox it carefully.
+- Add authentication, user accounts, and a queue system for heavy generation jobs.
+
+---
+
+## Licensing
+
+This scaffold is provided as-is to help you build a mod generator. Be sure to respect Minecraft/Forge licenses and third-party libraries' licenses.
+
+---
+
+End of single-file repository content.
