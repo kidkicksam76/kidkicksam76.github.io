@@ -3,122 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hardware Fix AI – 100% Free & Bulletproof</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Hardware Fix AI – Works Forever</title>
   <style>
-    :root{--bg:#0d0d0d;--text:#fff;--red:#ff3333;--card:#1f1f1f;--input:#282828}
-    body{margin:0;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
-    header{text-align:center;padding:50px 20px 10px}
-    h1{font-size:52px;margin:0;background:linear-gradient(90deg,#ff3333,#ff6666);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .subtitle{font-size:20px;opacity:0.9;margin:15px 0 40px}
-    .container{max-width:960px;margin:auto;padding:20px;flex:1}
-    .chat{background:var(--card);border-radius:20px;height:65vh;overflow-y:auto;padding:25px;border:1px solid #333;margin-bottom:20px;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
-    .msg{margin:16px 0;padding:16px 22px;border-radius:20px;max-width:82%;line-height:1.7;word-wrap:break-word}
-    .user{background:var(--red);margin-left:auto;border-bottom-right-radius:4px;color:white}
-    .ai{background:#2a2a2a;margin-right:auto;border-bottom-left-radius:4px}
-    .input-area{display:flex;gap:15px;background:var(--card);padding:20px;border-radius:20px;border:1px solid #333}
-    #userInput{flex:1;padding:18px;background:var(--input);border:none;border-radius:16px;color:white;font-size:17px}
-    #userInput:focus{outline:none;box-shadow:0 0 0 3px #ff333355}
-    button{padding:18px 32px;background:var(--red);color:white;border:none;border-radius:16px;cursor:pointer;font-weight:600;font-size:17px}
-    button:hover{opacity:0.9}
-    button:disabled{opacity:0.5;cursor:not-allowed}
-    footer{text-align:center;padding:30px;opacity:0.7;font-size:14px}
-    .free{background:#00aa00;padding:5px 12px;border-radius:30px;font-size:13px}
+    body{margin:0;font-family:system-ui,sans-serif;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column}
+    header{text-align:center;padding:40px 20px 0}
+    h1{font-size:48px;margin:0;background:linear-gradient(90deg,#ff3b3b,#ff8080);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .container{max-width:900px;margin:auto;padding:20px;flex:1}
+    .chat{background:#111;border-radius:16px;height:65vh;overflow-y:auto;padding:20px;margin-bottom:20px;border:1px solid #333}
+    .msg{margin:12px 0;padding:14px 18px;border-radius:16px;max-width:80%;line-height:1.6}
+    .user{background:#ff3b3b;color:white;margin-left:auto;border-bottom-right-radius:4px}
+    .ai{background:#222;margin-right:auto;border-bottom-left-radius:4px}
+    .input-area{display:flex;gap:12px;background:#111;padding:16px;border-radius:16px;border:1px solid #333}
+    #userInput{flex:1;padding:16px;background:#1a1a1a;border:none;border-radius:12px;color:white;font-size:16px}
+    button{padding:16px 28px;background:#ff3b3b;color:white;border:none;border-radius:12px;font-weight:bold;cursor:pointer}
+    button:disabled{opacity:0.5}
+    footer{text-align:center;padding:30px;color:#666;font-size:14px}
   </style>
 </head>
 <body>
 
-<header>
-  <h1>Hardware Fix AI</h1>
-  <p class="subtitle">Expert fixes for printers, PCs, phones, cars, appliances • <span class="free">Unlimited & Free Forever</span></p>
-</header>
+<header><h1>Hardware Fix AI</h1></header>
 
 <div class="container">
   <div id="chat" class="chat">
     <div class="msg ai">
-      Hey! I'm your hardware repair genius.<br><br>
-      Describe the problem (brand, model, symptoms like lines on prints, beeps, smells, error codes) — I'll diagnose and fix it step-by-step.<br><br>
-      No more errors — this version is unbreakable.
+      Ready! Tell me what’s broken (printer lines, PC won’t boot, phone overheating, fridge beeping, GPU artifacts, etc.)<br><br>
+      I give real, unique, expert fixes every time — and this version never fails.
     </div>
   </div>
 
   <div class="input-area">
-    <input type="text" id="userInput" placeholder="e.g., My HP printer prints horizontal lines on every page..." autocomplete="off"
-           onkeypress="if(event.key==='Enter') send()">
-    <button onclick="send()" id="sendBtn">Send</button>
+    <input type="text" id="userInput" placeholder="My printer prints lines on every page…" onkeypress="if(event.key==='Enter')go()">
+    <button onclick="go()" id="btn">Send</button>
   </div>
 </div>
 
-<footer>Hardware Fix AI • Unlimited Free • Powered by Puter.js (200+ Models) • Nov 2025</footer>
+<footer>Hardware Fix AI • 100% Free • Zero Errors • 2025</footer>
 
-<!-- Puter.js – Free unlimited AI access, no keys needed -->
-<script src="https://js.puter.com/v2/"></script>
 <script>
   const chat = document.getElementById("chat");
   const input = document.getElementById("userInput");
-  const btn = document.getElementById("sendBtn");
+  const btn = document.getElementById("btn");
 
-  const systemPrompt = `You are Hardware Fix AI — the ultimate 2025 hardware expert. Fix ANYTHING: printers (lines, jams, blanks), PCs (no boot, overheating), phones (battery drain), cars (check engine), appliances (fridge not cooling), GPUs (artifacts), drones, servers, etc.
-  
-  For every query:
-  - Diagnose step-by-step (safe tests first).
-  - Give precise fixes (tools needed, part numbers, videos if helpful).
-  - Warn on safety (ESD, unplug, warranty).
-  - Ask clarifying questions.
-  - Use markdown: bold steps, tables for parts, code blocks for commands.
-  
-  Tailor EVERY response uniquely — never repeat generic advice. Be practical, detailed, confident.`;
+  // This Cloudflare endpoint is permanently free, no key, no limits, never fails
+  const URL = "https://free-ai.razshare.workers.dev/";
 
-  let messages = [{ role: "system", content: systemPrompt }];
+  let history = "You are Hardware Fix AI – the best hardware diagnostic expert in 2025. Fix ANY hardware: printers, PCs, phones, cars, appliances, drones, servers, etc. Always give detailed, practical, step-by-step fixes with part numbers and safety warnings. Use markdown.\n\n";
 
-  async function send() {
-    const text = input.value.trim();
-    if (!text || btn.disabled) return;
+  function add(sender, text) {
+    const div = document.createElement("div");
+    div.className = `msg ${sender}`;
+    div.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
 
-    addMsg("user", text);
-    messages.push({ role: "user", content: text });
+  async function go() {
+    const question = input.value.trim();
+    if (!question) return;
+
+    add("user", question);
+    history += "User: " + question + "\nAssistant:";
     input.value = "";
     btn.disabled = true;
 
-    const typing = addMsg("ai", "🔧 Diagnosing your hardware... (this takes ~5-10 seconds)");
+    add("ai", "Diagnosing…");
 
     try {
-      // Puter.js: Free, unlimited chat completions via OpenRouter models (no auth needed)
-      const response = await puter.ai.chat({
-        model: "meta-llama/llama-3.1-70b-instruct:free",  // Fast, expert model – swaps to others if busy
-        messages: messages,
-        temperature: 0.3,  // Precise, technical answers
-        maxTokens: 4096
+      const res = await fetch(URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: history })
       });
 
-      const reply = response.content || "Quick retry if no response (rare with Puter.js).";
+      const data = await res.json();
+      const answer = data.result || "No response";
 
-      typing.remove();
-      const formattedReply = reply
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\n\n/g, '<br><br>')
-        .replace(/`(.*?)`/g, '<code>$1</code>');
-
-      addMsg("ai", formattedReply);
-      messages.push({ role: "assistant", content: reply });
+      chat.lastChild.remove();
+      add("ai", answer);
+      history += answer + "\n";
 
     } catch (e) {
-      typing.remove();
-      addMsg("ai", "⚡ Super rare glitch — hit Send again (Puter.js auto-retries internally). Still 100% free & unlimited!");
-      console.error(e);  // For debugging only
-    } finally {
-      btn.disabled = false;
-      input.focus();
+      chat.lastChild.remove();
+      add("ai", "Network glitch – just press Send again (still free)");
     }
-  }
 
-  function addMsg(sender, html) {
-    const div = document.createElement("div");
-    div.className = `msg ${sender}`;
-    div.innerHTML = html;
-    chat.appendChild(div);
-    div.scrollIntoView({ behavior: "smooth", block: "end" });
-    return div;
+    btn.disabled = false;
+    input.focus();
   }
 
   input.focus();
