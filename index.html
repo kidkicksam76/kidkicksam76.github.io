@@ -19,16 +19,26 @@
       * {
         box-sizing: border-box;
       }
-      /* Custom scrollbar for chat */
+      /* Custom scrollbar for chat - now visible and styled */
       .cc-scroll::-webkit-scrollbar {
-        width: 6px;
+        width: 12px;
       }
       .cc-scroll::-webkit-scrollbar-track {
-        background: transparent;
+        background: #0f3460;
+        border-radius: 10px;
       }
       .cc-scroll::-webkit-scrollbar-thumb {
-        background-color: rgba(255, 255, 255, 0.2);
-        border-radius: 999px;
+        background-color: #533483;
+        border-radius: 10px;
+        border: 2px solid #0f3460;
+      }
+      .cc-scroll::-webkit-scrollbar-thumb:hover {
+        background-color: #6d44a8;
+      }
+      /* Firefox scrollbar */
+      .cc-scroll {
+        scrollbar-width: auto;
+        scrollbar-color: #533483 #0f3460;
       }
 
       @keyframes cc-slide-in {
@@ -54,6 +64,801 @@
   <style>@view-transition { navigation: auto; }</style>
  </head>
  <body class="h-full">
+  <div class="h-full flex flex-col bg-[#1a1a2e]">
+   <header class="flex-shrink-0 border-b-2 border-[#e94560] bg-[#0f3460] text-[#e94560]" role="banner">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+     <div class="flex items-center gap-3"><button id="cc-back-btn" type="button" class="cc-focus-visible hidden items-center justify-center h-9 w-9 rounded-full bg-[#533483] hover:bg-[#6d44a8] text-white transition" aria-label="Go back to welcome screen"> ← </button>
+      <h1 id="cc-main-title" class="text-xl font-semibold">Tech Support Assistant</h1>
+     </div>
+     <div class="inline-flex items-center gap-2 text-xs text-white/80 bg-[#16213e] px-3 py-1.5 rounded-full"><span class="inline-flex h-2 w-2 rounded-full bg-[#22c55e]" aria-hidden="true"></span> <span>Online helper</span>
+     </div>
+    </div>
+   </header>
+   <main class="flex-1 min-h-0 flex flex-col" role="main">
+    <section aria-label="Chat conversation" class="flex-1 min-h-0 overflow-hidden">
+     <div id="cc-chat-container" class="cc-scroll max-w-5xl mx-auto px-6 py-6 flex flex-col gap-4 overflow-y-auto"><!-- Welcome block (hidden after first real message) -->
+      <article id="cc-welcome" class="text-center text-white max-w-xl mx-auto mt-6 bg-[#16213e]/70 rounded-2xl px-6 py-8 shadow-lg">
+       <h2 id="cc-welcome-title" class="text-2xl font-semibold text-[#e94560] mb-2">Hi, I'm your tech assistant 🔧</h2>
+       <p id="cc-welcome-body" class="text-sm text-white/80 mb-4 leading-relaxed">Describe what's going wrong with your computer, phone, or apps, and I'll walk you through simple, step‑by‑step fixes.</p>
+       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-left text-xs" aria-label="Quick help categories"><button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My Wi‑Fi keeps disconnecting every few minutes"> 🛜 Wi‑Fi Drops </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My computer takes forever to start up"> 🖥️ Slow Startup </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My email won't send messages"> 📧 Email Won't Send </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My app closes by itself"> ⚙️ App Crashes </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My printer won't print"> 🖨️ Printer Issues </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My screen is completely frozen"> 🔒 Frozen Screen </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="I forgot my password and can't log in"> 🔑 Forgot Password </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My phone battery dies too fast"> 🔋 Battery Drains </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="I'm getting a blue screen error on Windows"> 💙 Blue Screen </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="I can't hear any sound from my computer"> 🔊 No Sound </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My webcam shows a black screen"> 📷 Camera Black </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My Bluetooth headphones won't pair"> 📡 Bluetooth Pairing </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My keyboard keys aren't working"> ⌨️ Keyboard Issues </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My computer says storage is full"> 💾 Storage Full </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="Software won't install on my computer"> 📦 Can't Install </button>
+       </div>
+      </article><!-- Initial assistant message -->
+      <div class="flex items-start gap-3 max-w-xl cc-message-anim" data-role="assistant-message">
+       <div class="message-avatar flex items-center justify-center h-9 w-9 rounded-full bg-[#533483] text-white text-lg flex-shrink-0" aria-hidden="true">
+        🤖
+       </div>
+       <div class="flex-1">
+        <div class="message-content bg-[#0f3460] text-white rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed">
+         <p>I'm here to help you fix tech problems. Just tell me what's wrong in simple words, and I'll give you easy steps to follow.</p>
+        </div>
+        <p class="message-time text-[11px] text-white/60 mt-1">Assistant · just now</p>
+       </div>
+      </div>
+     </div>
+    </section>
+    <section aria-label="Ask a tech support question" class="flex-shrink-0 border-t-2 border-[#533483] bg-[#0f3460]">
+     <div class="max-w-5xl mx-auto px-6 py-4 space-y-2">
+      <form id="cc-input-form" class="w-full" novalidate>
+       <div class="flex items-end gap-3">
+        <div class="flex-1"><label for="cc-input" class="block text-xs font-medium text-white/70 mb-1">Type your tech question</label>
+         <div class="flex items-center gap-2 bg-[#1a1a2e] border-2 border-[#533483] rounded-full px-4 py-2.5 focus-within:border-[#e94560] transition"><textarea id="cc-input" rows="1" class="input-field block w-full bg-transparent border-none outline-none text-sm text-white placeholder:text-white/40 resize-none" placeholder="Ask a question about your device, app, or setup..."></textarea>
+         </div>
+        </div><button id="cc-send-btn" type="submit" class="cc-focus-visible inline-flex items-center justify-center bg-[#e94560] hover:bg-[#f25b72] text-white font-semibold text-sm px-5 py-2.5 rounded-full whitespace-nowrap transition disabled:opacity-60 disabled:cursor-not-allowed"> <span id="cc-send-text">Send</span> <span id="cc-send-spinner" class="hidden ml-2 h-4 w-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden="true"></span> </button>
+       </div>
+      </form>
+      <p id="cc-footer-text" class="text-[11px] text-white/50 text-left">Responses are suggestions only. For sensitive systems, confirm steps with your IT team first.</p>
+      <p id="cc-error" class="hidden text-xs text-[#fed7d7] bg-[#7f1d1d]/60 border border-[#fecaca] rounded-md px-3 py-1.5"></p>
+     </div>
+    </section>
+   </main>
+  </div>
+  <script>
+      // --- Comprehensive tech support with specific problem detection ---
+
+      const chatContainer = document.getElementById("cc-chat-container");
+      const inputForm = document.getElementById("cc-input-form");
+      const inputField = document.getElementById("cc-input");
+      const sendBtn = document.getElementById("cc-send-btn");
+      const sendText = document.getElementById("cc-send-text");
+      const sendSpinner = document.getElementById("cc-send-spinner");
+      const errorBox = document.getElementById("cc-error");
+      const welcomeBlock = document.getElementById("cc-welcome");
+      const backBtn = document.getElementById("cc-back-btn");
+
+      const welcomeTitleEl = document.getElementById("cc-welcome-title");
+      const welcomeBodyEl = document.getElementById("cc-welcome-body");
+      const mainTitleEl = document.getElementById("cc-main-title");
+      const footerTextEl = document.getElementById("cc-footer-text");
+
+      function showError(message) {
+        if (!errorBox) return;
+        errorBox.textContent = message;
+        errorBox.classList.remove("hidden");
+        setTimeout(() => {
+          errorBox.classList.add("hidden");
+        }, 3000);
+      }
+
+      function setSending(isSending) {
+        if (!sendBtn) return;
+        sendBtn.disabled = isSending;
+        if (isSending) {
+          sendSpinner.classList.remove("hidden");
+        } else {
+          sendSpinner.classList.add("hidden");
+        }
+      }
+
+      function addMessage(role, text) {
+        if (!chatContainer) return;
+
+        if (welcomeBlock && !welcomeBlock.classList.contains("hidden")) {
+          welcomeBlock.classList.add("hidden");
+          if (backBtn) {
+            backBtn.classList.remove("hidden");
+            backBtn.classList.add("flex");
+          }
+        }
+
+        const wrapper = document.createElement("div");
+        wrapper.className =
+          "flex items-start gap-3 max-w-xl cc-message-anim " +
+          (role === "user" ? "ml-auto flex-row-reverse" : "");
+        wrapper.setAttribute("data-role", role + "-message");
+
+        const avatar = document.createElement("div");
+        avatar.className =
+          "message-avatar flex items-center justify-center h-9 w-9 rounded-full text-white text-lg flex-shrink-0 " +
+          (role === "user" ? "bg-[#e94560]" : "bg-[#533483]");
+        avatar.textContent = role === "user" ? "👤" : "🤖";
+
+        const body = document.createElement("div");
+        body.className = "flex-1";
+
+        const bubble = document.createElement("div");
+        bubble.className =
+          "message-content text-white rounded-2xl px-4 py-3 text-sm leading-relaxed " +
+          (role === "user"
+            ? "bg-[#e94560] rounded-br-sm"
+            : "bg-[#0f3460] rounded-bl-sm");
+        
+        // Format text with line breaks
+        const lines = text.split('\n');
+        lines.forEach((line, index) => {
+          if (line.trim()) {
+            const p = document.createElement('p');
+            p.textContent = line;
+            if (index > 0) p.className = 'mt-2';
+            bubble.appendChild(p);
+          }
+        });
+
+        const time = document.createElement("p");
+        time.className = "message-time text-[11px] text-white/60 mt-1";
+        const timestamp = new Date();
+        const minutes = timestamp.getMinutes().toString().padStart(2, "0");
+        const hours = timestamp.getHours().toString().padStart(2, "0");
+        time.textContent =
+          (role === "user" ? "You" : "Assistant") + " · " + hours + ":" + minutes;
+
+        body.appendChild(bubble);
+        body.appendChild(time);
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(body);
+
+        chatContainer.appendChild(wrapper);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      function generateAssistantReply(message) {
+        const lower = message.toLowerCase();
+
+        // VERY SPECIFIC WI-FI ISSUES
+        if (lower.includes("wifi keeps disconnecting") || lower.includes("wi-fi drops") || lower.includes("connection drops") || lower.includes("keeps losing connection")) {
+          return "Your Wi-Fi keeps dropping? Here's the fix:\n\n1️⃣ Move closer to your router. Walls block the signal.\n\n2️⃣ Unplug your router, wait 30 seconds, plug it back in. Wait 3 minutes.\n\n3️⃣ On your device, turn Wi-Fi off, wait 5 seconds, turn it back on.\n\n4️⃣ Too many devices? Turn off Wi-Fi on devices you're not using.\n\n5️⃣ Check if your router is overheating. Make sure it has space around it for air.\n\n6️⃣ Update your router's software (check the manual or call your internet provider).";
+        }
+
+        if (lower.includes("wifi connected but no internet") || lower.includes("connected but can't browse") || lower.includes("no internet access")) {
+          return "Connected to Wi-Fi but can't open websites? Try this:\n\n1️⃣ Unplug your router for 30 seconds, then plug it back in.\n\n2️⃣ On your device, turn Wi-Fi off and back on.\n\n3️⃣ Try opening a different website - maybe just that one site is down.\n\n4️⃣ Check if other devices can access the internet. If not, call your internet provider.\n\n5️⃣ Restart your device completely.";
+        }
+
+        if ((lower.includes("wrong password") || lower.includes("incorrect password")) && (lower.includes("wifi") || lower.includes("wi-fi"))) {
+          return "Wi-Fi password not working?\n\n1️⃣ Check if Caps Lock is ON. Passwords care about capital letters.\n\n2️⃣ Look at your router - there's usually a sticker on the bottom or back with the password.\n\n3️⃣ Type the password in Notes first so you can see it, then copy and paste it.\n\n4️⃣ Make sure you're typing the exact password - no extra spaces.\n\n5️⃣ If someone changed it, ask them for the new password.";
+        }
+
+        if (lower.includes("wifi slow") || lower.includes("internet slow") || lower.includes("slow connection")) {
+          return "Internet running slow?\n\n1️⃣ Move closer to your router.\n\n2️⃣ Close apps and browser tabs you're not using.\n\n3️⃣ Restart your router - unplug for 30 seconds.\n\n4️⃣ Check how many devices are using Wi-Fi. Each one slows it down.\n\n5️⃣ Run a speed test (search 'speed test' on Google). If it's much slower than what you pay for, call your provider.";
+        }
+
+        // General Wi-Fi
+        if (lower.includes("wifi") || lower.includes("wi-fi") || lower.includes("internet") || lower.includes("connection") || lower.includes("network") || lower.includes("online")) {
+          return "Internet not working? Let's fix it:\n\n1️⃣ Check if other devices have internet. If nothing works, it's your router or internet provider.\n\n2️⃣ Unplug your router for 30 seconds, plug it back in, wait 3 minutes.\n\n3️⃣ On your device, turn Wi-Fi off and back on.\n\n4️⃣ Move closer to the router.\n\n5️⃣ Restart your device.\n\n6️⃣ If still not working, call your internet provider.";
+        }
+
+        // VERY SPECIFIC SLOW COMPUTER ISSUES
+        if (lower.includes("slow startup") || lower.includes("takes forever to start") || lower.includes("slow boot") || lower.includes("long to start")) {
+          return "Computer takes forever to start?\n\n1️⃣ Too many programs start automatically. Stop them:\n   • Windows: Press Ctrl+Shift+Esc, click 'Startup', turn off programs you don't need\n   • Mac: Apple menu > System Preferences > Users & Groups > Login Items, remove programs\n\n2️⃣ Restart your computer.\n\n3️⃣ Make sure you have free space on your hard drive (at least 15%).\n\n4️⃣ Update Windows or macOS.\n\n5️⃣ If it's still slow, your hard drive might be old and needs replacing.";
+        }
+
+        if (lower.includes("browser slow") || lower.includes("chrome slow") || lower.includes("firefox slow") || lower.includes("edge slow") || lower.includes("safari slow")) {
+          return "Browser running slow?\n\n1️⃣ Close tabs you're not using. Each tab uses memory.\n\n2️⃣ Clear your browsing history:\n   • Press Ctrl+Shift+Delete (or Cmd+Shift+Delete on Mac)\n   • Select 'All time'\n   • Check 'Cookies' and 'Cached images'\n   • Click 'Clear data'\n\n3️⃣ Turn off extensions you don't use (click the puzzle piece icon).\n\n4️⃣ Update your browser.\n\n5️⃣ Close the browser completely and reopen it.";
+        }
+
+        if (lower.includes("100% disk") || lower.includes("disk usage") || lower.includes("disk at 100")) {
+          return "Hard drive at 100%? This makes everything slow:\n\n1️⃣ Restart your computer first.\n\n2️⃣ Press Ctrl+Shift+Esc, click the 'Disk' column to see what's using it.\n\n3️⃣ Update Windows (Settings > Update & Security > Check for updates).\n\n4️⃣ Run a virus scan with Windows Defender.\n\n5️⃣ If it keeps happening, your hard drive might be failing - back up your important files now.";
+        }
+
+        if (lower.includes("fan loud") || lower.includes("fan noise") || lower.includes("loud fan")) {
+          return "Computer fan really loud?\n\n1️⃣ Close programs you're not using - they make the computer work hard.\n\n2️⃣ Make sure air vents aren't blocked. Don't use laptop on bed or couch.\n\n3️⃣ Clean dust from vents with compressed air (buy at any store).\n\n4️⃣ Put your laptop on a hard, flat surface.\n\n5️⃣ If it's always loud, the fan might need replacing.";
+        }
+
+        // General Slow Computer
+        if (lower.includes("slow") || lower.includes("lag") || lower.includes("performance") || lower.includes("sluggish")) {
+          return "Computer running slow?\n\n1️⃣ Close programs you're not using.\n\n2️⃣ Restart your computer. This fixes most slowness.\n\n3️⃣ Check your storage - you need at least 15% free space. Delete old files.\n\n4️⃣ Stop programs from starting automatically:\n   • Windows: Ctrl+Shift+Esc > Startup\n   • Mac: System Preferences > Users & Groups > Login Items\n\n5️⃣ Update your computer (Windows Update or Mac Software Update).\n\n6️⃣ Run a virus scan.";
+        }
+
+        // VERY SPECIFIC EMAIL ISSUES
+        if (lower.includes("email won't send") || lower.includes("can't send email") || lower.includes("email stuck")) {
+          return "Can't send emails?\n\n1️⃣ Check your internet connection - try opening a website.\n\n2️⃣ Check your Outbox folder - delete any stuck messages there.\n\n3️⃣ Make sure the email address you're sending to is typed correctly.\n\n4️⃣ Check if your email is full - delete old emails to make space.\n\n5️⃣ Sign out of your email and sign back in.\n\n6️⃣ If you changed your password recently, update it in your email app.";
+        }
+
+        if (lower.includes("email won't receive") || lower.includes("not receiving email") || lower.includes("emails not coming")) {
+          return "Not receiving emails?\n\n1️⃣ Check your Spam or Junk folder - emails might be there.\n\n2️⃣ Check if your inbox is full - delete old emails.\n\n3️⃣ Make sure you're connected to the internet.\n\n4️⃣ Try sending yourself an email to test.\n\n5️⃣ Sign out and sign back in.\n\n6️⃣ Check if the sender's email address is blocked.";
+        }
+
+        if (lower.includes("forgot email password") || lower.includes("can't log into email")) {
+          return "Can't log into your email?\n\n1️⃣ Click 'Forgot Password' on the login page.\n\n2️⃣ Check your phone for a text message with a code.\n\n3️⃣ Check your backup email for a reset link.\n\n4️⃣ Try your old passwords - you might remember one.\n\n5️⃣ For Gmail: Go to google.com/accounts/recovery\n   For Outlook: Go to account.live.com/password/reset";
+        }
+
+        // General Email
+        if (lower.includes("email") || lower.includes("outlook") || lower.includes("gmail") || lower.includes("mail")) {
+          return "Email problem? Let's fix it:\n\n1️⃣ Check your internet connection.\n\n2️⃣ Check your Spam/Junk folder.\n\n3️⃣ Sign out and sign back in.\n\n4️⃣ Make sure your device's date and time are correct.\n\n5️⃣ Update your email app.\n\n6️⃣ Try accessing email through a web browser instead of the app.";
+        }
+
+        // VERY SPECIFIC APP CRASH ISSUES
+        if (lower.includes("app closes by itself") || lower.includes("app keeps closing") || lower.includes("app shuts down")) {
+          return "App keeps closing by itself?\n\n1️⃣ Close the app completely (don't just minimize it) and open it again.\n\n2️⃣ Restart your device.\n\n3️⃣ Update the app (check your app store).\n\n4️⃣ Clear the app's cache:\n   • iPhone: Delete and reinstall the app\n   • Android: Settings > Apps > [App name] > Clear cache\n\n5️⃣ Make sure you have enough storage space.\n\n6️⃣ If it still crashes, delete and reinstall the app.";
+        }
+
+        if (lower.includes("app won't open") || lower.includes("app doesn't open") || lower.includes("can't open app")) {
+          return "App won't open?\n\n1️⃣ Restart your device.\n\n2️⃣ Update the app in your app store.\n\n3️⃣ Check if your device's operating system needs an update.\n\n4️⃣ Delete the app and download it again.\n\n5️⃣ Make sure you have enough storage space.\n\n6️⃣ Check if the app works on your device (some apps need newer phones).";
+        }
+
+        // General App Crashes
+        if (lower.includes("crash") || lower.includes("freeze") || lower.includes("not responding") || lower.includes("stopped working") || lower.includes("hang")) {
+          return "App crashing or freezing?\n\n1️⃣ Close the app completely and reopen it.\n\n2️⃣ Restart your device.\n\n3️⃣ Update the app.\n\n4️⃣ Clear the app's cache (Settings > Apps > Clear cache).\n\n5️⃣ Make sure you have free storage space.\n\n6️⃣ Delete and reinstall the app (backup important data first).";
+        }
+
+        // VERY SPECIFIC PRINTER ISSUES
+        if (lower.includes("printer offline") || lower.includes("printer says offline")) {
+          return "Printer says offline?\n\n1️⃣ Turn the printer off, wait 10 seconds, turn it back on.\n\n2️⃣ Check the cable is plugged in (or Wi-Fi is connected).\n\n3️⃣ On your computer:\n   • Windows: Settings > Devices > Printers > Right-click your printer > 'Use printer online'\n   • Mac: System Preferences > Printers > Delete printer and add it again\n\n4️⃣ Restart your computer.\n\n5️⃣ Make sure printer and computer are on the same Wi-Fi network.";
+        }
+
+        if (lower.includes("printer won't print") || lower.includes("nothing prints") || lower.includes("printer not printing")) {
+          return "Printer won't print?\n\n1️⃣ Check basics: Is it turned on? Does it have paper? Does it have ink?\n\n2️⃣ Check the cable is plugged in (or Wi-Fi is connected).\n\n3️⃣ Cancel all print jobs:\n   • Windows: Settings > Devices > Printers > Open queue > Cancel all\n   • Mac: System Preferences > Printers > Open print queue > Cancel all\n\n4️⃣ Restart the printer and your computer.\n\n5️⃣ Try printing a test page from the printer itself (no computer).";
+        }
+
+        if (lower.includes("paper jam") || lower.includes("jammed")) {
+          return "Paper jammed in printer?\n\n1️⃣ Turn off the printer.\n\n2️⃣ Open all doors and trays.\n\n3️⃣ Gently pull out any paper you see. Pull in the direction it normally feeds.\n\n4️⃣ Check for small torn pieces - remove everything.\n\n5️⃣ Close everything and turn the printer back on.\n\n6️⃣ If it still says paper jam, there might be a small piece stuck inside - check again carefully.";
+        }
+
+        // General Printer
+        if (lower.includes("print") || lower.includes("printer") || lower.includes("scan")) {
+          return "Printer problem?\n\n1️⃣ Check: Is it on? Does it have paper and ink?\n\n2️⃣ Check the cable or Wi-Fi connection.\n\n3️⃣ Restart the printer and your computer.\n\n4️⃣ Cancel all print jobs and try again.\n\n5️⃣ Make sure it's set as your default printer.\n\n6️⃣ Try printing a test page from the printer itself.";
+        }
+
+        // VERY SPECIFIC FROZEN SCREEN ISSUES
+        if (lower.includes("screen frozen") || lower.includes("completely frozen") || lower.includes("won't respond")) {
+          return "Screen completely frozen?\n\n1️⃣ Wait 30 seconds - sometimes it's just thinking.\n\n2️⃣ Try these keyboard shortcuts:\n   • Windows: Press Ctrl+Alt+Delete\n   • Mac: Press Command+Option+Escape\n\n3️⃣ If that doesn't work, force restart:\n   • Desktop: Hold the power button for 10 seconds\n   • Laptop: Hold the power button for 10 seconds\n   • Phone: Hold power + volume down for 10 seconds\n\n4️⃣ After it restarts, don't open everything at once.\n\n5️⃣ If this happens often, you might have a virus - run a scan.";
+        }
+
+        if (lower.includes("mouse not moving") || lower.includes("cursor frozen") || lower.includes("mouse stuck")) {
+          return "Mouse cursor not moving?\n\n1️⃣ Try pressing Ctrl+Alt+Delete (Windows) or Command+Option+Escape (Mac).\n\n2️⃣ Unplug your mouse and plug it back in.\n\n3️⃣ Try a different USB port.\n\n4️⃣ For wireless mouse, change the batteries.\n\n5️⃣ Try using keyboard to navigate (Tab key to move, Enter to click).\n\n6️⃣ If nothing works, hold the power button for 10 seconds to restart.";
+        }
+
+        // General Frozen
+        if (lower.includes("frozen") || lower.includes("stuck") || lower.includes("unresponsive")) {
+          return "Device frozen?\n\n1️⃣ Wait 30 seconds first.\n\n2️⃣ Try Ctrl+Alt+Delete (Windows) or Command+Option+Escape (Mac).\n\n3️⃣ If that doesn't work, force restart by holding the power button for 10 seconds.\n\n4️⃣ After restart, don't open all your programs at once.\n\n5️⃣ If it freezes often, run a virus scan and free up storage space.";
+        }
+
+        // VERY SPECIFIC PASSWORD ISSUES
+        if (lower.includes("forgot windows password") || lower.includes("can't log into windows")) {
+          return "Forgot Windows password?\n\n1️⃣ On the login screen, click 'I forgot my password'.\n\n2️⃣ Follow the steps to reset using your Microsoft account.\n\n3️⃣ If you don't have a Microsoft account, you'll need to:\n   • Use another admin account on the computer, OR\n   • Use a password reset disk if you made one, OR\n   • Reinstall Windows (you'll lose your files)\n\n4️⃣ For work computers, contact your IT department.";
+        }
+
+        if (lower.includes("forgot mac password") || lower.includes("can't log into mac")) {
+          return "Forgot Mac password?\n\n1️⃣ On the login screen, enter any password 3 times.\n\n2️⃣ You'll see 'Reset using Apple ID' - click it.\n\n3️⃣ Enter your Apple ID and password.\n\n4️⃣ Create a new password.\n\n5️⃣ If that doesn't work:\n   • Restart and hold Command+R\n   • Click Utilities > Terminal\n   • Type: resetpassword\n   • Follow the instructions";
+        }
+
+        // General Password
+        if (lower.includes("password") || lower.includes("forgot") || lower.includes("login") || lower.includes("sign in") || lower.includes("locked out")) {
+          return "Password problem?\n\n1️⃣ Click 'Forgot Password' on the login page.\n\n2️⃣ Check your email or phone for a reset link or code.\n\n3️⃣ Try passwords you commonly use.\n\n4️⃣ Check if Caps Lock is on.\n\n5️⃣ For work accounts, contact your IT department.\n\n6️⃣ After you reset it, write it down somewhere safe.";
+        }
+
+        // VERY SPECIFIC BATTERY ISSUES
+        if (lower.includes("battery drains fast") || lower.includes("battery dies quickly") || lower.includes("battery doesn't last")) {
+          return "Battery draining too fast?\n\n1️⃣ Lower your screen brightness (this uses the most battery).\n\n2️⃣ Turn on Battery Saver mode:\n   • iPhone: Settings > Battery > Low Power Mode\n   • Android: Settings > Battery > Battery Saver\n\n3️⃣ Turn off Wi-Fi and Bluetooth when you're not using them.\n\n4️⃣ Close apps you're not using.\n\n5️⃣ Check which apps use the most battery (Settings > Battery) and close them.\n\n6️⃣ If your phone is old (2+ years), the battery might be worn out and need replacing.";
+        }
+
+        if (lower.includes("won't charge") || lower.includes("not charging") || lower.includes("charging slow")) {
+          return "Device won't charge?\n\n1️⃣ Try a different charging cable.\n\n2️⃣ Try a different power outlet.\n\n3️⃣ Clean the charging port gently with a toothpick (turn device off first).\n\n4️⃣ Restart your device.\n\n5️⃣ Try charging from a wall outlet instead of computer USB.\n\n6️⃣ If it charges very slowly, your cable or charger might be damaged.";
+        }
+
+        // General Battery
+        if (lower.includes("battery") || lower.includes("drain") || lower.includes("charge") || lower.includes("power")) {
+          return "Battery problem?\n\n1️⃣ Lower screen brightness.\n\n2️⃣ Turn on Battery Saver or Low Power Mode.\n\n3️⃣ Turn off Wi-Fi and Bluetooth when not using them.\n\n4️⃣ Close apps you're not using.\n\n5️⃣ Check Settings > Battery to see what's using power.\n\n6️⃣ If battery is old (2+ years), it might need replacing.";
+        }
+
+        // BLUE SCREEN
+        if (lower.includes("blue screen") || lower.includes("bsod") || lower.includes("stop error")) {
+          return "Blue screen error?\n\n1️⃣ Write down the error code if you see one.\n\n2️⃣ Restart your computer - it might be a one-time thing.\n\n3️⃣ Update Windows (Settings > Update & Security).\n\n4️⃣ Update your drivers (especially graphics card).\n\n5️⃣ Run a virus scan.\n\n6️⃣ If it keeps happening, your computer might have a hardware problem - back up your files and take it to a repair shop.";
+        }
+
+        // VERY SPECIFIC SOUND ISSUES
+        if (lower.includes("no sound") || lower.includes("can't hear") || lower.includes("audio not working")) {
+          return "No sound coming out?\n\n1️⃣ Check the volume - make sure it's not muted or at zero.\n\n2️⃣ Check you're using the right output:\n   • Windows: Click speaker icon > Click arrow > Select your speakers/headphones\n   • Mac: System Preferences > Sound > Output > Select your device\n\n3️⃣ Unplug headphones and plug them back in.\n\n4️⃣ Restart your device.\n\n5️⃣ Try different headphones or speakers to see if yours are broken.\n\n6️⃣ Update your audio drivers (Windows: Device Manager > Sound controllers).";
+        }
+
+        if (lower.includes("sound crackling") || lower.includes("audio crackling") || lower.includes("static")) {
+          return "Sound crackling or static?\n\n1️⃣ Unplug your headphones/speakers and plug them back in.\n\n2️⃣ Try a different audio jack or USB port.\n\n3️⃣ Lower the volume - sometimes too loud causes crackling.\n\n4️⃣ Update your audio drivers (Device Manager > Sound controllers).\n\n5️⃣ Try different headphones to see if yours are damaged.\n\n6️⃣ Close other programs - too many can cause audio issues.";
+        }
+
+        // General Sound
+        if (lower.includes("sound") || lower.includes("audio") || lower.includes("speaker") || lower.includes("volume") || lower.includes("hear")) {
+          return "Sound problem?\n\n1️⃣ Check volume is up and not muted.\n\n2️⃣ Make sure the right speakers/headphones are selected.\n\n3️⃣ Unplug and replug your headphones.\n\n4️⃣ Restart your device.\n\n5️⃣ Try different headphones to test.\n\n6️⃣ Update your audio drivers.";
+        }
+
+        // VERY SPECIFIC CAMERA ISSUES
+        if (lower.includes("camera black screen") || lower.includes("webcam black") || lower.includes("camera shows black")) {
+          return "Camera showing black screen?\n\n1️⃣ Check if there's a cover or sticker over the camera.\n\n2️⃣ Close all apps that might use the camera (Zoom, Teams, Skype).\n\n3️⃣ Restart your device.\n\n4️⃣ Give the app permission to use camera:\n   • Windows: Settings > Privacy > Camera > Allow apps\n   • Mac: System Preferences > Security & Privacy > Camera > Check the app\n\n5️⃣ Update the app you're trying to use.\n\n6️⃣ Try the camera in a different app to see if it works.";
+        }
+
+        if (lower.includes("camera not working in zoom") || lower.includes("camera not working in teams")) {
+          return "Camera not working in Zoom/Teams?\n\n1️⃣ In the app, click Settings > Video > Select your camera from the dropdown.\n\n2️⃣ Close the app completely and reopen it.\n\n3️⃣ Give the app camera permission:\n   • Windows: Settings > Privacy > Camera\n   • Mac: System Preferences > Security & Privacy > Camera\n\n4️⃣ Close other apps that might be using the camera.\n\n5️⃣ Restart your computer.\n\n6️⃣ Update the app to the latest version.";
+        }
+
+        // General Camera
+        if (lower.includes("camera") || lower.includes("webcam") || lower.includes("video")) {
+          return "Camera not working?\n\n1️⃣ Check if there's a cover over the camera.\n\n2️⃣ Close other apps using the camera.\n\n3️⃣ Give the app permission (Settings > Privacy > Camera).\n\n4️⃣ Restart your device.\n\n5️⃣ Update the app.\n\n6️⃣ Try the camera in a different app to test it.";
+        }
+
+        // VERY SPECIFIC BLUETOOTH ISSUES
+        if (lower.includes("bluetooth won't pair") || lower.includes("can't pair bluetooth") || lower.includes("bluetooth pairing failed")) {
+          return "Bluetooth won't pair?\n\n1️⃣ Put your device in pairing mode (usually hold the power button until it flashes).\n\n2️⃣ On your phone/computer, turn Bluetooth off and back on.\n\n3️⃣ Forget the device and try pairing again:\n   • Find it in Bluetooth settings\n   • Click 'Forget' or 'Remove'\n   • Search for it again\n\n4️⃣ Move the devices closer together (within 3 feet).\n\n5️⃣ Charge your Bluetooth device - low battery causes problems.\n\n6️⃣ Restart both devices.";
+        }
+
+        if (lower.includes("bluetooth keeps disconnecting") || lower.includes("bluetooth drops")) {
+          return "Bluetooth keeps disconnecting?\n\n1️⃣ Move closer - walls and distance cause disconnections.\n\n2️⃣ Charge your Bluetooth device.\n\n3️⃣ Turn off other Bluetooth devices nearby - they can interfere.\n\n4️⃣ Forget the device and pair it again.\n\n5️⃣ Update your phone/computer's software.\n\n6️⃣ Turn off Wi-Fi temporarily to see if it helps (Wi-Fi can interfere with Bluetooth).";
+        }
+
+        // General Bluetooth
+        if (lower.includes("bluetooth") || lower.includes("pairing") || lower.includes("wireless headphones") || lower.includes("airpods")) {
+          return "Bluetooth problem?\n\n1️⃣ Turn Bluetooth off and back on.\n\n2️⃣ Put your device in pairing mode (hold power button until it flashes).\n\n3️⃣ Move devices closer together.\n\n4️⃣ Forget the device and pair again.\n\n5️⃣ Charge your Bluetooth device.\n\n6️⃣ Restart both devices.";
+        }
+
+        // VERY SPECIFIC KEYBOARD/MOUSE ISSUES
+        if (lower.includes("keyboard keys not working") || lower.includes("some keys don't work")) {
+          return "Some keyboard keys not working?\n\n1️⃣ Restart your computer.\n\n2️⃣ Clean under the keys - dust and crumbs cause problems. Use compressed air.\n\n3️⃣ Check if Num Lock or Function Lock is on (might change what keys do).\n\n4️⃣ Try the keyboard on another computer to see if it's broken.\n\n5️⃣ For laptops, try an external USB keyboard to see if the built-in one is damaged.\n\n6️⃣ Update keyboard drivers (Device Manager > Keyboards).";
+        }
+
+        if (lower.includes("mouse not working") || lower.includes("mouse won't move")) {
+          return "Mouse not working?\n\n1️⃣ Check the cable is plugged in (or batteries for wireless).\n\n2️⃣ Try a different USB port.\n\n3️⃣ For wireless mouse, make sure the USB receiver is plugged in.\n\n4️⃣ Clean the bottom of the mouse - dust blocks the sensor.\n\n5️⃣ Try the mouse on a different surface (not glass or shiny).\n\n6️⃣ Restart your computer.\n\n7️⃣ Try a different mouse to see if yours is broken.";
+        }
+
+        if (lower.includes("typing wrong letters") || lower.includes("keyboard typing wrong")) {
+          return "Keyboard typing wrong letters?\n\n1️⃣ Check if you accidentally changed the keyboard language:\n   • Windows: Look at bottom right corner, click language, select English\n   • Mac: Top right corner, click flag icon, select English\n\n2️⃣ Turn off Num Lock (might make some keys type numbers).\n\n3️⃣ Restart your computer.\n\n4️⃣ Check keyboard settings to make sure it's set to your language.";
+        }
+
+        // General Keyboard/Mouse
+        if (lower.includes("keyboard") || lower.includes("mouse") || lower.includes("trackpad") || lower.includes("typing") || lower.includes("cursor")) {
+          return "Keyboard or mouse problem?\n\n1️⃣ Check cables are plugged in (or batteries for wireless).\n\n2️⃣ Try a different USB port.\n\n3️⃣ Restart your computer.\n\n4️⃣ Clean the device - dust causes problems.\n\n5️⃣ Update drivers (Device Manager > Keyboards/Mice).\n\n6️⃣ Try a different keyboard/mouse to test.";
+        }
+
+        // VERY SPECIFIC STORAGE ISSUES
+        if (lower.includes("storage full") || lower.includes("disk full") || lower.includes("no space left")) {
+          return "Storage full? Here's how to free up space:\n\n1️⃣ Empty your Recycle Bin/Trash.\n\n2️⃣ Delete old downloads (Downloads folder).\n\n3️⃣ Delete programs you don't use:\n   • Windows: Settings > Apps > Uninstall\n   • Mac: Open Applications folder, drag apps to Trash\n\n4️⃣ Clear browser cache (Ctrl+Shift+Delete).\n\n5️⃣ Move photos and videos to Google Photos or iCloud.\n\n6️⃣ Use Disk Cleanup:\n   • Windows: Search 'Disk Cleanup', run it\n   • Mac: About This Mac > Storage > Manage";
+        }
+
+        if (lower.includes("what's taking up space") || lower.includes("find large files")) {
+          return "Want to see what's using your storage?\n\n1️⃣ Windows: Settings > System > Storage > Click your drive > See what's using space\n\n2️⃣ Mac: Apple menu > About This Mac > Storage > Manage\n\n3️⃣ Look for:\n   • Old downloads\n   • Videos (these are huge)\n   • Programs you don't use\n   • Duplicate files\n\n4️⃣ Delete what you don't need.\n\n5️⃣ Move important files to an external drive or cloud storage.";
+        }
+
+        // General Storage
+        if (lower.includes("storage") || lower.includes("disk") || lower.includes("space") || lower.includes("full") || lower.includes("memory")) {
+          return "Need more storage space?\n\n1️⃣ Empty Recycle Bin/Trash.\n\n2️⃣ Delete old downloads and files.\n\n3️⃣ Uninstall programs you don't use.\n\n4️⃣ Clear browser cache.\n\n5️⃣ Move photos/videos to cloud storage.\n\n6️⃣ Run Disk Cleanup (Windows) or Manage Storage (Mac).";
+        }
+
+        // VERY SPECIFIC INSTALLATION ISSUES
+        if (lower.includes("can't install") || lower.includes("won't install") || lower.includes("installation failed")) {
+          return "Can't install software?\n\n1️⃣ Right-click the installer and choose 'Run as administrator'.\n\n2️⃣ Turn off your antivirus temporarily (it might be blocking it).\n\n3️⃣ Make sure you have enough free space (at least 10GB).\n\n4️⃣ Download the installer again - it might be corrupted.\n\n5️⃣ Restart your computer and try again.\n\n6️⃣ Check if your computer meets the requirements (look on the software's website).";
+        }
+
+        if (lower.includes("windows update won't install") || lower.includes("update failed")) {
+          return "Windows Update not working?\n\n1️⃣ Restart your computer and try again.\n\n2️⃣ Free up storage space (need at least 10GB).\n\n3️⃣ Run Windows Update Troubleshooter:\n   • Settings > Update & Security > Troubleshoot > Windows Update\n\n4️⃣ Disconnect external drives and try again.\n\n5️⃣ If it keeps failing, search the error code on Google for specific help.";
+        }
+
+        // General Installation
+        if (lower.includes("install") || lower.includes("update") || lower.includes("download") || lower.includes("setup")) {
+          return "Installation problem?\n\n1️⃣ Run as administrator (right-click > Run as administrator).\n\n2️⃣ Turn off antivirus temporarily.\n\n3️⃣ Make sure you have enough storage space.\n\n4️⃣ Download the file again.\n\n5️⃣ Restart and try again.\n\n6️⃣ Check if your computer meets the requirements.";
+        }
+
+        // SCREEN ISSUES
+        if (lower.includes("screen") || lower.includes("display") || lower.includes("monitor") || lower.includes("resolution")) {
+          return "Screen problem?\n\n1️⃣ Check all cables are plugged in tight.\n\n2️⃣ Try a different cable or port.\n\n3️⃣ Adjust brightness.\n\n4️⃣ Update graphics drivers.\n\n5️⃣ Change screen resolution (Settings > Display).\n\n6️⃣ Restart your computer.\n\n7️⃣ Try the monitor with a different computer to test it.";
+        }
+
+        // OVERHEATING
+        if (lower.includes("hot") || lower.includes("heat") || lower.includes("overheat") || lower.includes("temperature")) {
+          return "Device getting too hot?\n\n1️⃣ Make sure air vents aren't blocked.\n\n2️⃣ Don't use laptop on bed, couch, or soft surfaces.\n\n3️⃣ Clean dust from vents with compressed air.\n\n4️⃣ Close programs you're not using.\n\n5️⃣ Use in a cooler room.\n\n6️⃣ Put laptop on a hard, flat surface.\n\n7️⃣ If it's always hot, the cooling system might need repair.";
+        }
+
+        // VPN
+        if (lower.includes("vpn")) {
+          return "VPN not working?\n\n1️⃣ Disconnect and reconnect.\n\n2️⃣ Try a different server location.\n\n3️⃣ Restart the VPN app.\n\n4️⃣ Restart your device.\n\n5️⃣ Check your internet works without VPN first.\n\n6️⃣ Update the VPN app.\n\n7️⃣ Try turning off your firewall temporarily.";
+        }
+
+        // USB
+        if (lower.includes("usb") || lower.includes("flash drive") || lower.includes("external drive")) {
+          return "USB device not working?\n\n1️⃣ Try a different USB port.\n\n2️⃣ Try the device on another computer.\n\n3️⃣ Restart your computer with the device unplugged, then plug it in.\n\n4️⃣ Check if the device shows up in File Explorer (Windows) or Finder (Mac).\n\n5️⃣ Update USB drivers (Device Manager).\n\n6️⃣ Check for physical damage to the port or device.";
+        }
+
+        // Default / General Response
+        return "I can help! To give you the best solution, tell me:\n\n1️⃣ What exactly is happening? (Error message? Nothing happens? Something else?)\n\n2️⃣ What device are you using? (Windows PC, Mac, iPhone, Android, etc.)\n\n3️⃣ When did this start?\n\n4️⃣ What have you tried already?\n\nOr click one of the buttons above for common problems!";
+      }
+
+      function handleUserSubmit(text) {
+        if (!text || !text.trim()) {
+          showError("Please describe your tech issue so I can help.");
+          return;
+        }
+        const cleaned = text.trim();
+        addMessage("user", cleaned);
+        setSending(true);
+
+        setTimeout(() => {
+          const reply = generateAssistantReply(cleaned);
+          addMessage("assistant", reply);
+          setSending(false);
+        }, 800);
+      }
+
+      if (inputForm) {
+        inputForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+          handleUserSubmit(inputField.value);
+          inputField.value = "";
+          inputField.style.height = "auto";
+        });
+      }
+
+      if (inputField) {
+        inputField.addEventListener("input", function () {
+          this.style.height = "auto";
+          this.style.height = this.scrollHeight + "px";
+        });
+      }
+
+      // Category buttons
+      document.addEventListener("click", function (e) {
+        const btn = e.target.closest(".category-btn");
+        if (!btn) return;
+        const prompt = btn.getAttribute("data-prompt");
+        if (!prompt) return;
+        if (inputField) {
+          inputField.value = prompt;
+          inputField.style.height = "auto";
+          inputField.style.height = inputField.scrollHeight + "px";
+          inputField.focus();
+        }
+      });
+
+      // Back button
+      if (backBtn) {
+        backBtn.addEventListener("click", function() {
+          // Clear all messages except the initial assistant message
+          const messages = chatContainer.querySelectorAll('[data-role]');
+          messages.forEach((msg, index) => {
+            if (index > 0) { // Keep first message
+              msg.remove();
+            }
+          });
+          
+          // Show welcome block
+          if (welcomeBlock) {
+            welcomeBlock.classList.remove("hidden");
+          }
+          
+          // Hide back button
+          backBtn.classList.add("hidden");
+          backBtn.classList.remove("flex");
+          
+          // Clear input
+          if (inputField) {
+            inputField.value = "";
+            inputField.style.height = "auto";
+          }
+          
+          // Scroll to top
+          chatContainer.scrollTop = 0;
+        });
+      }
+
+      // --- Element SDK: config-driven text, colors, font, size ---
+
+      const defaultConfig = {
+        main_title: "Tech Support Assistant",
+        welcome_title: "Hi, I'm your tech assistant 🔧",
+        welcome_body:
+          "Describe what's going wrong with your computer, phone, or apps, and I'll walk you through simple, step‑by‑step fixes.",
+        placeholder_text: "Ask a question about your device, app, or setup...",
+        primary_button_text: "Send",
+        footer_text:
+          "Responses are suggestions only. For sensitive systems, confirm steps with your IT team first.",
+        // Colors
+        background_color: "#1a1a2e",
+        surface_color: "#0f3460",
+        text_color: "#ffffff",
+        primary_action_color: "#e94560",
+        secondary_action_color: "#533483",
+        // Font
+        font_family: "system-ui",
+        font_size: 14
+      };
+
+      async function onConfigChange(config) {
+        const cfg = Object.assign({}, defaultConfig, config || {});
+
+        const root = document.body;
+        if (root) {
+          root.style.backgroundColor = cfg.background_color;
+        }
+
+        const container = document.querySelector("div.h-full.flex.flex-col");
+        if (container) {
+          container.style.backgroundColor = cfg.background_color;
+        }
+
+        const headers = document.querySelectorAll("header");
+        headers.forEach((el) => {
+          el.style.backgroundColor = cfg.surface_color;
+          el.style.borderBottomColor = cfg.primary_action_color;
+        });
+
+        const footerSection = document.querySelector(
+          "section[aria-label='Ask a tech support question']"
+        );
+        if (footerSection) {
+          footerSection.style.backgroundColor = cfg.surface_color;
+          footerSection.style.borderTopColor = cfg.secondary_action_color;
+        }
+
+        const textEls = document.querySelectorAll("body, p, span, label, h1, h2, button");
+        textEls.forEach((el) => {
+          el.style.color = cfg.text_color;
+        });
+
+        // Primary button
+        if (sendBtn) {
+          sendBtn.style.backgroundColor = cfg.primary_action_color;
+        }
+
+        // Back button
+        if (backBtn) {
+          backBtn.style.backgroundColor = cfg.secondary_action_color;
+        }
+
+        // Category buttons and some avatars
+        const categoryButtons = document.querySelectorAll(".category-btn");
+        categoryButtons.forEach((btn) => {
+          btn.style.backgroundColor = cfg.secondary_action_color;
+        });
+        const assistantAvatars = document.querySelectorAll(
+          ".message-avatar.bg-\\[\\#533483\\]"
+        );
+        assistantAvatars.forEach((el) => {
+          el.style.backgroundColor = cfg.secondary_action_color;
+        });
+
+        // Scrollbar colors
+        const style = document.createElement('style');
+        style.textContent = `
+          .cc-scroll::-webkit-scrollbar-track {
+            background: ${cfg.surface_color} !important;
+          }
+          .cc-scroll::-webkit-scrollbar-thumb {
+            background-color: ${cfg.secondary_action_color} !important;
+            border-color: ${cfg.surface_color} !important;
+          }
+          .cc-scroll {
+            scrollbar-color: ${cfg.secondary_action_color} ${cfg.surface_color} !important;
+          }
+        `;
+        document.head.appendChild(style);
+
+        // Text content
+        if (mainTitleEl) {
+          mainTitleEl.textContent = cfg.main_title || defaultConfig.main_title;
+        }
+        if (welcomeTitleEl) {
+          welcomeTitleEl.textContent =
+            cfg.welcome_title || defaultConfig.welcome_title;
+        }
+        if (welcomeBodyEl) {
+          welcomeBodyEl.textContent =
+            cfg.welcome_body || defaultConfig.welcome_body;
+        }
+        if (inputField) {
+          inputField.placeholder =
+            cfg.placeholder_text || defaultConfig.placeholder_text;
+        }
+        if (sendText) {
+          sendText.textContent =
+            cfg.primary_button_text || defaultConfig.primary_button_text;
+        }
+        if (footerTextEl) {
+          footerTextEl.textContent =
+            cfg.footer_text || defaultConfig.footer_text;
+        }
+
+        // Font + size
+        const baseFont =
+          (cfg.font_family && cfg.font_family.trim()) || defaultConfig.font_family;
+        const baseSize = Number.isFinite(cfg.font_size)
+          ? cfg.font_size
+          : defaultConfig.font_size;
+        const fontStack = baseFont + ", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
+        document.documentElement.style.fontFamily = fontStack;
+
+        if (mainTitleEl) {
+          mainTitleEl.style.fontSize = baseSize * 1.7 + "px";
+        }
+        if (welcomeTitleEl) {
+          welcomeTitleEl.style.fontSize = baseSize * 1.5 + "px";
+        }
+        if (welcomeBodyEl) {
+          welcomeBodyEl.style.fontSize = baseSize * 1.0 + "px";
+        }
+        if (inputField) {
+          inputField.style.fontSize = baseSize * 0.95 + "px";
+        }
+        const labels = document.querySelectorAll("label");
+        labels.forEach((el) => {
+          el.style.fontSize = baseSize * 0.85 + "px";
+        });
+        const smallTexts = document.querySelectorAll(
+          "#cc-footer-text, .message-time"
+        );
+        smallTexts.forEach((el) => {
+          el.style.fontSize = baseSize * 0.8 + "px";
+        });
+      }
+
+      function mapToCapabilities(config) {
+        const cfg = Object.assign({}, defaultConfig, config || {});
+
+        const recolorables = [
+          {
+            get: () => cfg.background_color || defaultConfig.background_color,
+            set: (value) => {
+              cfg.background_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            }
+          },
+          {
+            get: () => cfg.surface_color || defaultConfig.surface_color,
+            set: (value) => {
+              cfg.surface_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ surface_color: value });
+              }
+            }
+          },
+          {
+            get: () => cfg.text_color || defaultConfig.text_color,
+            set: (value) => {
+              cfg.text_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            }
+          },
+          {
+            get: () =>
+              cfg.primary_action_color || defaultConfig.primary_action_color,
+            set: (value) => {
+              cfg.primary_action_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ primary_action_color: value });
+              }
+            }
+          },
+          {
+            get: () =>
+              cfg.secondary_action_color || defaultConfig.secondary_action_color,
+            set: (value) => {
+              cfg.secondary_action_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ secondary_action_color: value });
+              }
+            }
+          }
+        ];
+
+        const fontEditable = {
+          get: () => cfg.font_family || defaultConfig.font_family,
+          set: (value) => {
+            cfg.font_family = value;
+            if (window.elementSdk) {
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          }
+        };
+
+        const fontSizeable = {
+          get: () => cfg.font_size || defaultConfig.font_size,
+          set: (value) => {
+            cfg.font_size = value;
+            if (window.elementSdk) {
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        };
+
+        return {
+          recolorables,
+          borderables: [],
+          fontEditable,
+          fontSizeable
+        };
+      }
+
+      function mapToEditPanelValues(config) {
+        const cfg = Object.assign({}, defaultConfig, config || {});
+        return new Map([
+          ["main_title", cfg.main_title],
+          ["welcome_title", cfg.welcome_title],
+          ["welcome_body", cfg.welcome_body],
+          ["placeholder_text", cfg.placeholder_text],
+          ["primary_button_text", cfg.primary_button_text],
+          ["footer_text", cfg.footer_text]
+        ]);
+      }
+
+      if (window.elementSdk && typeof window.elementSdk.init === "function") {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      } else {
+        // Fallback: apply defaults immediately if SDK not available
+        onConfigChange(defaultConfig);
+      }
+    </script>
+  <meta charset="UTF-8">
+  <title>Tech Support Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- SDKs -->
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script><!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+      body {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      /* Custom scrollbar for chat */
+      .cc-scroll::-webkit-scrollbar {
+        width: 12px;
+      }
+      .cc-scroll::-webkit-scrollbar-track {
+        background: #0f3460;
+        border-radius: 10px;
+      }
+      .cc-scroll::-webkit-scrollbar-thumb {
+        background-color: #533483;
+        border-radius: 10px;
+        border: 2px solid #0f3460;
+      }
+      .cc-scroll::-webkit-scrollbar-thumb:hover {
+        background-color: #6d44a8;
+      }
+      /* Firefox scrollbar */
+      .cc-scroll {
+        scrollbar-width: auto;
+        scrollbar-color: #533483 #0f3460;
+      }
+
+      @keyframes cc-slide-in {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .cc-message-anim {
+        animation: cc-slide-in 0.25s ease-out;
+      }
+
+      /* Focus ring for accessibility */
+      .cc-focus-visible:focus-visible {
+        outline: 2px solid #e94560;
+        outline-offset: 2px;
+      }
+    </style>
   <div class="h-full flex flex-col bg-[#1a1a2e]">
    <header class="flex-shrink-0 border-b-2 border-[#e94560] bg-[#0f3460] text-[#e94560]" role="banner">
     <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
@@ -203,14 +1008,27 @@
       function generateAssistantReply(message) {
         const lower = message.toLowerCase();
 
-        // Wi-Fi / Internet Issues
-        if (lower.includes("wifi") || lower.includes("wi-fi") || lower.includes("internet") || lower.includes("connection") || lower.includes("network")) {
-          return "Let's troubleshoot your internet connection step-by-step:\n\n1️⃣ Check other devices – are they also offline? If yes, the issue is likely your router or ISP.\n\n2️⃣ Restart your router/modem – unplug it for 30 seconds, plug it back in, and wait 2-3 minutes for it to fully restart.\n\n3️⃣ On your device, turn Wi‑Fi off and on again, or toggle Airplane mode on/off.\n\n4️⃣ Forget the Wi‑Fi network in settings and reconnect by entering the password again.\n\n5️⃣ Move closer to the router to rule out signal strength issues.\n\n6️⃣ Check if your device's network adapter is enabled in settings.\n\n7️⃣ Update your network drivers (Windows) or reset network settings (mobile devices).\n\n8️⃣ If only one app fails, try a different browser or app to isolate the issue.\n\n9️⃣ Contact your ISP if all devices are affected and router restart didn't help.";
+        // Very specific Wi-Fi issues
+        if (lower.includes("wifi keeps disconnecting") || lower.includes("wi-fi drops") || lower.includes("connection drops")) {
+          return "Your Wi-Fi keeps dropping? Here's what to do:\n\n1️⃣ Move closer to your router. Walls and distance weaken the signal.\n\n2️⃣ Unplug your router for 30 seconds, then plug it back in. Wait 3 minutes.\n\n3️⃣ Change your Wi-Fi channel in router settings (use channel 1, 6, or 11 for less interference).\n\n4️⃣ Turn off other devices using Wi-Fi to see if too many connections is the problem.\n\n5️⃣ Update your router's firmware through its settings page.\n\n6️⃣ On your device, forget the network and reconnect fresh.";
+        }
+
+        if (lower.includes("wifi connected but no internet") || lower.includes("connected but can't browse")) {
+          return "Connected to Wi-Fi but can't access websites? Try this:\n\n1️⃣ Restart your router - unplug it for 30 seconds.\n\n2️⃣ On your device, turn Wi-Fi off then back on.\n\n3️⃣ Open your device's network settings and change DNS to 8.8.8.8 (Google's DNS).\n\n4️⃣ Check if other devices can access the internet. If not, call your internet provider.\n\n5️⃣ Try opening a different website - the site you're trying might be down.";
+        }
+
+        if (lower.includes("wrong password") || lower.includes("can't connect") && lower.includes("password")) {
+          return "Wi-Fi password not working?\n\n1️⃣ Check if Caps Lock is on - passwords are case-sensitive.\n\n2️⃣ Look at the router label for the exact password (usually on bottom or back).\n\n3️⃣ Try typing the password in a notes app first to see it clearly, then copy-paste it.\n\n4️⃣ If someone changed the password, ask them for the new one.\n\n5️⃣ Reset your router to factory settings (small button on back, hold 10 seconds) - this returns it to the default password on the label.";
+        }
+
+        // General Wi-Fi / Internet Issues
+        if (lower.includes("wifi") || lower.includes("wi-fi") || lower.includes("internet") || lower.includes("connection") || lower.includes("network") || lower.includes("online")) {
+          return "Internet not working? Let's fix it:\n\n1️⃣ Check if other devices have internet. If none work, the problem is your router or internet provider.\n\n2️⃣ Unplug your router for 30 seconds, plug it back in, wait 3 minutes.\n\n3️⃣ On your device, turn Wi-Fi off and back on.\n\n4️⃣ Move closer to the router.\n\n5️⃣ Forget the Wi-Fi network in settings, then reconnect and type the password again.\n\n6️⃣ Restart your device.\n\n7️⃣ If nothing works, call your internet provider.";
         }
 
         // Slow Computer / Performance
         if (lower.includes("slow") || lower.includes("lag") || lower.includes("performance") || lower.includes("freeze") || lower.includes("sluggish")) {
-          return "A slow computer is usually caused by too many apps, limited storage, or background processes. Try this:\n\n1️⃣ Close unused apps and browser tabs – each one uses memory.\n\n2️⃣ Restart your computer if you haven't recently – this clears temporary files and memory.\n\n3️⃣ Check free storage space (need at least 10-15% free). Delete large unused files, old downloads, or uninstall unused programs.\n\n4️⃣ Disable startup programs that launch automatically (Task Manager > Startup on Windows, System Preferences > Users & Groups > Login Items on Mac).\n\n5️⃣ Run Disk Cleanup (Windows) or optimize storage (Mac).\n\n6️⃣ Check for malware using Windows Defender or your antivirus software.\n\n7️⃣ Update your operating system and drivers.\n\n8️⃣ Upgrade RAM if your computer has 4GB or less (especially for multitasking).\n\n9️⃣ Consider an SSD upgrade if you're still using a traditional hard drive.";
+          return "A slow computer is usually caused by too many apps, limited storage, or background processes. Try this:\n\n1️⃣ Close unused apps and browser tabs – each one uses memory.\n\n2️⃣ Restart your computer if you haven't recently – this clears temporary files and memory.\n\n3️⃣ Check free storage space (need at least 10-15% free). Delete large unused files, old downloads, or uninstall unused programs.\n\n4️⃣ Disable startup programs that launch automatically (Task Manager > Startup on Windows, System Preferences > Users & Groups > Login Items on Mac).\n\n5️⃣ Run Disk Cleanup (Windows) or optimize storage (Mac).\n\n6️��� Check for malware using Windows Defender or your antivirus software.\n\n7️⃣ Update your operating system and drivers.\n\n8️⃣ Upgrade RAM if your computer has 4GB or less (especially for multitasking).\n\n9️⃣ Consider an SSD upgrade if you're still using a traditional hard drive.";
         }
 
         // Email Issues
@@ -619,5 +1437,5 @@
         onConfigChange(defaultConfig);
       }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a10ba6c57726cda',t:'MTc2MzU2NjAxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a10cf6467a76cda',t:'MTc2MzU2Njg2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
