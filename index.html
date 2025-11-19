@@ -2,1063 +2,622 @@
 <html lang="en">
  <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tech Support Assistant</title>
-  <script src="/_sdk/data_sdk.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- SDKs -->
   <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script><!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      height: 100%;
-      overflow: hidden;
-    }
-    
-    html {
-      height: 100%;
-    }
-    
-    * {
-      box-sizing: border-box;
-    }
-    
-    .container {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    }
-    
-    .header {
-      background: #0f3460;
-      color: #e94560;
-      padding: 20px 24px;
-      border-bottom: 2px solid #e94560;
-      flex-shrink: 0;
-    }
-    
-    .header h1 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 600;
-    }
-    
-    .chat-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    
-    .welcome-message {
-      text-align: center;
-      color: #ffffff;
-      padding: 40px 20px;
-      max-width: 600px;
-      margin: auto;
-    }
-    
-    .welcome-message h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #e94560;
-    }
-    
-    .welcome-message p {
-      font-size: 16px;
-      opacity: 0.8;
-      margin-bottom: 24px;
-    }
-    
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      margin-top: 24px;
-    }
-    
-    .category-btn {
-      background: #533483;
-      color: #ffffff;
-      border: none;
-      padding: 16px 12px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.2s;
-      text-align: center;
-    }
-    
-    .category-btn:hover {
-      background: #6d44a8;
-      transform: translateY(-2px);
-    }
-    
-    .message {
-      display: flex;
-      gap: 12px;
-      max-width: 80%;
-      animation: slideIn 0.3s ease-out;
-    }
-    
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
+      body {
+        box-sizing: border-box;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+      html,
+      body {
+        height: 100%;
+        margin: 0;
       }
-    }
-    
-    .message.user {
-      align-self: flex-end;
-      flex-direction: row-reverse;
-    }
-    
-    .message-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-    
-    .message.user .message-avatar {
-      background: #e94560;
-    }
-    
-    .message.assistant .message-avatar {
-      background: #533483;
-    }
-    
-    .message-content {
-      background: #0f3460;
-      padding: 12px 16px;
-      border-radius: 16px;
-      color: #ffffff;
-      line-height: 1.5;
-    }
-    
-    .message.user .message-content {
-      background: #e94560;
-      border-bottom-right-radius: 4px;
-    }
-    
-    .message.assistant .message-content {
-      border-bottom-left-radius: 4px;
-    }
-    
-    .message-time {
-      font-size: 11px;
-      opacity: 0.6;
-      margin-top: 4px;
-    }
-    
-    .input-container {
-      padding: 20px 24px;
-      background: #0f3460;
-      border-top: 2px solid #533483;
-      flex-shrink: 0;
-    }
-    
-    .input-wrapper {
-      display: flex;
-      gap: 12px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    .input-field {
-      flex: 1;
-      background: #1a1a2e;
-      border: 2px solid #533483;
-      color: #ffffff;
-      padding: 14px 18px;
-      border-radius: 24px;
-      font-size: 15px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    
-    .input-field:focus {
-      border-color: #e94560;
-    }
-    
-    .input-field::placeholder {
-      color: #ffffff;
-      opacity: 0.4;
-    }
-    
-    .send-btn {
-      background: #e94560;
-      color: #ffffff;
-      border: none;
-      padding: 14px 28px;
-      border-radius: 24px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: 600;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-    
-    .send-btn:hover:not(:disabled) {
-      background: #d63651;
-      transform: scale(1.02);
-    }
-    
-    .send-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    
-    .typing-indicator {
-      display: flex;
-      gap: 12px;
-      max-width: 80%;
-    }
-    
-    .typing-dots {
-      background: #0f3460;
-      padding: 12px 16px;
-      border-radius: 16px;
-      border-bottom-left-radius: 4px;
-      display: flex;
-      gap: 4px;
-    }
-    
-    .typing-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #533483;
-      animation: typing 1.4s infinite;
-    }
-    
-    .typing-dot:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    
-    .typing-dot:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-    
-    @keyframes typing {
-      0%, 60%, 100% {
-        transform: translateY(0);
+      * {
+        box-sizing: border-box;
       }
-      30% {
-        transform: translateY(-10px);
+      /* Custom scrollbar for chat */
+      .cc-scroll::-webkit-scrollbar {
+        width: 6px;
       }
-    }
-    
-    .loading-state {
-      display: none;
-      text-align: center;
-      padding: 20px;
-      color: #ffffff;
-      opacity: 0.6;
-    }
-    
-    .back-button {
-      background: #533483;
-      color: #ffffff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.2s;
-      display: none;
-      margin-bottom: 16px;
-    }
-    
-    .back-button:hover {
-      background: #6d44a8;
-      transform: translateX(-2px);
-    }
-    
-    .back-button.show {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    
-    @media (max-width: 768px) {
-      .header {
-        padding: 16px 20px;
+      .cc-scroll::-webkit-scrollbar-track {
+        background: transparent;
       }
-      
-      .header h1 {
-        font-size: 20px;
+      .cc-scroll::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 999px;
       }
-      
-      .chat-container {
-        padding: 16px;
+
+      @keyframes cc-slide-in {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
-      
-      .message {
-        max-width: 90%;
+      .cc-message-anim {
+        animation: cc-slide-in 0.25s ease-out;
       }
-      
-      .category-grid {
-        grid-template-columns: 1fr;
+
+      /* Focus ring for accessibility */
+      .cc-focus-visible:focus-visible {
+        outline: 2px solid #e94560;
+        outline-offset: 2px;
       }
-      
-      .input-container {
-        padding: 16px;
-      }
-      
-      .send-btn {
-        padding: 14px 20px;
-      }
-    }
-  </style>
+    </style>
   <style>@view-transition { navigation: auto; }</style>
-  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
- <body>
-  <div class="container">
-   <div class="header">
-    <h1 id="site-title">Tech Support Assistant</h1>
-   </div>
-   <div class="chat-container" id="chat-container"><button class="back-button" id="back-button">← Back to Menu</button>
-    <div class="loading-state" id="loading-state">
-     Loading conversations...
-    </div>
-    <div class="welcome-message" id="welcome-message">
-     <h2 id="welcome-text">How can I help you today?</h2>
-     <p>Select a category below and describe your tech issue</p>
-     <div class="category-grid"><button class="category-btn" data-category="AI Assistant">🤖 AI Assistant</button> <button class="category-btn" data-category="Hardware">🔧 Hardware Issues</button> <button class="category-btn" data-category="Software">💻 Software Problems</button> <button class="category-btn" data-category="Network">📡 Network &amp; WiFi</button> <button class="category-btn" data-category="Performance">⚡ Performance</button> <button class="category-btn" data-category="Security">🔒 Security</button> <button class="category-btn" data-category="Other">❓ Other Issues</button>
+ <body class="h-full">
+  <div class="h-full flex flex-col bg-[#1a1a2e]">
+   <header class="flex-shrink-0 border-b-2 border-[#e94560] bg-[#0f3460] text-[#e94560]" role="banner">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+     <div class="flex items-center gap-3"><button id="cc-back-btn" type="button" class="cc-focus-visible hidden items-center justify-center h-9 w-9 rounded-full bg-[#533483] hover:bg-[#6d44a8] text-white transition" aria-label="Go back to welcome screen"> ← </button>
+      <h1 id="cc-main-title" class="text-xl font-semibold">Tech Support Assistant</h1>
+     </div>
+     <div class="inline-flex items-center gap-2 text-xs text-white/80 bg-[#16213e] px-3 py-1.5 rounded-full"><span class="inline-flex h-2 w-2 rounded-full bg-[#22c55e]" aria-hidden="true"></span> <span>Online helper</span>
      </div>
     </div>
-   </div>
-   <div class="input-container">
-    <div class="input-wrapper"><input type="text" class="input-field" id="user-input" placeholder="Describe your issue..." autocomplete="off"> <button class="send-btn" id="send-btn">Send</button>
-    </div>
-   </div>
+   </header>
+   <main class="flex-1 min-h-0 flex flex-col" role="main">
+    <section aria-label="Chat conversation" class="flex-1 min-h-0 overflow-hidden">
+     <div id="cc-chat-container" class="cc-scroll max-w-5xl mx-auto px-6 py-6 flex flex-col gap-4 overflow-y-auto"><!-- Welcome block (hidden after first real message) -->
+      <article id="cc-welcome" class="text-center text-white max-w-xl mx-auto mt-6 bg-[#16213e]/70 rounded-2xl px-6 py-8 shadow-lg">
+       <h2 id="cc-welcome-title" class="text-2xl font-semibold text-[#e94560] mb-2">Hi, I'm your tech assistant 🔧</h2>
+       <p id="cc-welcome-body" class="text-sm text-white/80 mb-4 leading-relaxed">Describe what's going wrong with your computer, phone, or apps, and I'll walk you through simple, step‑by‑step fixes.</p>
+       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-left text-xs" aria-label="Quick help categories"><button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My Wi‑Fi or internet connection isn't working"> 🛜 Wi‑Fi &amp; Internet </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My computer is running very slowly"> 🖥️ Slow Computer </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="I have issues with my email not sending or receiving"> 📧 Email Issues </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My software or app keeps crashing or freezing"> ⚙️ Apps Crashing </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="I can't print from my computer"> 🖨️ Printer Problems </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My screen is frozen or not responding"> 🔒 Frozen Screen </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="I forgot my password"> 🔑 Password Reset </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My battery drains too quickly"> 🔋 Battery Drain </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="I'm getting a blue screen error"> 💙 Blue Screen </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My audio or sound isn't working"> 🔊 No Sound </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My webcam or camera isn't working"> 📷 Camera Issues </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="I can't connect my Bluetooth device"> 📡 Bluetooth </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My keyboard or mouse isn't working"> ⌨️ Keyboard/Mouse </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="My storage is full"> 💾 Storage Full </button> <button type="button" class="category-btn cc-focus-visible w-full bg-[#533483] hover:bg-[#6d44a8] text-white font-medium px-3 py-3 rounded-xl text-left transition transform hover:-translate-y-0.5" data-prompt="I can't install or update software"> 📦 Install Issues </button>
+       </div>
+      </article><!-- Initial assistant message -->
+      <div class="flex items-start gap-3 max-w-xl cc-message-anim" data-role="assistant-message">
+       <div class="message-avatar flex items-center justify-center h-9 w-9 rounded-full bg-[#533483] text-white text-lg flex-shrink-0" aria-hidden="true">
+        🤖
+       </div>
+       <div class="flex-1">
+        <div class="message-content bg-[#0f3460] text-white rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed">
+         <p>I'm here to help you troubleshoot devices and apps. Tell me the issue in your own words, and I'll suggest clear steps you can follow.</p>
+        </div>
+        <p class="message-time text-[11px] text-white/60 mt-1">Assistant · just now</p>
+       </div>
+      </div>
+     </div>
+    </section>
+    <section aria-label="Ask a tech support question" class="flex-shrink-0 border-t-2 border-[#533483] bg-[#0f3460]">
+     <div class="max-w-5xl mx-auto px-6 py-4 space-y-2">
+      <form id="cc-input-form" class="w-full" novalidate>
+       <div class="flex items-end gap-3">
+        <div class="flex-1"><label for="cc-input" class="block text-xs font-medium text-white/70 mb-1">Type your tech question</label>
+         <div class="flex items-center gap-2 bg-[#1a1a2e] border-2 border-[#533483] rounded-full px-4 py-2.5 focus-within:border-[#e94560] transition"><textarea id="cc-input" rows="1" class="input-field block w-full bg-transparent border-none outline-none text-sm text-white placeholder:text-white/40 resize-none" placeholder="Ask a question about your device, app, or setup..."></textarea>
+         </div>
+        </div><button id="cc-send-btn" type="submit" class="cc-focus-visible inline-flex items-center justify-center bg-[#e94560] hover:bg-[#f25b72] text-white font-semibold text-sm px-5 py-2.5 rounded-full whitespace-nowrap transition disabled:opacity-60 disabled:cursor-not-allowed"> <span id="cc-send-text">Send</span> <span id="cc-send-spinner" class="hidden ml-2 h-4 w-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden="true"></span> </button>
+       </div>
+      </form>
+      <p id="cc-footer-text" class="text-[11px] text-white/50 text-left">Responses are suggestions only. For sensitive systems, confirm steps with your IT team first.</p>
+      <p id="cc-error" class="hidden text-xs text-[#fed7d7] bg-[#7f1d1d]/60 border border-[#fecaca] rounded-md px-3 py-1.5"></p>
+     </div>
+    </section>
+   </main>
   </div>
   <script>
-    const defaultConfig = {
-      site_title: "Tech Support Assistant",
-      welcome_message: "How can I help you today?",
-      input_placeholder: "Describe your issue...",
-      background_color: "#1a1a2e",
-      surface_color: "#0f3460",
-      text_color: "#ffffff",
-      primary_action_color: "#e94560",
-      secondary_action_color: "#533483",
-      font_family: "sans-serif",
-      font_size: 16
-    };
+      // --- Comprehensive tech support knowledge base ---
 
-    let messagesData = [];
-    let isTyping = false;
-    let selectedCategory = null;
+      const chatContainer = document.getElementById("cc-chat-container");
+      const inputForm = document.getElementById("cc-input-form");
+      const inputField = document.getElementById("cc-input");
+      const sendBtn = document.getElementById("cc-send-btn");
+      const sendText = document.getElementById("cc-send-text");
+      const sendSpinner = document.getElementById("cc-send-spinner");
+      const errorBox = document.getElementById("cc-error");
+      const welcomeBlock = document.getElementById("cc-welcome");
+      const backBtn = document.getElementById("cc-back-btn");
 
-    const dataHandler = {
-      onDataChanged(data) {
-        messagesData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-        renderMessages();
+      const welcomeTitleEl = document.getElementById("cc-welcome-title");
+      const welcomeBodyEl = document.getElementById("cc-welcome-body");
+      const mainTitleEl = document.getElementById("cc-main-title");
+      const footerTextEl = document.getElementById("cc-footer-text");
+
+      function showError(message) {
+        if (!errorBox) return;
+        errorBox.textContent = message;
+        errorBox.classList.remove("hidden");
+        setTimeout(() => {
+          errorBox.classList.add("hidden");
+        }, 3000);
       }
-    };
 
-    async function initializeApp() {
-      const loadingState = document.getElementById('loading-state');
-      loadingState.style.display = 'block';
-
-      const initResult = await window.dataSdk.init(dataHandler);
-      
-      loadingState.style.display = 'none';
-      
-      if (!initResult.isOk) {
-        showError("Failed to initialize. Please refresh the page.");
-        return;
-      }
-    }
-
-    function renderMessages() {
-      const container = document.getElementById('chat-container');
-      const welcomeMessage = document.getElementById('welcome-message');
-      const loadingState = document.getElementById('loading-state');
-      
-      if (messagesData.length === 0) {
-        welcomeMessage.style.display = 'block';
-        return;
-      }
-      
-      welcomeMessage.style.display = 'none';
-      loadingState.style.display = 'none';
-      
-      const existingMessages = new Map(
-        [...container.querySelectorAll('.message')].map(el => [el.dataset.messageId, el])
-      );
-      
-      messagesData.forEach(msg => {
-        if (existingMessages.has(msg.id)) {
-          existingMessages.delete(msg.id);
+      function setSending(isSending) {
+        if (!sendBtn) return;
+        sendBtn.disabled = isSending;
+        if (isSending) {
+          sendSpinner.classList.remove("hidden");
         } else {
-          const messageEl = createMessageElement(msg);
-          container.appendChild(messageEl);
+          sendSpinner.classList.add("hidden");
+        }
+      }
+
+      function addMessage(role, text) {
+        if (!chatContainer) return;
+
+        if (welcomeBlock && !welcomeBlock.classList.contains("hidden")) {
+          welcomeBlock.classList.add("hidden");
+          if (backBtn) {
+            backBtn.classList.remove("hidden");
+            backBtn.classList.add("flex");
+          }
+        }
+
+        const wrapper = document.createElement("div");
+        wrapper.className =
+          "flex items-start gap-3 max-w-xl cc-message-anim " +
+          (role === "user" ? "ml-auto flex-row-reverse" : "");
+        wrapper.setAttribute("data-role", role + "-message");
+
+        const avatar = document.createElement("div");
+        avatar.className =
+          "message-avatar flex items-center justify-center h-9 w-9 rounded-full text-white text-lg flex-shrink-0 " +
+          (role === "user" ? "bg-[#e94560]" : "bg-[#533483]");
+        avatar.textContent = role === "user" ? "👤" : "🤖";
+
+        const body = document.createElement("div");
+        body.className = "flex-1";
+
+        const bubble = document.createElement("div");
+        bubble.className =
+          "message-content text-white rounded-2xl px-4 py-3 text-sm leading-relaxed " +
+          (role === "user"
+            ? "bg-[#e94560] rounded-br-sm"
+            : "bg-[#0f3460] rounded-bl-sm");
+        
+        // Format text with line breaks
+        const lines = text.split('\n');
+        lines.forEach((line, index) => {
+          if (line.trim()) {
+            const p = document.createElement('p');
+            p.textContent = line;
+            if (index > 0) p.className = 'mt-2';
+            bubble.appendChild(p);
+          }
+        });
+
+        const time = document.createElement("p");
+        time.className = "message-time text-[11px] text-white/60 mt-1";
+        const timestamp = new Date();
+        const minutes = timestamp.getMinutes().toString().padStart(2, "0");
+        const hours = timestamp.getHours().toString().padStart(2, "0");
+        time.textContent =
+          (role === "user" ? "You" : "Assistant") + " · " + hours + ":" + minutes;
+
+        body.appendChild(bubble);
+        body.appendChild(time);
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(body);
+
+        chatContainer.appendChild(wrapper);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      function generateAssistantReply(message) {
+        const lower = message.toLowerCase();
+
+        // Wi-Fi / Internet Issues
+        if (lower.includes("wifi") || lower.includes("wi-fi") || lower.includes("internet") || lower.includes("connection") || lower.includes("network")) {
+          return "Let's troubleshoot your internet connection step-by-step:\n\n1️⃣ Check other devices – are they also offline? If yes, the issue is likely your router or ISP.\n\n2️⃣ Restart your router/modem – unplug it for 30 seconds, plug it back in, and wait 2-3 minutes for it to fully restart.\n\n3️⃣ On your device, turn Wi‑Fi off and on again, or toggle Airplane mode on/off.\n\n4️⃣ Forget the Wi‑Fi network in settings and reconnect by entering the password again.\n\n5️⃣ Move closer to the router to rule out signal strength issues.\n\n6️⃣ Check if your device's network adapter is enabled in settings.\n\n7️⃣ Update your network drivers (Windows) or reset network settings (mobile devices).\n\n8️⃣ If only one app fails, try a different browser or app to isolate the issue.\n\n9️⃣ Contact your ISP if all devices are affected and router restart didn't help.";
+        }
+
+        // Slow Computer / Performance
+        if (lower.includes("slow") || lower.includes("lag") || lower.includes("performance") || lower.includes("freeze") || lower.includes("sluggish")) {
+          return "A slow computer is usually caused by too many apps, limited storage, or background processes. Try this:\n\n1️⃣ Close unused apps and browser tabs – each one uses memory.\n\n2️⃣ Restart your computer if you haven't recently – this clears temporary files and memory.\n\n3️⃣ Check free storage space (need at least 10-15% free). Delete large unused files, old downloads, or uninstall unused programs.\n\n4️⃣ Disable startup programs that launch automatically (Task Manager > Startup on Windows, System Preferences > Users & Groups > Login Items on Mac).\n\n5️⃣ Run Disk Cleanup (Windows) or optimize storage (Mac).\n\n6️⃣ Check for malware using Windows Defender or your antivirus software.\n\n7️⃣ Update your operating system and drivers.\n\n8️⃣ Upgrade RAM if your computer has 4GB or less (especially for multitasking).\n\n9️⃣ Consider an SSD upgrade if you're still using a traditional hard drive.";
+        }
+
+        // Email Issues
+        if (lower.includes("email") || lower.includes("outlook") || lower.includes("gmail") || lower.includes("mail") || lower.includes("send") || lower.includes("receive")) {
+          return "Let's fix your email problem:\n\n1️⃣ Confirm you're connected to the internet – try loading a website.\n\n2️⃣ Check your Outbox or Drafts folder for stuck messages.\n\n3️⃣ Verify your device's date and time are correct (incorrect time causes authentication failures).\n\n4️⃣ Sign out of your email app completely and sign back in.\n\n5️⃣ If you recently changed your password, update it in your email app settings.\n\n6️⃣ Check your email storage quota – full mailboxes can't receive new messages.\n\n7️⃣ Verify your email server settings (IMAP/SMTP) are correct.\n\n8️⃣ Disable VPN temporarily if you're using one.\n\n9️⃣ Check your spam/junk folder – messages might be filtered there.\n\n🔟 Try accessing email through a web browser to see if it's an app-specific issue.\n\n1️⃣1️⃣ Clear the email app cache (mobile) or reinstall the app.";
+        }
+
+        // App Crashes / Freezing
+        if (lower.includes("crash") || lower.includes("freeze") || lower.includes("not responding") || lower.includes("stopped working") || lower.includes("hang")) {
+          return "When an app keeps crashing or freezing, try this sequence:\n\n1️⃣ Force close the app completely (don't just minimize) and reopen it.\n\n2️⃣ Restart your device to clear temporary issues and free up memory.\n\n3️⃣ Check for app updates in your app store or software updater.\n\n4️⃣ Clear the app's cache and temporary files (Settings > Apps > [App Name] > Clear Cache).\n\n5️⃣ Check if your operating system needs updates.\n\n6️⃣ Free up storage space – apps need room to operate.\n\n7️⃣ Check if other apps are also crashing (might indicate a system issue).\n\n8️⃣ Uninstall and reinstall the app (backup important data first).\n\n9️⃣ Check the app's system requirements – your device might not meet them.\n\n🔟 Disable any third-party plugins or extensions that might conflict.\n\n1️⃣1️⃣ Run the app in compatibility mode (Windows) if it's an older program.";
+        }
+
+        // Printer Problems
+        if (lower.includes("print") || lower.includes("printer") || lower.includes("scan")) {
+          return "Let's get your printer working:\n\n1️⃣ Check basics – is the printer powered on, has paper, and ink/toner?\n\n2️⃣ Check the connection – USB cable secure or Wi-Fi connected?\n\n3️⃣ Restart both your computer and printer.\n\n4️⃣ Set your printer as the default printer in system settings.\n\n5️⃣ Clear the print queue – cancel all pending jobs and try again.\n\n6️⃣ Update or reinstall printer drivers from the manufacturer's website.\n\n7️⃣ Run the printer troubleshooter (Windows: Settings > Update & Security > Troubleshoot).\n\n8️⃣ Check for paper jams inside the printer.\n\n9️⃣ For network printers, verify the IP address hasn't changed.\n\n🔟 Try printing a test page directly from the printer (without computer).\n\n1️⃣1️⃣ Disable VPN if you're using one – it can block printer communication.\n\n1️⃣2️⃣ Check firewall settings aren't blocking the printer.";
+        }
+
+        // Frozen Screen
+        if (lower.includes("frozen") || lower.includes("stuck") || lower.includes("unresponsive") || lower.includes("won't respond")) {
+          return "When your screen is frozen:\n\n1️⃣ Wait 30-60 seconds – sometimes the system is just processing.\n\n2️⃣ Try keyboard shortcuts:\n   • Windows: Ctrl+Alt+Delete, then Task Manager\n   • Mac: Command+Option+Escape to force quit apps\n\n3️⃣ If mouse works, try closing the frozen app via Task Manager.\n\n4️⃣ If completely frozen, force restart:\n   • Desktop: Hold power button 5-10 seconds\n   • Laptop: Hold power button 5-10 seconds\n   • Phone/Tablet: Hold power + volume down for 10 seconds\n\n5️⃣ After restart, don't reopen all apps at once.\n\n6️⃣ Check for system updates after restarting.\n\n7️⃣ Run a disk check (Windows: chkdsk) or First Aid (Mac: Disk Utility).\n\n8️⃣ If it happens frequently, check for overheating or hardware issues.\n\n9️⃣ Scan for malware that might be consuming resources.";
+        }
+
+        // Password Reset
+        if (lower.includes("password") || lower.includes("forgot") || lower.includes("login") || lower.includes("sign in") || lower.includes("locked out")) {
+          return "Let's help you regain access:\n\n1️⃣ Use the 'Forgot Password' or 'Reset Password' link on the login page.\n\n2️⃣ Check your email (including spam folder) for the reset link.\n\n3️⃣ Try alternate email addresses or phone numbers associated with the account.\n\n4️⃣ Answer security questions if prompted.\n\n5️⃣ For Windows login: Use another admin account or password reset disk if you created one.\n\n6️⃣ For Mac login: Use your Apple ID to reset the password in Recovery Mode.\n\n7️⃣ For work accounts: Contact your IT department or help desk.\n\n8️⃣ Check if you saved the password in your browser's password manager.\n\n9️⃣ Try common variations you might have used.\n\n🔟 Enable two-factor authentication after resetting to prevent future lockouts.\n\n1️⃣1️⃣ Use a password manager going forward to securely store passwords.";
+        }
+
+        // Battery Drain
+        if (lower.includes("battery") || lower.includes("drain") || lower.includes("charge") || lower.includes("power")) {
+          return "To improve battery life:\n\n1️⃣ Check battery usage in settings to identify power-hungry apps.\n\n2️⃣ Lower screen brightness or enable auto-brightness.\n\n3️⃣ Turn off Wi-Fi, Bluetooth, and location services when not needed.\n\n4️⃣ Close background apps you're not using.\n\n5️⃣ Enable battery saver or low power mode.\n\n6️⃣ Reduce screen timeout duration.\n\n7️⃣ Disable push notifications for non-essential apps.\n\n8️⃣ Turn off keyboard vibration and haptic feedback.\n\n9️⃣ Keep your device updated – updates often include battery optimizations.\n\n🔟 Avoid extreme temperatures (very hot or cold).\n\n1️⃣1️⃣ Calibrate your battery: fully drain, then fully charge without interruption.\n\n1️⃣2️⃣ Check for rogue apps running in background.\n\n1️⃣3️⃣ If battery is old (2-3+ years), it may need replacement.";
+        }
+
+        // Blue Screen (BSOD)
+        if (lower.includes("blue screen") || lower.includes("bsod") || lower.includes("stop error")) {
+          return "Blue Screen of Death (BSOD) troubleshooting:\n\n1️⃣ Note the error code displayed (e.g., 'DRIVER_IRQL_NOT_LESS_OR_EQUAL').\n\n2️⃣ Restart your computer – it might be a one-time glitch.\n\n3️⃣ Boot into Safe Mode (press F8 during startup) to diagnose.\n\n4️⃣ Update all drivers, especially graphics, chipset, and network drivers.\n\n5️⃣ Run Windows Memory Diagnostic to check for RAM issues.\n\n6️⃣ Check for Windows updates and install them.\n\n7️⃣ Uninstall recently installed software or drivers.\n\n8️⃣ Run System File Checker: open Command Prompt as admin and type 'sfc /scannow'.\n\n9️⃣ Check hard drive health using CHKDSK or manufacturer tools.\n\n🔟 Scan for malware with Windows Defender or antivirus.\n\n1️⃣1️⃣ Check for overheating – clean dust from fans and vents.\n\n1️⃣2️⃣ Test RAM by removing one stick at a time if you have multiple.\n\n1️⃣3️⃣ If persistent, consider System Restore to a point before issues started.";
+        }
+
+        // No Sound / Audio Issues
+        if (lower.includes("sound") || lower.includes("audio") || lower.includes("speaker") || lower.includes("volume") || lower.includes("hear")) {
+          return "Let's fix your audio:\n\n1️⃣ Check volume levels – system volume, app volume, and physical volume buttons.\n\n2️⃣ Ensure you're not muted (check system tray icon and app settings).\n\n3️⃣ Check the correct output device is selected (speakers vs headphones).\n\n4️⃣ Unplug and replug headphones/speakers to reset the connection.\n\n5️⃣ Restart your device.\n\n6️⃣ Update audio drivers (Windows: Device Manager > Sound controllers).\n\n7️⃣ Run the audio troubleshooter (Windows: Settings > System > Sound > Troubleshoot).\n\n8️⃣ Check if audio works in different apps to isolate the issue.\n\n9️⃣ Disable audio enhancements (Sound settings > Properties > Enhancements > Disable all).\n\n🔟 Check for Windows updates.\n\n1️⃣1️⃣ Reinstall audio drivers if updating didn't work.\n\n1️⃣2️⃣ Check BIOS settings to ensure audio is enabled.\n\n1️⃣3️⃣ Test with different speakers/headphones to rule out hardware failure.";
+        }
+
+        // Camera / Webcam Issues
+        if (lower.includes("camera") || lower.includes("webcam") || lower.includes("video") || lower.includes("zoom") || lower.includes("teams")) {
+          return "Let's get your camera working:\n\n1️⃣ Check if the camera is physically covered or has a privacy shutter closed.\n\n2️⃣ Verify camera permissions are enabled for the app (Settings > Privacy > Camera).\n\n3️⃣ Close other apps that might be using the camera.\n\n4️⃣ Restart the app and your device.\n\n5️⃣ Update camera drivers (Windows: Device Manager > Cameras).\n\n6️⃣ Check if the camera works in other apps (Camera app, browser test).\n\n7️⃣ Disable and re-enable the camera in Device Manager.\n\n8️⃣ Check for Windows/macOS updates.\n\n9️⃣ Scan for malware that might be blocking camera access.\n\n🔟 For external webcams, try a different USB port.\n\n1️⃣1️⃣ Check antivirus settings – some block camera access for security.\n\n1️⃣2️⃣ Reinstall camera drivers.\n\n1️⃣3️⃣ For laptops, check if there's a function key (Fn) to enable/disable camera.";
+        }
+
+        // Bluetooth Issues
+        if (lower.includes("bluetooth") || lower.includes("pairing") || lower.includes("wireless") || lower.includes("headphones") || lower.includes("airpods")) {
+          return "Bluetooth troubleshooting:\n\n1️⃣ Turn Bluetooth off and on again on both devices.\n\n2️⃣ Make sure the Bluetooth device is in pairing mode (usually a flashing light).\n\n3️⃣ Move devices closer together (within 3 feet for pairing).\n\n4️⃣ Forget/unpair the device and pair it again from scratch.\n\n5️⃣ Restart both your computer/phone and the Bluetooth device.\n\n6️⃣ Charge the Bluetooth device – low battery can cause connection issues.\n\n7️⃣ Check if the device is already connected to another device.\n\n8️⃣ Update Bluetooth drivers (Windows: Device Manager > Bluetooth).\n\n9️⃣ Remove other paired devices to reduce interference.\n\n🔟 Turn off Wi-Fi temporarily – it can interfere with Bluetooth.\n\n1️⃣1️⃣ Check for system updates.\n\n1️⃣2️⃣ Reset network settings (mobile devices).\n\n1️⃣3️⃣ Try pairing with a different device to isolate the problem.";
+        }
+
+        // Keyboard / Mouse Issues
+        if (lower.includes("keyboard") || lower.includes("mouse") || lower.includes("trackpad") || lower.includes("typing") || lower.includes("cursor")) {
+          return "Keyboard/Mouse troubleshooting:\n\n1️⃣ Check the connection – USB plugged in securely or wireless receiver connected.\n\n2️⃣ For wireless devices, replace batteries or charge them.\n\n3️⃣ Try a different USB port.\n\n4️⃣ Restart your computer.\n\n5️⃣ Clean the keyboard/mouse – debris can cause issues.\n\n6️⃣ For laptops, check if an external keyboard/mouse is overriding the built-in one.\n\n7️⃣ Update or reinstall drivers (Device Manager > Keyboards/Mice).\n\n8️⃣ Check if Num Lock, Caps Lock, or Function Lock is causing unexpected behavior.\n\n9️⃣ Disable Filter Keys (Windows: Settings > Ease of Access > Keyboard).\n\n🔟 Test with a different keyboard/mouse to rule out hardware failure.\n\n1️⃣1️⃣ For wireless devices, re-pair them with the receiver.\n\n1️⃣2️⃣ Check BIOS settings to ensure USB ports are enabled.\n\n1️⃣3️⃣ Scan for malware that might be interfering with input devices.";
+        }
+
+        // Storage Full
+        if (lower.includes("storage") || lower.includes("disk") || lower.includes("space") || lower.includes("full") || lower.includes("memory")) {
+          return "Free up storage space:\n\n1️⃣ Empty Recycle Bin/Trash.\n\n2️⃣ Delete old downloads, documents, and media files you no longer need.\n\n3️⃣ Uninstall unused programs and apps.\n\n4️⃣ Clear browser cache and cookies.\n\n5️⃣ Use Disk Cleanup (Windows) or Optimize Storage (Mac).\n\n6️⃣ Delete temporary files (Windows: %temp% folder).\n\n7️⃣ Move large files to external storage or cloud services.\n\n8️⃣ Clear app caches (especially browsers, Spotify, photo apps).\n\n9️⃣ Remove old system restore points (keep only the most recent).\n\n🔟 Compress large files or folders you want to keep.\n\n1️⃣1️⃣ Use storage analysis tools to find what's taking up space (WinDirStat, DaisyDisk).\n\n1️⃣2️⃣ Delete duplicate files.\n\n1️⃣3️⃣ Consider upgrading to a larger drive or adding external storage.";
+        }
+
+        // Software Installation Issues
+        if (lower.includes("install") || lower.includes("update") || lower.includes("download") || lower.includes("setup")) {
+          return "Software installation troubleshooting:\n\n1️⃣ Run the installer as administrator (right-click > Run as administrator).\n\n2️⃣ Temporarily disable antivirus – it might be blocking the installation.\n\n3️⃣ Check if you have enough free disk space.\n\n4️⃣ Download the installer again – the file might be corrupted.\n\n5️⃣ Check system requirements – your device might not meet them.\n\n6️⃣ Close all other programs before installing.\n\n7️⃣ Restart your computer and try again.\n\n8️⃣ Check for Windows/macOS updates first.\n\n9️⃣ Uninstall any previous versions of the software.\n\n🔟 Run Windows Update troubleshooter if Windows Update is failing.\n\n1️⃣1️⃣ Check your internet connection for online installers.\n\n1️⃣2️⃣ Disable VPN during installation.\n\n1️⃣3️⃣ Check the software vendor's website for known installation issues.\n\n1️⃣4️⃣ Try installing in Safe Mode if normal mode fails.";
+        }
+
+        // Screen Issues
+        if (lower.includes("screen") || lower.includes("display") || lower.includes("monitor") || lower.includes("resolution")) {
+          return "Display troubleshooting:\n\n1️⃣ Check all cable connections (HDMI, DisplayPort, VGA).\n\n2️⃣ Try a different cable or port.\n\n3️⃣ Adjust brightness settings.\n\n4️⃣ Update graphics drivers.\n\n5️⃣ Change screen resolution (Settings > Display).\n\n6️⃣ Check if the monitor is set to the correct input source.\n\n7️⃣ Restart your computer.\n\n8️⃣ For multiple monitors, detect displays in settings.\n\n9️⃣ Try the monitor with a different computer to rule out monitor issues.\n\n🔟 Check for Windows/macOS updates.\n\n1️⃣1️⃣ Disable and re-enable the display adapter in Device Manager.\n\n1️⃣2️⃣ Boot into Safe Mode to see if it's a driver issue.\n\n1️⃣3️⃣ Reset display settings to default.";
+        }
+
+        // Overheating
+        if (lower.includes("hot") || lower.includes("heat") || lower.includes("overheat") || lower.includes("fan") || lower.includes("temperature")) {
+          return "Overheating solutions:\n\n1️⃣ Ensure air vents are not blocked – use laptop on hard, flat surfaces.\n\n2️⃣ Clean dust from vents and fans using compressed air.\n\n3️⃣ Close resource-intensive programs and browser tabs.\n\n4️⃣ Use a laptop cooling pad.\n\n5️⃣ Check Task Manager for processes using high CPU.\n\n6️⃣ Update BIOS and drivers.\n\n7️⃣ Reduce screen brightness.\n\n8️⃣ Work in a cooler environment.\n\n9️⃣ Check if fans are running (you should hear them under load).\n\n🔟 Reapply thermal paste if you're comfortable opening the device (or have a professional do it).\n\n1️⃣1️⃣ Limit gaming or video editing sessions.\n\n1️⃣2️⃣ Check for malware that might be using resources.\n\n1️⃣3️⃣ Consider undervolting (advanced users) to reduce heat.";
+        }
+
+        // VPN Issues
+        if (lower.includes("vpn") || lower.includes("virtual private")) {
+          return "VPN troubleshooting:\n\n1️⃣ Disconnect and reconnect to the VPN.\n\n2️⃣ Try a different VPN server location.\n\n3️⃣ Restart the VPN app.\n\n4️⃣ Restart your device.\n\n5️⃣ Check your internet connection without VPN first.\n\n6️⃣ Update the VPN app to the latest version.\n\n7️⃣ Try a different VPN protocol (OpenVPN, IKEv2, WireGuard).\n\n8️⃣ Temporarily disable firewall or antivirus.\n\n9️⃣ Check if your network blocks VPN traffic.\n\n🔟 Clear VPN app cache and data.\n\n1️⃣1️⃣ Reinstall the VPN app.\n\n1️⃣2️⃣ Check VPN subscription status.\n\n1️⃣3️⃣ Contact VPN support if issues persist.";
+        }
+
+        // USB Issues
+        if (lower.includes("usb") || lower.includes("flash drive") || lower.includes("external drive")) {
+          return "USB device troubleshooting:\n\n1️⃣ Try a different USB port.\n\n2️⃣ Try the device on another computer.\n\n3️⃣ Restart your computer with the device unplugged, then plug it in.\n\n4️⃣ Check Device Manager for errors (yellow exclamation marks).\n\n5️⃣ Update USB drivers.\n\n6️⃣ Check if the device appears in Disk Management (Windows) or Disk Utility (Mac).\n\n7️⃣ Assign a drive letter if missing (Disk Management).\n\n8️⃣ Run hardware troubleshooter.\n\n9️⃣ Check for physical damage to the USB port or device.\n\n🔟 Disable USB selective suspend (Power Options > Advanced).\n\n1️⃣1️⃣ Update chipset drivers.\n\n1️⃣2️⃣ Check BIOS settings for USB configuration.";
+        }
+
+        // Default / General Response
+        return "Thanks for the details. To help you better, I need a bit more information:\n\n1️⃣ What exactly happens? (Error message, nothing happens, unexpected behavior?)\n\n2️⃣ What device are you using? (Windows PC, Mac, iPhone, Android, etc.)\n\n3️⃣ When did this start? (After an update, always been this way, suddenly today?)\n\n4️⃣ What have you already tried?\n\nReply with these details and I'll provide specific step-by-step solutions. You can also click one of the category buttons above to get targeted help for common issues!";
+      }
+
+      function handleUserSubmit(text) {
+        if (!text || !text.trim()) {
+          showError("Please describe your tech issue so I can help.");
+          return;
+        }
+        const cleaned = text.trim();
+        addMessage("user", cleaned);
+        setSending(true);
+
+        setTimeout(() => {
+          const reply = generateAssistantReply(cleaned);
+          addMessage("assistant", reply);
+          setSending(false);
+        }, 800);
+      }
+
+      if (inputForm) {
+        inputForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+          handleUserSubmit(inputField.value);
+          inputField.value = "";
+          inputField.style.height = "auto";
+        });
+      }
+
+      if (inputField) {
+        inputField.addEventListener("input", function () {
+          this.style.height = "auto";
+          this.style.height = this.scrollHeight + "px";
+        });
+      }
+
+      // Category buttons
+      document.addEventListener("click", function (e) {
+        const btn = e.target.closest(".category-btn");
+        if (!btn) return;
+        const prompt = btn.getAttribute("data-prompt");
+        if (!prompt) return;
+        if (inputField) {
+          inputField.value = prompt;
+          inputField.style.height = "auto";
+          inputField.style.height = inputField.scrollHeight + "px";
+          inputField.focus();
         }
       });
-      
-      existingMessages.forEach(el => el.remove());
-      
-      scrollToBottom();
-    }
 
-    function createMessageElement(msg) {
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${msg.sender}`;
-      messageDiv.dataset.messageId = msg.id;
-      
-      const time = new Date(msg.timestamp).toLocaleTimeString([], { 
-        hour: '2-digit', 
-        minute: '2-digit' 
-      });
-      
-      const avatar = msg.sender === 'user' ? '👤' : '🤖';
-      
-      messageDiv.innerHTML = `
-        <div class="message-avatar">${avatar}</div>
-        <div>
-          <div class="message-content">${escapeHtml(msg.message)}</div>
-          <div class="message-time">${time}</div>
-        </div>
-      `;
-      
-      return messageDiv;
-    }
-
-    function showTypingIndicator() {
-      const container = document.getElementById('chat-container');
-      const welcomeMessage = document.getElementById('welcome-message');
-      welcomeMessage.style.display = 'none';
-      
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'typing-indicator';
-      typingDiv.id = 'typing-indicator';
-      typingDiv.innerHTML = `
-        <div class="message-avatar">🤖</div>
-        <div class="typing-dots">
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-        </div>
-      `;
-      container.appendChild(typingDiv);
-      scrollToBottom();
-    }
-
-    function removeTypingIndicator() {
-      const typingIndicator = document.getElementById('typing-indicator');
-      if (typingIndicator) {
-        typingIndicator.remove();
+      // Back button
+      if (backBtn) {
+        backBtn.addEventListener("click", function() {
+          // Clear all messages except the initial assistant message
+          const messages = chatContainer.querySelectorAll('[data-role]');
+          messages.forEach((msg, index) => {
+            if (index > 0) { // Keep first message
+              msg.remove();
+            }
+          });
+          
+          // Show welcome block
+          if (welcomeBlock) {
+            welcomeBlock.classList.remove("hidden");
+          }
+          
+          // Hide back button
+          backBtn.classList.add("hidden");
+          backBtn.classList.remove("flex");
+          
+          // Clear input
+          if (inputField) {
+            inputField.value = "";
+            inputField.style.height = "auto";
+          }
+          
+          // Scroll to top
+          chatContainer.scrollTop = 0;
+        });
       }
-    }
 
-    async function sendMessage(userMessage, category = null) {
-      if (!userMessage.trim() || isTyping) return;
-      
-      if (messagesData.length >= 999) {
-        showError("Maximum conversation limit reached. Please start a new session.");
-        return;
-      }
-      
-      const sendBtn = document.getElementById('send-btn');
-      const userInput = document.getElementById('user-input');
-      
-      sendBtn.disabled = true;
-      userInput.disabled = true;
-      
-      const userMsg = {
-        id: `msg-${Date.now()}-user`,
-        message: userMessage,
-        sender: 'user',
-        timestamp: new Date().toISOString(),
-        category: category || selectedCategory || 'General'
+      // --- Element SDK: config-driven text, colors, font, size ---
+
+      const defaultConfig = {
+        main_title: "Tech Support Assistant",
+        welcome_title: "Hi, I'm your tech assistant 🔧",
+        welcome_body:
+          "Describe what's going wrong with your computer, phone, or apps, and I'll walk you through simple, step‑by‑step fixes.",
+        placeholder_text: "Ask a question about your device, app, or setup...",
+        primary_button_text: "Send",
+        footer_text:
+          "Responses are suggestions only. For sensitive systems, confirm steps with your IT team first.",
+        // Colors
+        background_color: "#1a1a2e",
+        surface_color: "#0f3460",
+        text_color: "#ffffff",
+        primary_action_color: "#e94560",
+        secondary_action_color: "#533483",
+        // Font
+        font_family: "system-ui",
+        font_size: 14
       };
-      
-      const createResult = await window.dataSdk.create(userMsg);
-      
-      if (!createResult.isOk) {
-        showError("Failed to send message. Please try again.");
-        sendBtn.disabled = false;
-        userInput.disabled = false;
-        return;
-      }
-      
-      userInput.value = '';
-      isTyping = true;
-      showTypingIndicator();
-      
-      setTimeout(async () => {
-        const response = generateResponse(userMessage, category || selectedCategory);
-        
-        const assistantMsg = {
-          id: `msg-${Date.now()}-assistant`,
-          message: response,
-          sender: 'assistant',
-          timestamp: new Date().toISOString(),
-          category: category || selectedCategory || 'General'
-        };
-        
-        removeTypingIndicator();
-        
-        const assistantResult = await window.dataSdk.create(assistantMsg);
-        
-        if (!assistantResult.isOk) {
-          showError("Failed to receive response. Please try again.");
+
+      async function onConfigChange(config) {
+        const cfg = Object.assign({}, defaultConfig, config || {});
+
+        const root = document.body;
+        if (root) {
+          root.style.backgroundColor = cfg.background_color;
         }
-        
-        isTyping = false;
-        sendBtn.disabled = false;
-        userInput.disabled = false;
-        userInput.focus();
-      }, 1500);
-    }
 
-    function generateResponse(message, category) {
-      const lowerMessage = message.toLowerCase();
-      
-      // Hardware Issues
-      if (lowerMessage.includes('blue screen') || lowerMessage.includes('bsod')) {
-        return "Blue Screen error means Windows crashed. Try: 1) Restart your computer 2) Check for Windows updates 3) Update your graphics driver 4) If you added new hardware recently, remove it 5) Run Windows Memory Diagnostic tool. The error code on the blue screen helps identify the problem.";
-      }
-      
-      if (lowerMessage.includes('black screen') || lowerMessage.includes('no display')) {
-        return "No display? Let's fix it: 1) Check monitor is on and cables are plugged in tight 2) Try a different cable if you have one 3) For laptops, press brightness up key 4) Hold power button 10 seconds to force restart 5) Try connecting to different monitor. If you hear sounds but no display, it's likely the monitor or cable.";
-      }
-      
-      if (lowerMessage.includes('overheat') || lowerMessage.includes('hot') || lowerMessage.includes('thermal')) {
-        return "Overheating needs immediate attention: 1) Make sure vents aren't blocked 2) Clean dust with compressed air (turn off first) 3) For laptops, elevate the back for airflow 4) Check that fans are spinning 5) Don't use on soft surfaces like beds. Your computer should feel warm but not burning hot.";
-      }
-      
-      if ((lowerMessage.includes('hard drive') || lowerMessage.includes('disk')) && (lowerMessage.includes('fail') || lowerMessage.includes('click') || lowerMessage.includes('noise'))) {
-        return "Clicking hard drive is serious - BACKUP NOW! 1) Copy important files immediately 2) Stop using the drive if possible 3) Don't restart multiple times 4) Consider professional recovery for critical data. Clicking means mechanical failure. Data could be lost permanently soon.";
-      }
-      
-      if (lowerMessage.includes('battery') || lowerMessage.includes('charging')) {
-        return "Battery/Power issues: 1) Try different power outlet 2) Check if charging light comes on 3) Remove battery and hold power button 30 seconds, then reconnect 4) Check charging cable for damage 5) Try charging while powered off. Battery may need replacement after 2-3 years of use.";
-      }
-      
-      if (lowerMessage.includes('keyboard') || lowerMessage.includes('keys')) {
-        return "Keyboard not working? Try: 1) Restart your computer 2) For wireless, check batteries 3) Try different USB port 4) Clean between keys gently 5) Test keyboard on another computer. If specific keys don't work, they might be physically damaged.";
-      }
-      
-      if (lowerMessage.includes('mouse') || lowerMessage.includes('touchpad') || lowerMessage.includes('trackpad')) {
-        return "Mouse/Touchpad issues: 1) For wireless mouse, replace batteries 2) Try different USB port 3) For touchpad, check if disabled (usually Fn key) 4) Clean mouse sensor 5) Update mouse driver. Make sure nothing blocking the sensor.";
-      }
-      
-      if (lowerMessage.includes('usb') || lowerMessage.includes('port')) {
-        return "USB not working: 1) Try different USB port 2) Try device on another computer 3) Restart your computer 4) Check Device Manager for errors 5) Update USB drivers. Front ports fail more often than back ports on desktops.";
-      }
-      
-      if (lowerMessage.includes('webcam') || lowerMessage.includes('camera')) {
-        return "Webcam issues: 1) Check if camera enabled in Settings > Privacy > Camera 2) Make sure no other app using it 3) Update camera driver 4) Check for physical camera shutter 5) Restart computer. Some apps need permission to use camera.";
-      }
-      
-      if (lowerMessage.includes('screen') && (lowerMessage.includes('crack') || lowerMessage.includes('broken') || lowerMessage.includes('damage'))) {
-        return "Cracked/broken screen needs professional repair. Meanwhile: 1) Connect to external monitor 2) Backup data immediately 3) Avoid pressing on screen 4) Cover with screen protector. Physical damage usually requires screen replacement.";
-      }
-      
-      // Software Issues
-      if (lowerMessage.includes('slow') || lowerMessage.includes('laggy') || lowerMessage.includes('sluggish')) {
-        return "To speed up your computer: 1) Restart it 2) Close programs you're not using 3) Check Task Manager for high CPU/Memory use 4) Delete temporary files 5) Make sure you have at least 20% free space 6) Run virus scan.";
-      }
-      
-      if (lowerMessage.includes('freeze') || lowerMessage.includes('frozen') || lowerMessage.includes('hang')) {
-        return "Computer freezing? Try: 1) Wait a minute - might be processing 2) Press Ctrl+Alt+Delete to open Task Manager 3) End the frozen program 4) If totally frozen, hold power button to restart 5) Check for Windows updates 6) Run disk cleanup.";
-      }
-      
-      if (lowerMessage.includes('crash') || (lowerMessage.includes('program') && lowerMessage.includes('closes'))) {
-        return "Program crashing: 1) Update the program 2) Restart your computer 3) Run program as administrator 4) Reinstall the program 5) Check if computer meets program's requirements. Check for updates first - most crashes fixed in updates.";
-      }
-      
-      if (lowerMessage.includes('update') && (lowerMessage.includes('fail') || lowerMessage.includes('stuck') || lowerMessage.includes('error'))) {
-        return "Windows Update stuck: 1) Wait at least 2 hours 2) Run Windows Update Troubleshooter 3) Restart and try again 4) Free up disk space 5) Disconnect external devices. Never force shut down during updates.";
-      }
-      
-      if (lowerMessage.includes('install') && lowerMessage.includes('fail')) {
-        return "Can't install program: 1) Run installer as administrator (right-click > Run as administrator) 2) Temporarily disable antivirus 3) Make sure you have enough disk space 4) Download fresh copy of installer 5) Restart and try again.";
-      }
-      
-      if (lowerMessage.includes('error message') || lowerMessage.includes('error code')) {
-        return "Getting error messages: 1) Write down exact error code 2) Search the error code online 3) Check Event Viewer for details 4) Restart your computer 5) Update Windows and drivers. The error code tells exactly what's wrong.";
-      }
-      
-      if (lowerMessage.includes('file') && (lowerMessage.includes('corrupt') || lowerMessage.includes('damaged') || lowerMessage.includes('won\'t open'))) {
-        return "File won't open: 1) Try opening on different computer 2) Check file extension is correct 3) Update program that opens it 4) Try online file viewers 5) Restore from backup if available.";
-      }
-      
-      if (lowerMessage.includes('boot') || lowerMessage.includes('start up') || lowerMessage.includes('turn on')) {
-        return "Won't start/boot: 1) Check if power light comes on 2) Try removing external devices 3) Boot into Safe Mode (press F8 at startup) 4) If see error messages, write them down 5) Try Windows Startup Repair. If you hear beeps, count them - beep codes indicate hardware issues.";
-      }
-      
-      // BIOS/UEFI Issues
-      if (lowerMessage.includes('bios') || lowerMessage.includes('uefi')) {
-        return "BIOS/UEFI access and issues: 1) To enter: restart and press Del, F2, F10, or F12 (depends on manufacturer) 2) Common settings: boot order, enable/disable devices, CPU/RAM speeds 3) To reset: remove CMOS battery for 5 minutes or use 'Load Defaults' option 4) Update BIOS only if needed for specific issue 5) NEVER turn off during BIOS update. Check motherboard manual for your specific key.";
-      }
-      
-      if (lowerMessage.includes('boot order') || lowerMessage.includes('boot priority')) {
-        return "Change boot order: 1) Enter BIOS (usually Del or F2 at startup) 2) Find 'Boot' or 'Boot Order' section 3) Move your primary drive to top 4) For USB install, put USB first temporarily 5) Save and exit (usually F10). If installing Windows, change back to hard drive after installation.";
-      }
-      
-      if (lowerMessage.includes('cmos') || lowerMessage.includes('rtc battery') || (lowerMessage.includes('clock') && lowerMessage.includes('wrong'))) {
-        return "CMOS/Clock issues: 1) Wrong time after shutdown = dead CMOS battery 2) Replace CR2032 battery on motherboard 3) Will reset BIOS settings, note them first 4) After replacement, enter BIOS and set date/time 5) Reconfigure boot order and other settings. Battery lasts 3-5 years.";
-      }
-      
-      if (lowerMessage.includes('post') || lowerMessage.includes('beep code') || lowerMessage.includes('beeping')) {
-        return "POST beep codes: 1) 1 beep = normal boot 2) No beep = power/motherboard issue 3) Continuous beeps = RAM problem (reseat memory) 4) 3 beeps = keyboard error 5) Long beeps = graphics card issue. Count beeps and search '[your PC brand] beep codes' for specific meaning.";
-      }
-      
-      if (lowerMessage.includes('secure boot') || lowerMessage.includes('tpm')) {
-        return "Secure Boot/TPM: 1) Required for Windows 11 2) Enable in BIOS under Security section 3) TPM usually in 'Advanced' or 'Security' 4) Secure Boot may need 'Windows UEFI mode' 5) If installing older OS, may need to disable. Check Windows 11 compatibility before upgrading.";
-      }
-      
-      if (lowerMessage.includes('overclock') || lowerMessage.includes('xmp') || lowerMessage.includes('overclocking')) {
-        return "Overclocking basics: 1) XMP/DOCP enables RAM rated speeds in BIOS 2) Only overclock with good cooling 3) Increase speeds gradually and test stability 4) If unstable, reset CMOS or load defaults 5) Voids warranty on some components. For beginners, just enable XMP for easy RAM boost.";
-      }
-      
-      if (lowerMessage.includes('virtualization') || lowerMessage.includes('vt-x') || lowerMessage.includes('amd-v')) {
-        return "Virtualization (VT-x/AMD-V): 1) Needed for virtual machines and some apps 2) Enable in BIOS under 'CPU Configuration' or 'Advanced' 3) Look for 'Intel VT-x', 'AMD-V', or 'SVM Mode' 4) Enable and save 5) Verify in Task Manager > Performance > CPU. Required for Hyper-V, VMware, BlueStacks, etc.";
-      }
-      
-      if (lowerMessage.includes('legacy boot') || lowerMessage.includes('uefi mode') || lowerMessage.includes('csm')) {
-        return "UEFI vs Legacy Boot: 1) UEFI is newer, faster, supports drives >2TB 2) Legacy/CSM for older operating systems 3) Windows 10/11 should use UEFI 4) Can't mix - reinstall Windows if switching modes 5) Check in BIOS under 'Boot Mode'. Stick with UEFI for modern systems.";
-      }
-      
-      if (lowerMessage.includes('fast boot') || lowerMessage.includes('quick boot')) {
-        return "Fast Boot: 1) BIOS setting that skips some hardware checks 2) Makes boot faster but harder to enter BIOS 3) If can't access BIOS, disable in Windows: Power Options > Choose what power buttons do > Change settings > Uncheck 'Fast Startup' 4) Or hold Shift while clicking Restart. Can cause USB boot issues.";
-      }
-      
-      // System Information
-      if (lowerMessage.includes('system info') || lowerMessage.includes('computer specs') || lowerMessage.includes('hardware info')) {
-        return "Check system information: 1) Press Windows + Pause/Break key 2) Or type 'System Information' in search 3) Or run 'msinfo32' command 4) Shows: CPU, RAM, Windows version, motherboard 5) For detailed GPU info, run 'dxdiag'. Free tool CPU-Z shows detailed specs.";
-      }
-      
-      if (lowerMessage.includes('device manager') || lowerMessage.includes('hardware not detected')) {
-        return "Device Manager: 1) Right-click Start > Device Manager 2) Yellow triangle = driver problem 3) Unknown device = missing driver 4) Right-click device > Update driver 5) Can disable/enable devices here. Use to troubleshoot hardware detection issues.";
-      }
-      
-      if (lowerMessage.includes('event viewer') || lowerMessage.includes('system logs')) {
-        return "Event Viewer for troubleshooting: 1) Search 'Event Viewer' in Windows 2) Check 'Windows Logs > System' for hardware issues 3) 'Application' logs for software crashes 4) Red errors are critical, yellow warnings less serious 5) Note error codes to search online. Helps identify crash causes.";
-      }
-      
-      if (lowerMessage.includes('task manager') || lowerMessage.includes('processes')) {
-        return "Task Manager essentials: 1) Open with Ctrl+Shift+Esc 2) 'Processes' shows what's using resources 3) 'Performance' shows CPU/RAM/Disk usage graphs 4) 'Startup' manages auto-start programs (disable bloatware here) 5) 'Services' shows background Windows services. Sort by CPU/Memory to find resource hogs.";
-      }
-      
-      if (lowerMessage.includes('driver') && !lowerMessage.includes('graphics')) {
-        return "Driver management: 1) Drivers let Windows talk to hardware 2) Update in Device Manager > right-click device > Update driver 3) Or download from manufacturer website 4) Graphics, chipset, and network drivers most important 5) Windows Update installs most drivers automatically. Old/wrong drivers cause instability.";
-      }
-      
-      if (lowerMessage.includes('windows activation') || lowerMessage.includes('product key')) {
-        return "Windows activation: 1) Check status: Settings > Update & Security > Activation 2) Digital license ties to your hardware 3) May need reactivation after motherboard change 4) Product key on sticker or in BIOS 5) Use 'slmgr /xpr' command to check expiration. Contact Microsoft support for activation issues.";
-      }
-      
-      if (lowerMessage.includes('clean install') || lowerMessage.includes('reinstall windows') || lowerMessage.includes('fresh install')) {
-        return "Clean Windows install: 1) Backup all important files first! 2) Download Windows Media Creation Tool 3) Create bootable USB (8GB+) 4) Boot from USB (change boot order in BIOS) 5) Follow installer, choose 'Custom' and format drive. Nuclear option - fixes most software issues but erases everything.";
-      }
-      
-      if (lowerMessage.includes('safe mode')) {
-        return "Boot into Safe Mode: 1) Hold Shift and click Restart 2) Choose Troubleshoot > Advanced > Startup Settings > Restart 3) Press 4 for Safe Mode or 5 for Safe Mode with Networking 4) Or type 'msconfig' > Boot tab > Safe boot 5) Safe mode loads minimal drivers - good for removing viruses or bad drivers.";
-      }
-      
-      if (lowerMessage.includes('power supply') || lowerMessage.includes('psu')) {
-        return "Power supply issues: 1) PSU powers all components 2) Symptoms: random shutdowns, won't turn on, burning smell 3) Check all power cables connected 4) Test with paperclip: unplug everything, short green+black wire 5) Undersized PSU causes crashes under load. Calculate wattage needs - add 20% headroom.";
-      }
-      
-      if (lowerMessage.includes('motherboard') || lowerMessage.includes('mobo')) {
-        return "Motherboard problems: 1) Dead motherboard = no power, no beeps, no lights 2) Check for bulging/leaking capacitors 3) Remove all components, test with just CPU+RAM 4) Reseat all cables and cards 5) Test power button by shorting power pins. Motherboard failure often means replacing whole PC on older systems.";
-      }
-      
-      if (lowerMessage.includes('thermal paste') || lowerMessage.includes('cpu temperature')) {
-        return "CPU temperature/thermal paste: 1) Normal temps: 30-50°C idle, 60-80°C under load 2) Over 90°C = too hot, needs attention 3) Check temps with HWMonitor or Core Temp 4) Reapply thermal paste if old (every 3-4 years) 5) Clean old paste with isopropyl alcohol, apply rice grain size. High temps cause throttling and shutdowns.";
-      }
-      
-      // Network Issues
-      if (lowerMessage.includes('wifi') || lowerMessage.includes('wireless') || lowerMessage.includes('internet')) {
-        return "WiFi problems: 1) Turn WiFi off and on again 2) Restart your router (unplug 30 seconds) 3) Forget network and reconnect 4) Move closer to router 5) Check if other devices connect. If only your device has issues, update WiFi driver.";
-      }
-      
-      if (lowerMessage.includes('ethernet') || lowerMessage.includes('wired') || lowerMessage.includes('cable')) {
-        return "Ethernet not working: 1) Check cable plugged in firmly both ends 2) Try different cable 3) Try different port on router 4) Check cable for damage 5) Restart router and computer.";
-      }
-      
-      if (lowerMessage.includes('no internet') || lowerMessage.includes('can\'t connect') || lowerMessage.includes('connection')) {
-        return "No internet access: 1) Restart your router 2) Check if lights on router are normal 3) Try connecting with cable instead of WiFi 4) Contact internet provider to check for outages 5) Restart computer.";
-      }
-      
-      if (lowerMessage.includes('dns') || lowerMessage.includes('can\'t reach') || lowerMessage.includes('can\'t find website')) {
-        return "Can't reach websites: 1) Try different browser 2) Clear browser cache 3) Restart router 4) Try using Google DNS (8.8.8.8 and 8.8.4.4) 5) Check if you can access other websites.";
-      }
-      
-      if (lowerMessage.includes('vpn')) {
-        return "VPN issues: 1) Disconnect and reconnect 2) Try different VPN server 3) Restart computer and router 4) Update VPN software 5) Temporarily disable firewall to test.";
-      }
-      
-      if (lowerMessage.includes('bluetooth')) {
-        return "Bluetooth problems: 1) Turn Bluetooth off and on 2) Remove device and pair again 3) Check device batteries 4) Move devices closer together 5) Update Bluetooth driver. Make sure device is in pairing mode.";
-      }
-      
-      // Performance Issues  
-      if (lowerMessage.includes('fan') && (lowerMessage.includes('loud') || lowerMessage.includes('noise'))) {
-        return "Loud fan noise: 1) Clean dust from vents 2) Make sure vents aren't blocked 3) Close programs using high CPU 4) Check if computer on hard surface 5) Update BIOS. Loud fans mean computer working hard or cooling system clogged.";
-      }
-      
-      if (lowerMessage.includes('storage') || lowerMessage.includes('disk space') || lowerMessage.includes('full')) {
-        return "Running out of space: 1) Empty Recycle Bin 2) Run Disk Cleanup 3) Uninstall programs you don't use 4) Move files to external drive 5) Delete old downloads. Keep at least 20% free space.";
-      }
-      
-      if (lowerMessage.includes('memory') || lowerMessage.includes('ram')) {
-        return "Memory/RAM issues: 1) Close unused programs 2) Restart computer 3) Check Task Manager to see what uses memory 4) Increase virtual memory in system settings 5) Consider adding more RAM. 8GB is minimum for modern Windows.";
-      }
-      
-      if (lowerMessage.includes('graphics') || lowerMessage.includes('gpu') || lowerMessage.includes('video card')) {
-        return "Graphics problems: 1) Update graphics driver 2) Check if GPU fan working 3) Make sure GPU power cables connected 4) Monitor GPU temperature 5) Try different display cable. For gaming issues, lower graphics settings first.";
-      }
-      
-      // Security Issues
-      if (lowerMessage.includes('virus') || lowerMessage.includes('malware') || lowerMessage.includes('infected')) {
-        return "Possible virus: 1) Disconnect from internet 2) Run full Windows Defender scan 3) Download and run Malwarebytes 4) Remove suspicious programs 5) Change passwords from clean device. Don't pay if ransomware - disconnect immediately.";
-      }
-      
-      if (lowerMessage.includes('hack') || lowerMessage.includes('breach') || lowerMessage.includes('compromised')) {
-        return "Account hacked: 1) Change password immediately 2) Enable two-factor authentication 3) Check recent login activity 4) Sign out all devices 5) Check for suspicious emails sent from your account.";
-      }
-      
-      if (lowerMessage.includes('spam') || lowerMessage.includes('popup') || lowerMessage.includes('ads')) {
-        return "Too many ads/popups: 1) Install ad blocker extension 2) Remove suspicious browser extensions 3) Check installed programs for adware 4) Run Malwarebytes scan 5) Reset browser settings.";
-      }
-      
-      if (lowerMessage.includes('phishing') || lowerMessage.includes('suspicious email') || lowerMessage.includes('scam')) {
-        return "Suspicious email/scam: 1) Don't click any links 2) Don't download attachments 3) Check sender email carefully 4) Don't provide personal info 5) Report as spam. Real companies never ask for passwords by email.";
-      }
-      
-      if (lowerMessage.includes('ransom') || (lowerMessage.includes('locked') && lowerMessage.includes('file')) || lowerMessage.includes('encrypted')) {
-        return "Ransomware attack: 1) DO NOT PAY - no guarantee you'll get files back 2) Disconnect from network immediately 3) Don't restart computer 4) Contact professional help 5) Check if decryption tools exist. Best protection is regular backups.";
-      }
-      
-      if (lowerMessage.includes('firewall') || lowerMessage.includes('antivirus')) {
-        return "Antivirus/Firewall: 1) Keep Windows Defender enabled 2) Don't disable firewall 3) Run regular scans 4) Keep Windows updated 5) Only download from trusted sources. Windows Defender is good for most users.";
-      }
-      
-      // Audio Issues
-      if (lowerMessage.includes('audio') || lowerMessage.includes('sound') || lowerMessage.includes('speaker') || lowerMessage.includes('volume')) {
-        return "No sound: 1) Check volume isn't muted 2) Right-click sound icon, check correct output device 3) Unplug and replug speakers/headphones 4) Update sound driver 5) Restart computer. Test with headphones to see if speakers or system issue.";
-      }
-      
-      if (lowerMessage.includes('microphone') || lowerMessage.includes('mic')) {
-        return "Microphone not working: 1) Check mic isn't muted 2) Go to Settings > Privacy > Microphone, allow apps to use it 3) Select correct input device 4) Update audio driver 5) Test in another program.";
-      }
-      
-      if (lowerMessage.includes('headphone') || lowerMessage.includes('earphone')) {
-        return "Headphone issues: 1) Check headphones work on another device 2) Try different jack/USB port 3) Update audio driver 4) Check sound settings for correct output 5) Clean headphone jack gently. For wireless: charge and re-pair.";
-      }
-      
-      // Printer Issues
-      if (lowerMessage.includes('printer') || lowerMessage.includes('print')) {
-        return "Printer not working: 1) Check printer is on and connected 2) Check paper is loaded 3) Clear print queue 4) Set as default printer 5) Update printer driver. Check ink levels. For network printers, make sure on same WiFi.";
-      }
-      
-      if (lowerMessage.includes('scan')) {
-        return "Scanner not working: 1) Make sure scanner is on 2) Update scanner driver 3) Check USB connection 4) Try scanner software from manufacturer 5) Restart both devices. Some printers need special software for scanning.";
-      }
-      
-      // Data Recovery
-      if (lowerMessage.includes('data recovery') || lowerMessage.includes('lost files') || lowerMessage.includes('deleted') || lowerMessage.includes('restore')) {
-        return "Recover deleted files: 1) Check Recycle Bin first 2) Stop using computer to prevent overwriting 3) Try File History or Previous Versions 4) Use free tool like Recuva 5) Check cloud backup. Best prevention: regular backups.";
-      }
-      
-      if (lowerMessage.includes('backup')) {
-        return "Setting up backups: 1) Use external hard drive or cloud storage 2) Enable File History in Windows 3) Set up automatic backups 4) Follow 3-2-1 rule: 3 copies, 2 storage types, 1 offsite 5) Test restoring. Backup before major changes.";
-      }
-      
-      // Display Issues
-      if (lowerMessage.includes('display') || lowerMessage.includes('monitor') || lowerMessage.includes('screen flicker')) {
-        return "Display problems: 1) Check cable connections 2) Update graphics driver 3) Change refresh rate in display settings 4) Try different cable or port 5) Test with another monitor. Flickering usually means cable or driver issue.";
-      }
-      
-      if (lowerMessage.includes('resolution') || lowerMessage.includes('blurry') || lowerMessage.includes('fuzzy')) {
-        return "Wrong resolution: 1) Right-click desktop > Display settings 2) Set to recommended resolution 3) Update graphics driver 4) Make sure scaling is 100% 5) Check monitor native resolution. Use native resolution for sharpest image.";
-      }
-      
-      // AI Assistant responses
-      if (category === 'AI Assistant') {
-        const aiResponses = [
-          "I'm here to help! I can assist with: answering questions, explaining concepts, helping with creative writing, brainstorming ideas, solving problems, providing information on various topics, and much more. What would you like help with?",
-          "Hello! I'm a general-purpose AI assistant. I can help you with research, writing, math, coding basics, creative projects, learning new topics, making decisions, and answering questions. How can I assist you today?",
-          "Hi there! Think of me as your helpful AI companion. I can: explain complex topics simply, help organize your thoughts, provide suggestions and ideas, answer your questions, help with homework or work tasks, and chat about various subjects. What do you need?",
-          "I'm ready to assist! I'm knowledgeable about many subjects including science, history, math, literature, current events, technology, and more. I can also help with practical tasks like planning, writing, and problem-solving. What's on your mind?",
-          "Welcome! As an AI assistant, I can help you: learn new things, get answers to questions, work through problems step-by-step, generate ideas, improve your writing, understand difficult concepts, and have interesting conversations. What would you like to explore?"
-        ];
-        return aiResponses[Math.floor(Math.random() * aiResponses.length)];
-      }
-      
-      // Category-based responses
-      const responses = {
-        'AI Assistant': [
-          "I'd be happy to help with that! Could you provide a bit more detail about what you're looking for? The more specific you can be, the better I can assist you.",
-          "Interesting question! To give you the most helpful answer, could you tell me more about the context or what specifically you'd like to know?",
-          "I'm here to help! Let me know if you need me to: explain something, help solve a problem, provide suggestions, review your work, or answer any questions you have.",
-          "Great! I can assist with that. Would you like me to explain it step-by-step, provide examples, give you a summary, or approach it a different way?",
-          "I understand what you're asking! Here's what I can help with: breaking down complex topics, providing practical advice, offering different perspectives, or diving deeper into details. What works best for you?"
-        ],
-        'Hardware': [
-          "For hardware problems: 1) Restart your computer first 2) Check all cables are plugged in firmly 3) Look for physical damage 4) Make sure nothing is overheating 5) Update drivers. If you added new hardware recently, try removing it.",
-          "Hardware troubleshooting: 1) Test with different cables/ports 2) Clean dust from vents and fans 3) Make sure components properly seated 4) Check for error lights or beeps 5) Run Windows diagnostics. Listen for unusual sounds.",
-          "Component issues: 1) For RAM problems, try reseating memory 2) For graphics issues, update GPU driver 3) For drive problems, backup immediately 4) Check temps aren't too high 5) Test components one at a time if possible."
-        ],
-        'Software': [
-          "For software issues: 1) Update the program to latest version 2) Restart your computer 3) Run as administrator 4) Reinstall if problem continues 5) Check if compatible with your Windows version. Most issues fixed with updates.",
-          "Software troubleshooting: 1) Check Task Manager for high CPU/Memory use 2) Boot into Safe Mode to test 3) Update Windows completely 4) Remove recently installed programs 5) Scan for malware. Create restore point before changes.",
-          "Program not working: 1) Check for updates first 2) Clear cache and temp files 3) Check system requirements 4) Try different user account 5) Contact software support with error messages."
-        ],
-        'Network': [
-          "Network problems: 1) Restart router and computer 2) Check if other devices work 3) Try wired connection 4) Update network drivers 5) Contact internet provider if nothing works. Most issues fixed with router restart.",
-          "WiFi troubleshooting: 1) Move closer to router 2) Check router lights are normal 3) Forget and reconnect to network 4) Change WiFi channel in router 5) Update router firmware. 5GHz faster but shorter range than 2.4GHz.",
-          "Connection issues: 1) Run network troubleshooter 2) Check cables firmly connected 3) Disable VPN to test 4) Try Google DNS (8.8.8.8) 5) Reset network settings as last resort."
-        ],
-        'Performance': [
-          "To improve performance: 1) Restart regularly 2) Close unused programs 3) Delete temp files 4) Keep at least 20% disk space free 5) Scan for malware. More RAM helps if you multitask a lot.",
-          "Speed up computer: 1) Disable startup programs in Task Manager 2) Update all drivers 3) Run Disk Cleanup 4) Check for disk errors 5) Consider upgrading to SSD. SSD is biggest performance upgrade.",
-          "Performance issues: 1) Check Task Manager to find bottleneck 2) Close browser tabs 3) Uninstall bloatware 4) Disable visual effects 5) Upgrade hardware if consistently slow."
-        ],
-        'Security': [
-          "Stay secure: 1) Keep Windows Defender enabled 2) Update Windows regularly 3) Use strong unique passwords 4) Enable two-factor authentication 5) Don't click suspicious links. Antivirus and common sense prevent most issues.",
-          "Security tips: 1) Never disable firewall 2) Don't download from untrusted sites 3) Scan USB drives before use 4) Backup important files regularly 5) Be cautious with email attachments. Prevention easier than recovery.",
-          "Protect yourself: 1) Use password manager 2) Enable automatic updates 3) Don't use public WiFi without VPN 4) Check website uses HTTPS 5) Review app permissions. Most attacks target outdated software."
-        ],
-        'Other': [
-          "General troubleshooting: 1) Restart your computer first 2) Check for Windows updates 3) Update all drivers 4) Scan for malware 5) Make sure you have free disk space. Most issues fixed with restart and updates.",
-          "Basic diagnostics: 1) Note when problem occurs 2) Check what changed recently 3) Test in Safe Mode 4) Review Event Viewer for errors 5) Create restore point before fixes. Document what you try.",
-          "Common solutions: 1) Update everything (Windows, drivers, programs) 2) Clean temporary files 3) Check hardware connections 4) Run Windows troubleshooters 5) Backup data regularly. Prevention is best fix."
-        ]
-      };
-      
-      const categoryResponses = responses[category] || responses['Other'];
-      return categoryResponses[Math.floor(Math.random() * categoryResponses.length)];
-    }
-
-    function scrollToBottom() {
-      const container = document.getElementById('chat-container');
-      setTimeout(() => {
-        container.scrollTop = container.scrollHeight;
-      }, 100);
-    }
-
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    function showError(message) {
-      const container = document.getElementById('chat-container');
-      const errorDiv = document.createElement('div');
-      errorDiv.style.cssText = 'background: #d63651; color: white; padding: 12px; border-radius: 8px; margin: 12px 0; text-align: center;';
-      errorDiv.textContent = message;
-      container.appendChild(errorDiv);
-      setTimeout(() => errorDiv.remove(), 5000);
-    }
-
-    document.getElementById('send-btn').addEventListener('click', () => {
-      const input = document.getElementById('user-input');
-      sendMessage(input.value);
-    });
-
-    document.getElementById('user-input').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendMessage(e.target.value);
-      }
-    });
-
-    document.querySelectorAll('.category-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        selectedCategory = btn.dataset.category;
-        const welcomeMessage = document.getElementById('welcome-message');
-        const backButton = document.getElementById('back-button');
-        welcomeMessage.style.display = 'none';
-        backButton.classList.add('show');
-        document.getElementById('user-input').focus();
-      });
-    });
-
-    document.getElementById('back-button').addEventListener('click', async () => {
-      const welcomeMessage = document.getElementById('welcome-message');
-      const backButton = document.getElementById('back-button');
-      const messages = document.querySelectorAll('.message');
-      
-      welcomeMessage.style.display = 'block';
-      backButton.classList.remove('show');
-      selectedCategory = null;
-      
-      // Delete all messages from database
-      for (const msg of messagesData) {
-        await window.dataSdk.delete(msg);
-      }
-      
-      messages.forEach(msg => msg.remove());
-    });
-
-    async function onConfigChange(config) {
-      const customFont = config.font_family || defaultConfig.font_family;
-      const baseFontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      const baseSize = config.font_size || defaultConfig.font_size;
-      
-      document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
-      document.body.style.fontSize = `${baseSize}px`;
-      
-      document.getElementById('site-title').textContent = config.site_title || defaultConfig.site_title;
-      document.getElementById('welcome-text').textContent = config.welcome_message || defaultConfig.welcome_message;
-      document.getElementById('user-input').placeholder = config.input_placeholder || defaultConfig.input_placeholder;
-      
-      const bgColor = config.background_color || defaultConfig.background_color;
-      const surfaceColor = config.surface_color || defaultConfig.surface_color;
-      const textColor = config.text_color || defaultConfig.text_color;
-      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
-      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
-      
-      document.querySelector('.container').style.background = `linear-gradient(135deg, ${bgColor} 0%, ${surfaceColor} 100%)`;
-      document.querySelector('.header').style.background = surfaceColor;
-      document.querySelector('.header').style.color = primaryColor;
-      document.querySelector('.header').style.borderBottomColor = primaryColor;
-      
-      document.querySelectorAll('.message-content').forEach(el => {
-        el.style.color = textColor;
-        if (el.closest('.message.user')) {
-          el.style.background = primaryColor;
-        } else {
-          el.style.background = surfaceColor;
+        const container = document.querySelector("div.h-full.flex.flex-col");
+        if (container) {
+          container.style.backgroundColor = cfg.background_color;
         }
-      });
-      
-      document.querySelectorAll('.message-avatar').forEach(el => {
-        if (el.closest('.message.user')) {
-          el.style.background = primaryColor;
-        } else {
-          el.style.background = secondaryColor;
-        }
-      });
-      
-      const welcomeH2 = document.querySelector('.welcome-message h2');
-      if (welcomeH2) {
-        welcomeH2.style.color = primaryColor;
-        welcomeH2.style.fontSize = `${baseSize * 1.75}px`;
-      }
-      
-      const welcomeP = document.querySelector('.welcome-message p');
-      if (welcomeP) {
-        welcomeP.style.color = textColor;
-        welcomeP.style.fontSize = `${baseSize}px`;
-      }
-      
-      document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.style.background = secondaryColor;
-        btn.style.color = textColor;
-        btn.style.fontSize = `${baseSize * 0.875}px`;
-      });
-      
-      document.querySelector('.input-container').style.background = surfaceColor;
-      document.querySelector('.input-container').style.borderTopColor = secondaryColor;
-      
-      const inputField = document.querySelector('.input-field');
-      inputField.style.background = bgColor;
-      inputField.style.borderColor = secondaryColor;
-      inputField.style.color = textColor;
-      inputField.style.fontSize = `${baseSize * 0.9375}px`;
-      
-      const sendBtn = document.querySelector('.send-btn');
-      sendBtn.style.background = primaryColor;
-      sendBtn.style.color = textColor;
-      sendBtn.style.fontSize = `${baseSize * 0.9375}px`;
-      
-      const backButton = document.querySelector('.back-button');
-      backButton.style.background = secondaryColor;
-      backButton.style.color = textColor;
-      backButton.style.fontSize = `${baseSize * 0.875}px`;
-    }
 
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities: (config) => ({
-          recolorables: [
-            {
-              get: () => config.background_color || defaultConfig.background_color,
-              set: (value) => {
-                config.background_color = value;
+        const headers = document.querySelectorAll("header");
+        headers.forEach((el) => {
+          el.style.backgroundColor = cfg.surface_color;
+          el.style.borderBottomColor = cfg.primary_action_color;
+        });
+
+        const footerSection = document.querySelector(
+          "section[aria-label='Ask a tech support question']"
+        );
+        if (footerSection) {
+          footerSection.style.backgroundColor = cfg.surface_color;
+          footerSection.style.borderTopColor = cfg.secondary_action_color;
+        }
+
+        const textEls = document.querySelectorAll("body, p, span, label, h1, h2, button");
+        textEls.forEach((el) => {
+          el.style.color = cfg.text_color;
+        });
+
+        // Primary button
+        if (sendBtn) {
+          sendBtn.style.backgroundColor = cfg.primary_action_color;
+        }
+
+        // Back button
+        if (backBtn) {
+          backBtn.style.backgroundColor = cfg.secondary_action_color;
+        }
+
+        // Category buttons and some avatars
+        const categoryButtons = document.querySelectorAll(".category-btn");
+        categoryButtons.forEach((btn) => {
+          btn.style.backgroundColor = cfg.secondary_action_color;
+        });
+        const assistantAvatars = document.querySelectorAll(
+          ".message-avatar.bg-\\[\\#533483\\]"
+        );
+        assistantAvatars.forEach((el) => {
+          el.style.backgroundColor = cfg.secondary_action_color;
+        });
+
+        // Text content
+        if (mainTitleEl) {
+          mainTitleEl.textContent = cfg.main_title || defaultConfig.main_title;
+        }
+        if (welcomeTitleEl) {
+          welcomeTitleEl.textContent =
+            cfg.welcome_title || defaultConfig.welcome_title;
+        }
+        if (welcomeBodyEl) {
+          welcomeBodyEl.textContent =
+            cfg.welcome_body || defaultConfig.welcome_body;
+        }
+        if (inputField) {
+          inputField.placeholder =
+            cfg.placeholder_text || defaultConfig.placeholder_text;
+        }
+        if (sendText) {
+          sendText.textContent =
+            cfg.primary_button_text || defaultConfig.primary_button_text;
+        }
+        if (footerTextEl) {
+          footerTextEl.textContent =
+            cfg.footer_text || defaultConfig.footer_text;
+        }
+
+        // Font + size
+        const baseFont =
+          (cfg.font_family && cfg.font_family.trim()) || defaultConfig.font_family;
+        const baseSize = Number.isFinite(cfg.font_size)
+          ? cfg.font_size
+          : defaultConfig.font_size;
+        const fontStack = baseFont + ", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
+        document.documentElement.style.fontFamily = fontStack;
+
+        if (mainTitleEl) {
+          mainTitleEl.style.fontSize = baseSize * 1.7 + "px";
+        }
+        if (welcomeTitleEl) {
+          welcomeTitleEl.style.fontSize = baseSize * 1.5 + "px";
+        }
+        if (welcomeBodyEl) {
+          welcomeBodyEl.style.fontSize = baseSize * 1.0 + "px";
+        }
+        if (inputField) {
+          inputField.style.fontSize = baseSize * 0.95 + "px";
+        }
+        const labels = document.querySelectorAll("label");
+        labels.forEach((el) => {
+          el.style.fontSize = baseSize * 0.85 + "px";
+        });
+        const smallTexts = document.querySelectorAll(
+          "#cc-footer-text, .message-time"
+        );
+        smallTexts.forEach((el) => {
+          el.style.fontSize = baseSize * 0.8 + "px";
+        });
+      }
+
+      function mapToCapabilities(config) {
+        const cfg = Object.assign({}, defaultConfig, config || {});
+
+        const recolorables = [
+          {
+            get: () => cfg.background_color || defaultConfig.background_color,
+            set: (value) => {
+              cfg.background_color = value;
+              if (window.elementSdk) {
                 window.elementSdk.setConfig({ background_color: value });
               }
-            },
-            {
-              get: () => config.surface_color || defaultConfig.surface_color,
-              set: (value) => {
-                config.surface_color = value;
+            }
+          },
+          {
+            get: () => cfg.surface_color || defaultConfig.surface_color,
+            set: (value) => {
+              cfg.surface_color = value;
+              if (window.elementSdk) {
                 window.elementSdk.setConfig({ surface_color: value });
               }
-            },
-            {
-              get: () => config.text_color || defaultConfig.text_color,
-              set: (value) => {
-                config.text_color = value;
+            }
+          },
+          {
+            get: () => cfg.text_color || defaultConfig.text_color,
+            set: (value) => {
+              cfg.text_color = value;
+              if (window.elementSdk) {
                 window.elementSdk.setConfig({ text_color: value });
               }
-            },
-            {
-              get: () => config.primary_action_color || defaultConfig.primary_action_color,
-              set: (value) => {
-                config.primary_action_color = value;
+            }
+          },
+          {
+            get: () =>
+              cfg.primary_action_color || defaultConfig.primary_action_color,
+            set: (value) => {
+              cfg.primary_action_color = value;
+              if (window.elementSdk) {
                 window.elementSdk.setConfig({ primary_action_color: value });
               }
-            },
-            {
-              get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
-              set: (value) => {
-                config.secondary_action_color = value;
+            }
+          },
+          {
+            get: () =>
+              cfg.secondary_action_color || defaultConfig.secondary_action_color,
+            set: (value) => {
+              cfg.secondary_action_color = value;
+              if (window.elementSdk) {
                 window.elementSdk.setConfig({ secondary_action_color: value });
               }
             }
-          ],
-          borderables: [],
-          fontEditable: {
-            get: () => config.font_family || defaultConfig.font_family,
-            set: (value) => {
-              config.font_family = value;
+          }
+        ];
+
+        const fontEditable = {
+          get: () => cfg.font_family || defaultConfig.font_family,
+          set: (value) => {
+            cfg.font_family = value;
+            if (window.elementSdk) {
               window.elementSdk.setConfig({ font_family: value });
             }
-          },
-          fontSizeable: {
-            get: () => config.font_size || defaultConfig.font_size,
-            set: (value) => {
-              config.font_size = value;
+          }
+        };
+
+        const fontSizeable = {
+          get: () => cfg.font_size || defaultConfig.font_size,
+          set: (value) => {
+            cfg.font_size = value;
+            if (window.elementSdk) {
               window.elementSdk.setConfig({ font_size: value });
             }
           }
-        }),
-        mapToEditPanelValues: (config) => new Map([
-          ["site_title", config.site_title || defaultConfig.site_title],
-          ["welcome_message", config.welcome_message || defaultConfig.welcome_message],
-          ["input_placeholder", config.input_placeholder || defaultConfig.input_placeholder]
-        ])
-      });
-    }
+        };
 
-    initializeApp();
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a109d8a44dd6cda',t:'MTc2MzU2NDgyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+        return {
+          recolorables,
+          borderables: [],
+          fontEditable,
+          fontSizeable
+        };
+      }
+
+      function mapToEditPanelValues(config) {
+        const cfg = Object.assign({}, defaultConfig, config || {});
+        return new Map([
+          ["main_title", cfg.main_title],
+          ["welcome_title", cfg.welcome_title],
+          ["welcome_body", cfg.welcome_body],
+          ["placeholder_text", cfg.placeholder_text],
+          ["primary_button_text", cfg.primary_button_text],
+          ["footer_text", cfg.footer_text]
+        ]);
+      }
+
+      if (window.elementSdk && typeof window.elementSdk.init === "function") {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      } else {
+        // Fallback: apply defaults immediately if SDK not available
+        onConfigChange(defaultConfig);
+      }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a10ba6c57726cda',t:'MTc2MzU2NjAxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
