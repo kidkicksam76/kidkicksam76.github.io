@@ -2,8 +2,8 @@ import base64
 import os
 from typing import Literal
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
-from pydantic import BaseModel, Field
+from fastapi import FastAPI, File, HTTPException, UploadFile  
+from pydantic import BaseModel, Field  
 from openai import OpenAI
 
 app = FastAPI(
@@ -33,7 +33,7 @@ class IssueResponse(BaseModel):
 
 
 def get_client() -> OpenAI:
-    api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("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")
     if not api_key:
         raise HTTPException(status_code=500, detail="OPENAI_API_KEY is not configured.")
     return OpenAI(api_key=api_key)

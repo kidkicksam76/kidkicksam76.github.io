@@ -28,7 +28,7 @@ This project provides a lightweight API that can:
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-export OPENAI_API_KEY="your_key_here"
+export OPENAI_API_KEY="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"
 ```
 
 ## Run
