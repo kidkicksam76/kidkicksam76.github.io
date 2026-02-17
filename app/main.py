@@ -2,8 +2,8 @@ import base64
 import os
 from typing import Literal
 
-from fastapi import FastAPI, File, HTTPException, UploadFile  
-from pydantic import BaseModel, Field  
+from fastapi import FastAPI, File, HTTPException, UploadFile
+from pydantic import BaseModel, Field
 from openai import OpenAI
 
 app = FastAPI(
@@ -13,14 +13,20 @@ app = FastAPI(
 )
 
 
+# =========================
+# Models
+# =========================
+
 class IssueRequest(BaseModel):
     issue_type: Literal["software", "hardware", "unknown"] = Field(
-        default="unknown", description="Known issue category if user already knows it."
+        default="unknown",
+        description="Known issue category if user already knows it."
     )
     device: str = Field(..., description="Device, OS, and version details.")
     symptoms: str = Field(..., description="What is happening and when.")
     recent_changes: str = Field(
-        default="None", description="Updates, installs, impacts, spills, drops, etc."
+        default="None",
+        description="Updates, installs, impacts, spills, drops, etc."
     )
 
 
@@ -32,10 +38,17 @@ class IssueResponse(BaseModel):
     escalation: str
 
 
+# =========================
+# OpenAI Client
+# =========================
+
 def get_client() -> OpenAI:
-    api_key = os.getenv("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")
+    api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
-        raise HTTPException(status_code=500, detail="OPENAI_API_KEY is not configured.")
+        raise HTTPException(
+            status_code=500,
+            detail="OPENAI_API_KEY environment variable is not configured."
+        )
     return OpenAI(api_key=api_key)
 
 
@@ -47,10 +60,18 @@ SYSTEM_PROMPT = (
 )
 
 
+# =========================
+# Health Check
+# =========================
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
 
+
+# =========================
+# Text Analysis Endpoint
+# =========================
 
 @app.post("/analyze", response_model=IssueResponse)
 def analyze_issue(request: IssueRequest) -> IssueResponse:
@@ -70,22 +91,34 @@ Return JSON with keys:
 - escalation (string)
 """
 
-    completion = client.chat.completions.create(
-        model=os.getenv("TEXT_MODEL", "gpt-4o-mini"),
-        response_format={"type": "json_object"},
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.2,
-    )
+    try:
+        response = client.responses.create(
+            model=os.getenv("TEXT_MODEL", "gpt-4.1-mini"),
+            response_format={"type": "json_object"},
+            input=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.2,
+        )
 
-    content = completion.choices[0].message.content
-    if not content:
-        raise HTTPException(status_code=502, detail="Model returned empty response.")
+        content = response.output_text
 
-    return IssueResponse.model_validate_json(content)
+        if not content:
+            raise HTTPException(
+                status_code=502,
+                detail="Model returned empty response."
+            )
 
+        return IssueResponse.model_validate_json(content)
+
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
+# =========================
+# Image Analysis Endpoint
+# =========================
 
 @app.post("/analyze-image", response_model=IssueResponse)
 async def analyze_issue_from_image(
@@ -93,43 +126,60 @@ async def analyze_issue_from_image(
     context: str = "",
 ) -> IssueResponse:
     if not image.content_type or not image.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="Upload must be an image file.")
+        raise HTTPException(
+            status_code=400,
+            detail="Upload must be an image file."
+        )
 
     client = get_client()
-    image_bytes = await image.read()
-    encoded = base64.b64encode(image_bytes).decode("utf-8")
 
-    messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {
-            "role": "user",
-            "content": [
-                {
-                    "type": "text",
-                    "text": (
-                        "Read this image for technical issue evidence (error codes, LEDs, damage, BIOS, "
-                        "logs, stack traces, device manager, etc.) and diagnose root causes. "
-                        f"Additional user context: {context or 'None'}\n"
-                        "Return JSON with keys: classification, likely_causes, quick_checks, next_steps, escalation."
-                    ),
-                },
-                {
-                    "type": "image_url",
-                    "image_url": {"url": f"data:{image.content_type};base64,{encoded}"},
-                },
-            ],
-        },
-    ]
+    try:
+        image_bytes = await image.read()
+        encoded = base64.b64encode(image_bytes).decode("utf-8")
 
-    completion = client.chat.completions.create(
-        model=os.getenv("VISION_MODEL", "gpt-4o-mini"),
-        response_format={"type": "json_object"},
-        messages=messages,
-        temperature=0.2,
-    )
+        messages = [
+            {
+                "role": "system",
+                "content": SYSTEM_PROMPT,
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": (
+                            "Read this image for technical issue evidence "
+                            "(error codes, LEDs, damage, BIOS, logs, stack traces, "
+                            "device manager, etc.) and diagnose root causes. "
+                            f"Additional user context: {context or 'None'}\n"
+                            "Return JSON with keys: classification, likely_causes, "
+                            "quick_checks, next_steps, escalation."
+                        ),
+                    },
+                    {
+                        "type": "input_image",
+                        "image_url": f"data:{image.content_type};base64,{encoded}",
+                    },
+                ],
+            },
+        ]
 
-    content = completion.choices[0].message.content
-    if not content:
-        raise HTTPException(status_code=502, detail="Model returned empty response.")
+        response = client.responses.create(
+            model=os.getenv("VISION_MODEL", "gpt-4.1-mini"),
+            response_format={"type": "json_object"},
+            input=messages,
+            temperature=0.2,
+        )
 
-    return IssueResponse.model_validate_json(content)
+        content = response.output_text
+
+        if not content:
+            raise HTTPException(
+                status_code=502,
+                detail="Model returned empty response."
+            )
+
+        return IssueResponse.model_validate_json(content)
+
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
