@@ -1,163 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Tech Issue AI</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #0f172a;
-    color: white;
-    margin: 0;
-    padding: 0;
-}
-
-.container {
-    max-width: 900px;
-    margin: auto;
-    padding: 30px;
-}
-
-h1 {
-    text-align: center;
-    color: #38bdf8;
-}
-
-.card {
-    background: #111827;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-}
-
-input, textarea, select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    margin-bottom: 14px;
-    border-radius: 8px;
-    border: none;
-}
-
-button {
-    background: #38bdf8;
-    color: black;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-button:hover {
-    background: #0ea5e9;
-}
-
-.result {
-    white-space: pre-wrap;
-    background: #020617;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 15px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit a Ticket</title>
+    <style>
+        body { font-family: sans-serif; max-width: 500px; margin: 2rem auto; padding: 0 1rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: .5rem; }
+        input, textarea { width: 100%; padding: .5rem; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; padding: .75rem 1rem; cursor: pointer; }
+    </style>
 </head>
-
 <body>
-<div class="container">
-    <h1>🛠️ Tech Issue AI</h1>
 
-    <div class="card">
-        <h2>Analyze Text Issue</h2>
+    <h2>Submit a Support Ticket</h2>
+    <form id="ticketForm">
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="name" required>
+        </div>
+        <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="location" required>
+        </div>
+        <div class="form-group">
+            <label>Contact Information</label>
+            <input type="text" id="contact" placeholder="Email or Phone" required>
+        </div>
+        <div class="form-group">
+            <label>Issue Description</label>
+            <textarea id="issue" rows="4" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Upload Picture</label>
+            <input type="file" id="image" accept="image/*">
+        </div>
+        <button type="submit">Submit Ticket</button>
+    </form>
 
-        <label>Issue Type</label>
-        <select id="issueType">
-            <option value="unknown">Unknown</option>
-            <option value="software">Software</option>
-            <option value="hardware">Hardware</option>
-        </select>
-
-        <label>Device Details</label>
-        <input id="device" placeholder="Windows 11 laptop, MacBook, etc">
-
-        <label>Symptoms</label>
-        <textarea id="symptoms" rows="3"></textarea>
-
-        <label>Recent Changes</label>
-        <input id="changes" placeholder="Optional">
-
-        <button onclick="analyzeText()">Analyze Issue</button>
-
-        <div id="textResult" class="result"></div>
-    </div>
-
-    <div class="card">
-        <h2>Analyze Image</h2>
-
-        <input type="file" id="imageInput" accept="image/*">
-        <input id="imageContext" placeholder="Optional context">
-
-        <button onclick="analyzeImage()">Analyze Image</button>
-
-        <div id="imageResult" class="result"></div>
-    </div>
-</div>
-
-<script>
-async function analyzeText() {
-    const resultBox = document.getElementById("textResult");
-    resultBox.textContent = "Analyzing...";
-
-    const data = {
-        issue_type: document.getElementById("issueType").value,
-        device: document.getElementById("device").value,
-        symptoms: document.getElementById("symptoms").value,
-        recent_changes: document.getElementById("changes").value || "None"
-    };
-
-    try {
-        const response = await fetch("/analyze", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(data)
+    <script>
+        document.getElementById('ticketForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert("Ticket submitted successfully! (Connect to a backend to process data)");
         });
-
-        const json = await response.json();
-        resultBox.textContent = JSON.stringify(json, null, 2);
-    } catch (err) {
-        resultBox.textContent = "Error: " + err;
-    }
-}
-
-async function analyzeImage() {
-    const fileInput = document.getElementById("imageInput");
-    const resultBox = document.getElementById("imageResult");
-
-    if (!fileInput.files.length) {
-        alert("Please select an image.");
-        return;
-    }
-
-    resultBox.textContent = "Analyzing image...";
-
-    const formData = new FormData();
-    formData.append("image", fileInput.files[0]);
-    formData.append("context", document.getElementById("imageContext").value);
-
-    try {
-        const response = await fetch("/analyze-image", {
-            method: "POST",
-            body: formData
-        });
-
-        const json = await response.json();
-        resultBox.textContent = JSON.stringify(json, null, 2);
-    } catch (err) {
-        resultBox.textContent = "Error: " + err;
-    }
-}
-</script>
+    </script>
 </body>
 </html>
