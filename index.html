@@ -65,6 +65,43 @@
       alert("Ticket submitted successfully!");
     }
   });
+    // index.ts (Supabase Edge Function)
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+
+const TELEGRAM_BOT_TOKEN = Deno.env.get('TELEGRAM_BOT_TOKEN')
+const TELEGRAM_CHAT_ID = Deno.env.get('TELEGRAM_CHAT_ID')
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: { 'Access-Control-Allow-Origin': '*' } })
+  }
+
+  try {
+    const { record } = await req.json() // Receives data from Supabase Webhook
+
+    const text = `🚨 *New Support Ticket* 🚨\n\n` +
+                 `👤 *Name:* ${record.name}\n` +
+                 `📍 *Location:* ${record.location}\n` +
+                 `📞 *Contact:* ${record.contact}\n` +
+                 `📝 *Issue:* ${record.issue}`;
+
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: text,
+        parse_mode: 'Markdown'
+      })
+    })
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+    })
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), { status: 400 })
+  }
+})
 </script>
     
 </body>
