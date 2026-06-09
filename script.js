@@ -15,8 +15,8 @@ serve(async (req) => {
       return new Response('No record found', { status: 400 })
     }
 
-    const botToken = Deno.env.get('TELEGRAM_BOT_TOKEN')
-    const chatId = Deno.env.get('TELEGRAM_CHAT_ID')
+    const botToken = Deno.env.get('8953921040:AAH8WVurX9wbcNdD-SJK2mvT1sIp3a9ba4A')
+    const chatId = Deno.env.get('@Samuels_ticket_bot')
 
     if (!botToken || !chatId) {
       return new Response('Missing environment variables', { status: 500 })
@@ -38,7 +38,7 @@ serve(async (req) => {
 
     // Check if an image URL exists in the database record
     if (ticket.image_url) {
-      telegramUrl = `https://telegram.org{botToken}/sendPhoto`
+      telegramUrl = `https://telegram.org{8953921040:AAH8WVurX9wbcNdD-SJK2mvT1sIp3a9ba4A}/sendPhoto`
       bodyData = {
         chat_id: chatId,
         photo: ticket.image_url,
