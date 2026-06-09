@@ -68,8 +68,8 @@
     // index.ts (Supabase Edge Function)
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
-const TELEGRAM_BOT_TOKEN = Deno.env.get('TELEGRAM_BOT_TOKEN')
-const TELEGRAM_CHAT_ID = Deno.env.get('TELEGRAM_CHAT_ID')
+const TELEGRAM_BOT_TOKEN = Deno.env.get('8953921040:AAH8WVurX9wbcNdD-SJK2mvT1sIp3a9ba4A')
+const TELEGRAM_CHAT_ID = Deno.env.get('@Samuels_ticket_bot')
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -85,11 +85,11 @@ serve(async (req) => {
                  `📞 *Contact:* ${record.contact}\n` +
                  `📝 *Issue:* ${record.issue}`;
 
-    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    await fetch(`https://api.telegram.org/bot${8953921040:AAH8WVurX9wbcNdD-SJK2mvT1sIp3a9ba4A}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
+        chat_id: @Samuels_ticket_bot,
         text: text,
         parse_mode: 'Markdown'
       })
