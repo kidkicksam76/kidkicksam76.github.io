@@ -39,11 +39,33 @@
         <button type="submit">Submit Ticket</button>
     </form>
 
-    <script>
-        document.getElementById('ticketForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert("Ticket submitted successfully! (Connect to a backend to process data)");
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  // 1. Initialize Supabase
+  const supabase = supabase.createClient('YOUR_PROJECT_URL', 'YOUR_ANON_KEY');
+
+  document.getElementById('ticketForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // 2. Get values from the form
+    const name = document.getElementById('name').value;
+    const issue = document.getElementById('issue').value;
+    const location = document.getElementById('location').value;
+    const contact = document.getElementById('contact').value;
+
+    // 3. Send to Supabase
+    const { data, error } = await supabase
+      .from('tickets')
+      .insert([{ name, issue, location, contact }]);
+
+    if (error) {
+      alert("Error: " + error.message);
+    } else {
+      alert("Ticket submitted successfully!");
+    }
+  });
+</script>
+    
 </body>
 </html>
