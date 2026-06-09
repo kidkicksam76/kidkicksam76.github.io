@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit Support Ticket</title>
+    <title>Samuel's Support Tickets</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -25,28 +25,38 @@
                 <!-- Hidden fields -->
                 <input type="hidden" name="_subject" value="New Support Ticket Submitted">
                 <input type="hidden" name="_replyto" value="paladinosamuel60@gmail.com">
-                <input type="hidden" name="_next" value="https://yourdomain.com/thanks.html">
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name*</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
                     <input type="text" name="name" required 
                            class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email Address* (for replies)</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email Address * (for replies)</label>
                     <input type="email" name="email" required 
                            class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Issue / Problem (Use as much detail as possible)*</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Issue Type (Optional)</label>
+                    <select name="issue_type" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Select one (optional)</option>
+                        <option value="Software">Software</option>
+                        <option value="Hardware">Hardware</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Issue / Problem (use as much detail as possible)*</label>
                     <textarea name="issue" rows="4" required 
                               class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-y"></textarea>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Location*</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Location *</label>
                     <input type="text" name="location" required 
                            class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
