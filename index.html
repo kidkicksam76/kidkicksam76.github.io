@@ -3,106 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit a Ticket</title>
+    <title>Submit a Support Ticket</title>
+
     <style>
-        body { font-family: sans-serif; max-width: 500px; margin: 2rem auto; padding: 0 1rem; }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; margin-bottom: .5rem; }
-        input, textarea { width: 100%; padding: .5rem; box-sizing: border-box; }
-        button { background: #007bff; color: white; border: none; padding: .75rem 1rem; cursor: pointer; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: .5rem;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: .5rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: .75rem 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
 
     <h2>Submit a Support Ticket</h2>
+
     <form id="ticketForm">
         <div class="form-group">
-            <label>Full Name</label>
+            <label for="name">Full Name</label>
             <input type="text" id="name" required>
         </div>
+
         <div class="form-group">
-            <label>Location</label>
+            <label for="location">Location</label>
             <input type="text" id="location" required>
         </div>
+
         <div class="form-group">
-            <label>Contact Information</label>
+            <label for="contact">Contact Information</label>
             <input type="text" id="contact" placeholder="Email or Phone" required>
         </div>
+
         <div class="form-group">
-            <label>Issue Description</label>
-            <textarea id="issue" rows="4" required></textarea>
+            <label for="issue">Issue Description</label>
+            <textarea id="issue" rows="5" required></textarea>
         </div>
+
         <div class="form-group">
-            <label>Upload Picture</label>
+            <label for="image">Upload Picture (optional)</label>
             <input type="file" id="image" accept="image/*">
         </div>
+
         <button type="submit">Submit Ticket</button>
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-  // 1. Initialize Supabase
-  const supabase = supabase.createClient('https://onhocrwspzvqseaxlcte.supabase.co', 'sb_publishable_TNkw2dRlb58i_zv5rMKyVA_kM9Z25Uc');
+    <script>
+        // Replace these with your Supabase credentials
+        const SUPABASE_URL = "https://onhocrwspzvqseaxlcte.supabase.co";
+        const SUPABASE_KEY = "YOUR_PUBLISHABLE_KEY";
 
-  document.getElementById('ticketForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+        const client = supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
 
-    // 2. Get values from the form
-    const name = document.getElementById('name').value;
-    const issue = document.getElementById('issue').value;
-    const location = document.getElementById('location').value;
-    const contact = document.getElementById('contact').value;
+        document
+            .getElementById("ticketForm")
+            .addEventListener("submit", async (e) => {
 
-    // 3. Send to Supabase
-    const { data, error } = await supabase
-      .from('tickets')
-      .insert([{ name, issue, location, contact }]);
+                e.preventDefault();
 
-    if (error) {
-      alert("Error: " + error.message);
-    } else {
-      alert("Ticket submitted successfully!");
-    }
-  });
-    // index.ts (Supabase Edge Function)
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+                const name = document.getElementById("name").value.trim();
+                const location = document.getElementById("location").value.trim();
+                const contact = document.getElementById("contact").value.trim();
+                const issue = document.getElementById("issue").value.trim();
 
-const TELEGRAM_BOT_TOKEN = Deno.env.get('8953921040:AAH8WVurX9wbcNdD-SJK2mvT1sIp3a9ba4A')
-const TELEGRAM_CHAT_ID = Deno.env.get('@Samuels_ticket_bot')
+                const { error } = await client
+                    .from("tickets")
+                    .insert([
+                        {
+                            name,
+                            location,
+                            contact,
+                            issue
+                        }
+                    ]);
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: { 'Access-Control-Allow-Origin': '*' } })
-  }
+                if (error) {
+                    console.error(error);
+                    alert("Error: " + error.message);
+                    return;
+                }
 
-  try {
-    const { record } = await req.json() // Receives data from Supabase Webhook
+                alert("Ticket submitted successfully!");
 
-    const text = `🚨 *New Support Ticket* 🚨\n\n` +
-                 `👤 *Name:* ${record.name}\n` +
-                 `📍 *Location:* ${record.location}\n` +
-                 `📞 *Contact:* ${record.contact}\n` +
-                 `📝 *Issue:* ${record.issue}`;
+                document.getElementById("ticketForm").reset();
+            });
+    </script>
 
-    await fetch(`https://api.telegram.org/bot${8953921040:AAH8WVurX9wbcNdD-SJK2mvT1sIp3a9ba4A}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: @Samuels_ticket_bot,
-        text: text,
-        parse_mode: 'Markdown'
-      })
-    })
-
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-    })
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 400 })
-  }
-})
-</script>
-    
 </body>
 </html>
