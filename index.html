@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support Ticket</title>
+    <title>Submit Support Ticket</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -22,32 +22,45 @@
             </div>
 
             <form id="ticketForm" action="https://formspree.io/f/xpqerqwd" method="POST" class="p-8 space-y-6">
-                <input type="hidden" name="_subject" value="New Support Ticket!">
-                <input type="hidden" name="_next" value="https://yourdomain.com/thanks.html"> <!-- Optional thank you page -->
+                <!-- Hidden fields -->
+                <input type="hidden" name="_subject" value="New Support Ticket Submitted">
+                <input type="hidden" name="_replyto" value="paladinosamuel60@gmail.com">
+                <input type="hidden" name="_next" value="https://yourdomain.com/thanks.html">
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                    <input type="text" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                    <input type="text" name="name" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Issue / Problem</label>
-                    <textarea name="issue" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-y"></textarea>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email Address * (for replies)</label>
+                    <input type="email" name="email" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                    <input type="text" name="location" required class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Issue / Problem *</label>
+                    <textarea name="issue" rows="4" required 
+                              class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-y"></textarea>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Contact Info (Email / Phone)</label>
-                    <input type="text" name="contact" required class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Location *</label>
+                    <input type="text" name="location" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Additional Contact Info (Phone, etc.)</label>
+                    <input type="text" name="contact" 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Optional Image / Screenshot</label>
-                    <input type="file" name="attachment" accept="image/*" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="file" name="attachment" accept="image/*" 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <button type="submit" 
@@ -62,7 +75,7 @@
     <script>
         document.getElementById('ticketForm').addEventListener('submit', function() {
             setTimeout(() => {
-                alert('✅ Ticket submitted! Check your email for confirmation.');
+                alert('✅ Ticket submitted successfully! You will receive a confirmation email shortly.');
             }, 800);
         });
     </script>
