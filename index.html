@@ -39,22 +39,17 @@
         <button type="submit">Submit Ticket</button>
     </form>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-  // 1. Initialize Supabase
-  const supabase = supabase.createClient('https://onhocrwspzvqseaxlcte.supabase.co', 'sb_secret_fpcrOKIIu6BMfQ30abtXkg_ZPeF_9nn');
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+        const supabase = supabase.createClient('https://onhocrwspzvqseaxlcte.supabase.co', 'sb_secret_fpcrOKIIu6BMfQ30abtXkg_ZPeF_9nn');
 
   document.getElementById('ticketForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // 2. Get values from the form
     const name = document.getElementById('name').value;
     const issue = document.getElementById('issue').value;
     const location = document.getElementById('location').value;
     const contact = document.getElementById('contact').value;
 
-    // 3. Send to Supabase
     const { data, error } = await supabase
       .from('tickets')
       .insert([{ name, issue, location, contact }]);
@@ -65,7 +60,28 @@
       alert("Ticket submitted successfully!");
     }
   });
-</script>
+    </script>
+
+  const supabase = supabase.createClient('https://onhocrwspzvqseaxlcte.supabase.co', 'sb_secret_fpcrOKIIu6BMfQ30abtXkg_ZPeF_9nn');
+
+  document.getElementById('ticketForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const issue = document.getElementById('issue').value;
+    const location = document.getElementById('location').value;
+    const contact = document.getElementById('contact').value;
+
+    const { data, error } = await supabase
+      .from('tickets')
+      .insert([{ name, issue, location, contact }]);
+
+    if (error) {
+      alert("Error: " + error.message);
+    } else {
+      alert("Ticket submitted successfully!");
+    }
+  });
     
 </body>
 </html>
