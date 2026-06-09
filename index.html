@@ -4,43 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit a Support Ticket</title>
-
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 500px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: .5rem;
-        }
-
-        input,
-        textarea {
-            width: 100%;
-            padding: .5rem;
-            box-sizing: border-box;
-        }
-
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: .75rem 1rem;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        button:hover {
-            opacity: 0.9;
-        }
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 2rem auto; padding: 0 1rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: .5rem; }
+        input, textarea { width: 100%; padding: .5rem; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; padding: .75rem 1rem; cursor: pointer; border-radius: 4px; }
+        button:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -52,75 +22,93 @@
             <label for="name">Full Name</label>
             <input type="text" id="name" required>
         </div>
-
         <div class="form-group">
             <label for="location">Location</label>
             <input type="text" id="location" required>
         </div>
-
         <div class="form-group">
             <label for="contact">Contact Information</label>
             <input type="text" id="contact" placeholder="Email or Phone" required>
         </div>
-
         <div class="form-group">
             <label for="issue">Issue Description</label>
             <textarea id="issue" rows="5" required></textarea>
         </div>
-
         <div class="form-group">
             <label for="image">Upload Picture (optional)</label>
             <input type="file" id="image" accept="image/*">
         </div>
-
-        <button type="submit">Submit Ticket</button>
+        <button type="submit" id="submitBtn">Submit Ticket</button>
     </form>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    <script src="https://jsdelivr.net"></script>
     <script>
-        // Replace these with your Supabase credentials
-        const SUPABASE_URL = "https://onhocrwspzvqseaxlcte.supabase.co";
+        const SUPABASE_URL = "https://supabase.co";
         const SUPABASE_KEY = "sb_publishable_GP7YZQI6oKXcAtY-MPjAYQ_XVQc_kzq";
 
-        const client = supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
-        );
+        const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        document
-            .getElementById("ticketForm")
-            .addEventListener("submit", async (e) => {
+        document.getElementById("ticketForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById("submitBtn");
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Submitting...";
 
-                e.preventDefault();
+            const name = document.getElementById("name").value.trim();
+            const location = document.getElementById("location").value.trim();
+            const contact = document.getElementById("contact").value.trim();
+            const issue = document.getElementById("issue").value.trim();
+            const imageFile = document.getElementById("image").files[0];
 
-                const name = document.getElementById("name").value.trim();
-                const location = document.getElementById("location").value.trim();
-                const contact = document.getElementById("contact").value.trim();
-                const issue = document.getElementById("issue").value.trim();
+            let imageUrl = null;
 
-                const { error } = await client
-                    .from("tickets")
-                    .insert([
-                        {
-                            name,
-                            location,
-                            contact,
-                            issue
-                        }
-                    ]);
+            // 1. Handle optional image upload to Supabase Storage
+            if (imageFile) {
+                const fileExt = imageFile.name.split('.').pop();
+                const fileName = `${Date.now()}.${fileExt}`;
+                const filePath = `${fileName}`;
 
-                if (error) {
-                    console.error(error);
-                    alert("Error: " + error.message);
+                const { error: uploadError } = await client.storage
+                    .from('ticket-images')
+                    .upload(filePath, imageFile);
+
+                if (uploadError) {
+                    console.error(uploadError);
+                    alert("Image upload failed: " + uploadError.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Submit Ticket";
                     return;
                 }
 
-                alert("Ticket submitted successfully!");
+                // Get public link
+                const { data } = client.storage.from('ticket-images').getPublicUrl(filePath);
+                imageUrl = data.publicUrl;
+            }
 
+            // 2. Insert into the database
+            const { error: dbError } = await client
+                .from("tickets")
+                .insert([
+                    {
+                        name,
+                        location,
+                        contact,
+                        issue,
+                        image_url: imageUrl
+                    }
+                ]);
+
+            if (dbError) {
+                console.error(dbError);
+                alert("Database Error: " + dbError.message);
+            } else {
+                alert("Ticket submitted successfully! Check your Telegram.");
                 document.getElementById("ticketForm").reset();
-            });
-    </script>
+            }
 
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Submit Ticket";
+        });
+    </script>
 </body>
 </html>
